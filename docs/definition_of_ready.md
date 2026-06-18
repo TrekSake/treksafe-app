@@ -37,22 +37,332 @@ Su objetivo es evitar que el equipo inicie trabajo sobre requisitos ambiguos, in
 
 ## DOR-01 — Plantilla CONNEXTRA
 
-Completar antes de marcar `Dev Ready = Yes`:
+Registro completado en refinement para las 25 historias de usuario (Dev Ready = Yes).
 
-```markdown
-### HU-XX — [Título]
+### HU-01 — Registro de Senderistas
 
-**Como** [rol: senderista / rescatista / sistema]
-**Necesito** [acción o capacidad concreta]
-**Para** [beneficio medible para el usuario o el negocio]
+**Como** senderista
+**Necesito** registrarme con mis datos personales y aceptar la política de privacidad
+**Para** gestionar mis expediciones de forma segura
 
-**Entidades:** [User, Expedition, Alert, Contact, MedicalRecord, …]
-**Restricciones:** [RC-XX, SA-XX, dependencias técnicas]
-**Negocio:** [regla o valor que justifica la HU]
-**Excepciones:** [flujos alternativos y errores esperados]
-**Tamaño:** [XS/S/M/L/XL o story points]
-**Test:** [cómo se verificará: unit, integración, E2E manual]
-```
+**Entidades:** User
+**Restricciones:** RC-05, SA-05
+**Negocio:** Estandarizar acceso al sistema y consentimiento Ley 29733
+**Excepciones:** Correo duplicado, contraseña debil, términos no aceptados
+**Tamaño:** 5 story points
+**Test:** E2E registro + verificación hash en BD
+
+### HU-02 — Inicio de Sesión Seguro
+
+**Como** usuario registrado
+**Necesito** iniciar sesión con correo y contraseña
+**Para** acceder a mi panel según mi rol
+
+**Entidades:** User, Session
+**Restricciones:** RC-05
+**Negocio:** Autenticación central para senderistas y rescatistas
+**Excepciones:** Credenciales inválidas, token expirado
+**Tamaño:** 3 story points
+**Test:** E2E login por rol + prueba 401
+
+### HU-03 — Registro de Cuerpos de Rescate
+
+**Como** miembro de rescate
+**Necesito** registrarme con credencial institucional simulada
+**Para** acceder a funciones de atención de emergencias
+
+**Entidades:** User, RescuerCredential
+**Restricciones:** RC-03, SA-06
+**Negocio:** Validar identidad de rescatistas en registro inicial
+**Excepciones:** Credencial no coincide, registro sin rol rescuer
+**Tamaño:** 5 story points
+**Test:** E2E registro válido/inválido + login posterior
+
+### HU-04 — Información Inicial de Expedición
+
+**Como** senderista
+**Necesito** declarar ubicación de inicio y destino
+**Para** facilitar mi localización en caso de emergencia
+
+**Entidades:** Expedition
+**Restricciones:** RC-05, SA-05
+**Negocio:** Base del plan de ruta declarada
+**Excepciones:** Campos vacíos, coordenadas inválidas si se ingresan
+**Tamaño:** 3 story points
+**Test:** E2E creación parcial + persistencia
+
+### HU-05 — Historial Médico y Consentimiento
+
+**Como** senderista
+**Necesito** registrar ficha médica con consentimiento explícito
+**Para** que rescatistas accedan solo en alerta activa
+
+**Entidades:** MedicalRecord, User
+**Restricciones:** RC-05
+**Negocio:** Cumplimiento normativo y datos críticos en emergencia
+**Excepciones:** Sin consentimiento, datos no guardados
+**Tamaño:** 5 story points
+**Test:** Inspeccion cifrado BD + E2E ficha médica
+
+### HU-06 — Contactos de Emergencia Frecuentes
+
+**Como** senderista
+**Necesito** guardar contactos de confianza reutilizables
+**Para** asociarlos rápidamente a mis rutas
+
+**Entidades:** EmergencyContact, User
+**Restricciones:** RC-05
+**Negocio:** Canal de aviso a terceros en desfase
+**Excepciones:** Formato email/telefono inválido
+**Tamaño:** 2 story points
+**Test:** CRUD E2E + validacion regex
+
+### HU-07 — Creación de Plan de Expedición
+
+**Como** senderista
+**Necesito** registrar itinerario con salida y retorno estimado
+**Para** activar monitoreo pasivo del sistema
+
+**Entidades:** Expedition
+**Restricciones:** RC-02, SA-04
+**Negocio:** Nucleo del protocolo de verificación positiva
+**Excepciones:** Fechas incoherentes, segúnda expedicion activa
+**Tamaño:** 5 story points
+**Test:** E2E POST expeditions + estados
+
+### HU-08 — Asociación de Contactos y Grupo
+
+**Como** senderista
+**Necesito** vincular contactos y acompanantes a la expedicion
+**Para** alertar correctamente en caso de desfase
+
+**Entidades:** Expedition, EmergencyContact
+**Restricciones:** SA-05
+**Negocio:** Información operativa para notificaciones
+**Excepciones:** Sin contacto o sin acompanante
+**Tamaño:** 3 story points
+**Test:** E2E creación con arreglos contactIds/companionNames
+
+### HU-09 — Visualización de Expedición Activa
+
+**Como** senderista
+**Necesito** ver resumen de ruta y tiempo restante
+**Para** controlar mi retorno antes del vencimiento
+
+**Entidades:** Expedition
+**Restricciones:** SA-04
+**Negocio:** Feedback continuo al senderista en montaña
+**Excepciones:** Sin expedicion activa
+**Tamaño:** 3 story points
+**Test:** E2E temporizador UI + GET active
+
+### HU-10 — Check-in Manual de Retorno Seguro
+
+**Como** senderista
+**Necesito** confirmar mi retorno seguro
+**Para** cerrar la expedicion y detener alertas
+
+**Entidades:** Expedition
+**Restricciones:** SA-04
+**Negocio:** Verificacion positiva manual del senderista
+**Excepciones:** Check-in tras vencimiento sin tolerancia, contraseña incorrecta
+**Tamaño:** 3 story points
+**Test:** E2E check-in + estado completed
+
+### HU-11 — Motor de Control de Plazos (Cron Job)
+
+**Como** sistema
+**Necesito** evaluar expediciones vencidas automáticamente
+**Para** escalar a estado alerta sin intervencion humana
+
+**Entidades:** Expedition, Alert
+**Restricciones:** SA-04, RC-01
+**Negocio:** Automatizacion del monitoreo pasivo
+**Excepciones:** Cron detenido, re-ejecucion idempotente
+**Tamaño:** 8 story points
+**Test:** Prueba cron + transicion in_progress a alert
+
+### HU-12 — Alerta por Correo a Contactos
+
+**Como** sistema
+**Necesito** enviar correo a contactos del senderista desfasado
+**Para** notificar a terceros con detalles de la ruta
+
+**Entidades:** Alert, EmergencyContact, EmailDispatch
+**Restricciones:** RC-04, SA-02
+**Negocio:** Aviso temprano a red de confianza
+**Excepciones:** SMTP fallido, sin contactos
+**Tamaño:** 5 story points
+**Test:** Integracion correo + idempotencia despacho
+
+### HU-13 — Alerta por Correo a Equipos de Rescate
+
+**Como** sistema
+**Necesito** enviar ficha tecnica a rescatistas validados
+**Para** iniciar respuesta institucional con ubicación y médica
+
+**Entidades:** Alert, User, MedicalRecord
+**Restricciones:** RC-04, RC-05
+**Negocio:** Canal formal a cuerpos de rescate
+**Excepciones:** Sin consentimiento médico, sin rescatistas
+**Tamaño:** 5 story points
+**Test:** Integracion correo + descifrado puntual
+
+### HU-14 — Confirmación de Recepción de Alerta
+
+**Como** equipo de rescate
+**Necesito** confirmar recepcion de una alerta
+**Para** iniciar seguimiento y evitar duplicidad
+
+**Entidades:** Alert, RescueAcknowledgement
+**Restricciones:** RC-05
+**Negocio:** Trazabilidad de atención del caso
+**Excepciones:** Usuario no rescatista, alerta ya confirmada
+**Tamaño:** 2 story points
+**Test:** E2E confirm + auditoría usuario/fecha
+
+### HU-15 — Dashboard Central de Expediciónes
+
+**Como** rescatista
+**Necesito** ver panel con expediciones en curso de la region
+**Para** mantener control preventivo
+
+**Entidades:** Expedition
+**Restricciones:** RC-01
+**Negocio:** Vista operativa centralizada
+**Excepciones:** Lista vacia, polling desactualizado
+**Tamaño:** 5 story points
+**Test:** E2E consola + GET rescue/expeditions
+
+### HU-16 — Filtro de Expediciónes por Zona
+
+**Como** rescatista
+**Necesito** filtrar expediciones por sector o nevado
+**Para** priorizar recursos en mi jurisdicción
+
+**Entidades:** Expedition
+**Restricciones:** RC-01
+**Negocio:** Enfoque geográfico operativo
+**Excepciones:** Filtro sin resultados
+**Tamaño:** 3 story points
+**Test:** E2E filtro texto + backend zone
+
+### HU-17 — Consola Visual de Alertas por Colores
+
+**Como** rescatista
+**Necesito** identificar riesgo por semáforo verde/amarillo/rojo
+**Para** priorizar casos críticos visualmente
+
+**Entidades:** Expedition
+**Restricciones:** RC-01
+**Negocio:** Clasificación rápida de desfase
+**Excepciones:** Estados intermedios mal coloreados
+**Tamaño:** 3 story points
+**Test:** E2E colores vs tiempo restante
+
+### HU-18 — Consulta de Ficha de Emergencia
+
+**Como** rescatista
+**Necesito** abrir expediente completo de alerta roja
+**Para** disponer de ruta, grupo y datos médicos autorizados
+
+**Entidades:** Alert, Expedition, MedicalRecord
+**Restricciones:** RC-05
+**Negocio:** Decisión de rescate informada
+**Excepciones:** Acceso sin alerta activa
+**Tamaño:** 5 story points
+**Test:** E2E detalle + auditoría acceso médico
+
+### HU-19 — Bitácora y Estados de Rescate
+
+**Como** rescatista
+**Necesito** registrar notas y cambiar estado del incidente
+**Para** coordinar la operacion de búsqueda
+
+**Entidades:** RescueLog, Alert
+**Restricciones:** RC-05
+**Negocio:** Trazabilidad operativa del rescate
+**Excepciones:** Cambio sin confirmación previa
+**Tamaño:** 3 story points
+**Test:** E2E PATCH log + historial notas
+
+### HU-20 — Historial de Expediciónes Finalizadas
+
+**Como** senderista
+**Necesito** consultar mis rutas pasadas y estadísticas
+**Para** llevar registro personal de actividad
+
+**Entidades:** Expedition
+**Restricciones:** RC-05
+**Negocio:** Valor histórico y estadísticas basicas
+**Excepciones:** Sin expediciones completadas
+**Tamaño:** 2 story points
+**Test:** E2E GET history + UI estadísticas
+
+### HU-21 — Revocación de Datos (Derechos ARCO)
+
+**Como** senderista
+**Necesito** solicitar eliminacion o anonimización de mis datos
+**Para** ejercer derechos según Ley 29733
+
+**Entidades:** User, Expedition, MedicalRecord
+**Restricciones:** RC-05
+**Negocio:** Cumplimiento derechos ARCO
+**Excepciones:** Solicitud parcial, sesión activa tras eliminar
+**Tamaño:** 5 story points
+**Test:** E2E revoke + verificación BD
+
+### HU-22 — Cache y Formularios Offline
+
+**Como** senderista
+**Necesito** usar plantillas y borradores sin conexión en base
+**Para** registrar expedicion al recuperar señal
+
+**Entidades:** Expedition, RouteTemplate, ExpeditionDraft
+**Restricciones:** RC-03, SA-03
+**Negocio:** Resiliencia en zonas sin cobertura
+**Excepciones:** SW no registrado, sync fallido
+**Tamaño:** 5 story points
+**Test:** Prueba offline PWA + Cache API + sync
+
+### HU-23 — Validación de Coordenadas
+
+**Como** senderista
+**Necesito** que el sistema valide formato de coordenadas manuales
+**Para** evitar errores en búsqueda y rescate
+
+**Entidades:** Expedition
+**Restricciones:** RC-05, SA-05
+**Negocio:** Calidad de georreferencia declarativa
+**Excepciones:** Formato decimal inválido, fuera de Perú
+**Tamaño:** 2 story points
+**Test:** Unit test coordinates + E2E formulario
+
+### HU-24 — Optimización de UX y Modo Oscuro
+
+**Como** senderista
+**Necesito** operar la app con contraste alto y modo oscuro
+**Para** usar TrekSafe en condiciones adversas de montaña
+
+**Entidades:** UI Theme
+**Restricciones:** RC-02
+**Negocio:** Accesibilidad y usabilidad en campo
+**Excepciones:** Tema no persistente
+**Tamaño:** 3 story points
+**Test:** E2E toggle tema + revision contraste
+
+### HU-25 — Notificación de Proximidad de Expiracion
+
+**Como** sistema
+**Necesito** mostrar recordatorio visual 30 min antes del limite
+**Para** reducir falsas alarmas por olvido de check-in
+
+**Entidades:** Expedition
+**Restricciones:** SA-04
+**Negocio:** Prevencion proactiva antes del escalamiento
+**Excepciones:** Recordatorio repetido tras descarte
+**Tamaño:** 3 story points
+**Test:** E2E banner/sheet a 30 min
 
 ---
 
