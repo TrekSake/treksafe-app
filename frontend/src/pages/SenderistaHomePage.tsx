@@ -44,7 +44,7 @@ export function SenderistaHomePage() {
       <div className="grid gap-3">
         <Link
           to="/senderista/expedicion/nueva"
-          className="flex items-center gap-3 bg-primary text-primary-foreground rounded-2xl p-4 font-semibold"
+          className="flex items-center gap-3 bg-primary text-primary-foreground rounded-2xl p-4 min-h-[56px] font-semibold text-base"
         >
           <Plus size={20} />
           Nueva expedición
@@ -52,7 +52,7 @@ export function SenderistaHomePage() {
 
         <Link
           to="/senderista/perfil/medica"
-          className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4"
+          className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 min-h-[52px]"
         >
           <Heart size={20} className="text-primary" />
           Ficha médica

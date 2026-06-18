@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ChevronRight, Heart, Map, Phone, Shield } from 'lucide-react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuth } from '@/context/AuthContext';
 
 export function SenderistaProfilePage() {
@@ -13,6 +14,8 @@ export function SenderistaProfilePage() {
       </div>
 
       <div className="space-y-3">
+        <ThemeToggle />
+
         <Link
           to="/senderista/perfil/medica"
           className="flex items-center justify-between bg-card border border-border rounded-2xl p-4"

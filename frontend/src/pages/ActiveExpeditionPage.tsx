@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Activity,
   AlertTriangle,
@@ -9,9 +9,11 @@ import {
   MapPin,
   Shield,
   Users,
+  X,
 } from 'lucide-react';
 import { CheckInConfirmDialog } from '@/components/CheckInConfirmDialog';
 import { useCountdown } from '@/hooks/useCountdown';
+import { clearReminderDismissal } from '@/lib/returnReminder';
 import { getActiveExpedition, type ActiveExpedition } from '@/services/expedition';
 
 function formatTime(iso: string): string {
@@ -25,12 +27,20 @@ function formatTime(iso: string): string {
 
 export function ActiveExpeditionPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [expedition, setExpedition] = useState<ActiveExpedition | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [checkInOpen, setCheckInOpen] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   const countdown = useCountdown(expedition?.deadlineAt, expedition?.startTime);
+
+  useEffect(() => {
+    if (searchParams.get('checkIn') === '1') {
+      setCheckInOpen(true);
+    }
+  }, [searchParams]);
 
   const loadActive = () => {
     getActiveExpedition()
@@ -50,6 +60,7 @@ export function ActiveExpeditionPage() {
   }, []);
 
   const handleCheckInSuccess = (checkedInAt: string) => {
+    if (expedition) clearReminderDismissal(expedition.id);
     setCheckInOpen(false);
     navigate('/senderista/expedicion/confirmada', {
       state: {
@@ -109,6 +120,23 @@ export function ActiveExpeditionPage() {
 
   return (
     <div className="px-6 py-6 pb-8">
+      {countdown.isUrgent && !countdown.expired && !bannerDismissed && (
+        <div className="urgent-banner -mx-6 -mt-6 mb-4 flex items-center gap-3 px-5 py-3">
+          <AlertTriangle size={18} className="flex-shrink-0" />
+          <p className="text-sm font-semibold flex-1">
+            Faltan {countdown.hours * 60 + countdown.minutes} min para tu límite — confirma retorno
+          </p>
+          <button
+            type="button"
+            onClick={() => setBannerDismissed(true)}
+            className="btn-touch opacity-70 hover:opacity-100"
+            aria-label="Cerrar aviso"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
       <Link to="/senderista" className="flex items-center gap-1 text-xs text-muted-foreground mb-4">
         <ChevronLeft size={16} /> Inicio
       </Link>
@@ -124,8 +152,9 @@ export function ActiveExpeditionPage() {
       )}
 
       {countdown.isUrgent && !countdown.expired && (
-        <div className="bg-amber-50 border border-amber-300 rounded-2xl p-4 mb-4 text-sm text-amber-800">
-          Faltan menos de 30 minutos para el límite. Confirma tu retorno a tiempo.
+        <div className="urgent-banner-subtle mb-4">
+          Faltan menos de 30 minutos para el límite. Confirma tu retorno a tiempo para evitar una
+          alerta automática.
         </div>
       )}
 

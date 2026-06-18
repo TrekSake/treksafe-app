@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { Home, Map, User, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { MobileShell } from '@/components/Layout';
+import { SenderistaReminderHost } from '@/components/SenderistaReminderHost';
 import { getActiveExpedition } from '@/services/expedition';
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
@@ -63,6 +64,8 @@ export function SenderistaLayout() {
             Perfil
           </NavLink>
         </nav>
+
+        <SenderistaReminderHost />
       </div>
     </MobileShell>
   );

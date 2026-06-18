@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { AlertTriangle, LogOut, Navigation, Shield } from 'lucide-react';
+import { AlertTriangle, LogOut, Moon, Navigation, Shield, Sun } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { MobileShell } from '@/components/Layout';
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
@@ -10,6 +11,7 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
 
 export function RescatistaLayout() {
   const { user, logout } = useAuth();
+  const { toggleDark, resolved } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -28,6 +30,14 @@ export function RescatistaLayout() {
               <p className="text-xs opacity-70">{user?.email}</p>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={toggleDark}
+            className="btn-touch opacity-70 hover:opacity-100 mr-2"
+            aria-label={resolved === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+          >
+            {resolved === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
           <button type="button" onClick={handleLogout} aria-label="Cerrar sesión">
             <LogOut size={20} className="opacity-70" />
           </button>

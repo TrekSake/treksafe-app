@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-background: #f0f5f1;
   --color-foreground: #0c1a10;
@@ -14,6 +16,26 @@
   --color-destructive: #dc2626;
   --color-destructive-foreground: #ffffff;
   --color-border: rgba(12, 26, 16, 0.1);
+  --color-urgent: #f59e0b;
+  --color-urgent-foreground: #1a1200;
+}
+
+.dark {
+  --color-background: #0c1410;
+  --color-foreground: #e8f0ea;
+  --color-card: #162018;
+  --color-card-foreground: #e8f0ea;
+  --color-primary: #22c55e;
+  --color-primary-foreground: #052e14;
+  --color-secondary: #1e3a5f;
+  --color-secondary-foreground: #e8f0ea;
+  --color-muted: #1a2820;
+  --color-muted-foreground: #8fa899;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: rgba(232, 240, 234, 0.1);
+  --color-urgent: #fbbf24;
+  --color-urgent-foreground: #1a1200;
 }
 
 * {
@@ -26,6 +48,7 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
   background-color: var(--color-background);
   color: var(--color-foreground);
+  -webkit-tap-highlight-color: transparent;
 }
 
 input,
@@ -37,18 +60,19 @@ button {
 
 .input-field {
   width: 100%;
+  min-height: 48px;
   padding: 0.75rem 1rem;
   background: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  font-size: 0.875rem;
+  font-size: 1rem;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .input-field:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
 }
 
 .input-field.input-error {
@@ -61,15 +85,17 @@ button {
 
 .btn-primary {
   width: 100%;
-  padding: 1rem;
+  min-height: 52px;
+  padding: 1rem 1.25rem;
   background: var(--color-primary);
   color: var(--color-primary-foreground);
   font-weight: 600;
+  font-size: 1rem;
   border: none;
   border-radius: var(--radius-xl);
   cursor: pointer;
   transition: opacity 0.15s, transform 0.1s;
-  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -87,20 +113,44 @@ button {
 
 .btn-secondary {
   width: 100%;
-  padding: 1rem;
+  min-height: 52px;
+  padding: 1rem 1.25rem;
   background: var(--color-secondary);
   color: var(--color-secondary-foreground);
   font-weight: 600;
+  font-size: 1rem;
   border: none;
   border-radius: var(--radius-xl);
   cursor: pointer;
 }
 
+.btn-touch {
+  min-height: 48px;
+  min-width: 48px;
+}
+
 .error-banner {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: color-mix(in srgb, var(--color-destructive) 8%, var(--color-card));
+  border: 1px solid color-mix(in srgb, var(--color-destructive) 25%, transparent);
   color: var(--color-destructive);
   padding: 0.75rem 1rem;
+  border-radius: var(--radius-xl);
+  font-size: 0.875rem;
+}
+
+.urgent-banner {
+  background: var(--color-urgent);
+  color: var(--color-urgent-foreground);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.urgent-banner-subtle {
+  background: color-mix(in srgb, var(--color-urgent) 12%, var(--color-card));
+  border: 1px solid color-mix(in srgb, var(--color-urgent) 35%, transparent);
+  color: color-mix(in srgb, var(--color-urgent) 85%, var(--color-foreground));
+  padding: 1rem;
   border-radius: var(--radius-xl);
   font-size: 0.875rem;
 }
