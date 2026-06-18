@@ -216,11 +216,11 @@ function ExpeditionCard({ expedition }: { expedition: RescueExpedition }) {
 
       {expedition.riskLevel === 'red' && (
         <Link
-          to="/rescatista/alertas"
+          to={`/rescatista/alertas/${expedition.expeditionId}`}
           className="w-full py-2.5 bg-destructive text-destructive-foreground font-semibold rounded-xl text-sm flex items-center justify-center gap-2"
         >
           <AlertTriangle size={16} />
-          {expedition.confirmedByMe ? 'Ver en alertas' : 'Gestionar alerta'}
+          {expedition.confirmedByMe ? 'Ver ficha y bitácora' : 'Gestionar alerta'}
         </Link>
       )}
     </article>

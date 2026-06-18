@@ -8,10 +8,12 @@ import { RegisterHikerPage } from '@/pages/RegisterHikerPage';
 import { RegisterRescuerPage } from '@/pages/RegisterRescuerPage';
 import { RescatistaHomePage } from '@/pages/RescatistaHomePage';
 import { RescueConsolePage } from '@/pages/RescueConsolePage';
+import { RescueAlertDetailPage } from '@/pages/RescueAlertDetailPage';
 import { SenderistaHomePage } from '@/pages/SenderistaHomePage';
 import { SenderistaProfilePage } from '@/pages/SenderistaProfilePage';
 import { MedicalInfoPage } from '@/pages/MedicalInfoPage';
 import { ContactsPage } from '@/pages/ContactsPage';
+import { ExpeditionHistoryPage } from '@/pages/ExpeditionHistoryPage';
 import { ExpeditionListPage } from '@/pages/ExpeditionListPage';
 import { CreateExpeditionPage } from '@/pages/CreateExpeditionPage';
 import { ActiveExpeditionPage } from '@/pages/ActiveExpeditionPage';
@@ -46,6 +48,7 @@ export function App() {
             <Route path="perfil" element={<SenderistaProfilePage />} />
             <Route path="perfil/medica" element={<MedicalInfoPage />} />
             <Route path="perfil/contactos" element={<ContactsPage />} />
+            <Route path="perfil/historial" element={<ExpeditionHistoryPage />} />
             <Route path="expedicion" element={<ExpeditionListPage />} />
             <Route path="expedicion/activa" element={<ActiveExpeditionPage />} />
             <Route path="expedicion/confirmada" element={<CheckInSuccessPage />} />
@@ -62,6 +65,7 @@ export function App() {
             <Route index element={<Navigate to="consola" replace />} />
             <Route path="consola" element={<RescueConsolePage />} />
             <Route path="alertas" element={<RescatistaHomePage />} />
+            <Route path="alertas/:expeditionId" element={<RescueAlertDetailPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -26,6 +26,11 @@ export async function getActiveExpedition(req: Request, res: Response): Promise<
   res.status(200).json({ expedition });
 }
 
+export async function getExpeditionHistory(req: Request, res: Response): Promise<void> {
+  const history = await expeditionService.getExpeditionHistory(authReq(req).user.id);
+  res.status(200).json(history);
+}
+
 export async function postCheckIn(req: Request, res: Response): Promise<void> {
   const expeditionId = String(req.params.id);
   const input = checkInSchema.parse(req.body);

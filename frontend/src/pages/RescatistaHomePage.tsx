@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   AlertTriangle,
   CheckCircle,
@@ -179,15 +180,32 @@ function AlertCard({
       )}
 
       {!confirmed && onConfirm && (
-        <button
-          type="button"
-          onClick={onConfirm}
-          disabled={confirming}
-          className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-xl flex items-center justify-center gap-2"
+        <div className="space-y-2">
+          <Link
+            to={`/rescatista/alertas/${alert.expeditionId}`}
+            className="w-full py-2.5 border border-border font-semibold rounded-xl text-sm flex items-center justify-center"
+          >
+            Ver ficha de emergencia
+          </Link>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={confirming}
+            className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-xl flex items-center justify-center gap-2"
+          >
+            <CheckCircle size={18} />
+            {confirming ? 'Confirmando…' : 'Confirmar recepción'}
+          </button>
+        </div>
+      )}
+
+      {confirmed && (
+        <Link
+          to={`/rescatista/alertas/${alert.expeditionId}`}
+          className="w-full py-2.5 bg-primary/10 text-primary font-semibold rounded-xl text-sm flex items-center justify-center"
         >
-          <CheckCircle size={18} />
-          {confirming ? 'Confirmando…' : 'Confirmar recepción'}
-        </button>
+          Ver ficha y bitácora
+        </Link>
       )}
     </div>
   );

@@ -138,4 +138,31 @@ export class ExpeditionService {
       checkedInAt: completed.updated_at ?? new Date().toISOString(),
     };
   }
+
+  async getExpeditionHistory(hikerId: string) {
+    await this.userRepo.assertHiker(hikerId);
+
+    const expeditions = await this.expeditionRepo.listCompletedExpeditions(hikerId);
+    const destinations = new Set(expeditions.map((e) => e.end_location));
+
+    let totalDurationHours = 0;
+    for (const exp of expeditions) {
+      const ms =
+        new Date(exp.estimated_return_time).getTime() - new Date(exp.start_time).getTime();
+      totalDurationHours += ms / 3_600_000;
+    }
+
+    return {
+      expeditions,
+      stats: {
+        totalCompleted: expeditions.length,
+        uniqueDestinations: destinations.size,
+        averageDurationHours:
+          expeditions.length > 0
+            ? Math.round((totalDurationHours / expeditions.length) * 10) / 10
+            : 0,
+        lastCompletedAt: expeditions[0]?.updated_at ?? null,
+      },
+    };
+  }
 }

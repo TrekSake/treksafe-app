@@ -1,7 +1,9 @@
 import { AppError } from '../../shared/errors/AppError.js';
-import type { ConfirmAlertInput, ListExpeditionsQuery } from '../dto/rescue.dto.js';
+import type { ConfirmAlertInput, ListExpeditionsQuery, UpdateRescueLogInput } from '../dto/rescue.dto.js';
+import { AlertRepository } from '../../infrastructure/repositories/AlertRepository.js';
 import { computeDeadlineAt } from '../../infrastructure/repositories/ExpeditionRepository.js';
 import { RescueRepository } from '../../infrastructure/repositories/RescueRepository.js';
+import { UserRepository } from '../../infrastructure/repositories/UserRepository.js';
 
 const URGENCY_THRESHOLD_MS = 30 * 60_000;
 
@@ -79,8 +81,39 @@ export function computeExpeditionRiskLevel(
   };
 }
 
+export type RescueAlertDetail = {
+  expeditionId: string;
+  hikerFullName: string;
+  hikerPhone: string;
+  startLocation: string;
+  endLocation: string;
+  startTime: string;
+  estimatedReturnTime: string;
+  toleranceMinutes: number;
+  deadlineAt: string;
+  alertSince: string;
+  companions: string[];
+  emergencyContacts: { fullName: string; phone: string; relationship: string; email: string }[];
+  medical: {
+    bloodType: string;
+    allergies: string;
+    conditions: string;
+    medications: string;
+  } | null;
+  rescueLog: {
+    id: string;
+    statusRescue: string;
+    notes: string | null;
+    updatedAt: string;
+  } | null;
+};
+
 export class RescueService {
-  constructor(private readonly repo = new RescueRepository()) {}
+  constructor(
+    private readonly repo = new RescueRepository(),
+    private readonly alertRepo = new AlertRepository(),
+    private readonly userRepo = new UserRepository(),
+  ) {}
 
   async listExpeditions(
     rescuerId: string,
@@ -167,6 +200,85 @@ export class RescueService {
     }
 
     return items;
+  }
+
+  async getAlertDetail(rescuerId: string, expeditionId: string): Promise<RescueAlertDetail> {
+    await this.repo.assertRescuer(rescuerId);
+
+    const context = await this.alertRepo.findRescueAlertContext(expeditionId);
+    if (!context) {
+      throw new AppError(404, 'Alerta no encontrada o expedición ya no está en alerta', 'NOT_FOUND');
+    }
+
+    const medicalRecord = await this.userRepo.getMedicalInfo(context.hikerId);
+    const confirmation = await this.repo.findConfirmation(expeditionId, rescuerId);
+
+    const expedition = await this.repo.findAlertExpedition(expeditionId);
+
+    return {
+      expeditionId: context.expeditionId,
+      hikerFullName: context.hikerFullName,
+      hikerPhone: context.hikerPhone,
+      startLocation: context.startLocation,
+      endLocation: context.endLocation,
+      startTime: context.startTime,
+      estimatedReturnTime: context.estimatedReturnTime,
+      toleranceMinutes: context.toleranceMinutes,
+      deadlineAt: context.deadlineAt,
+      alertSince: expedition?.updated_at ?? new Date().toISOString(),
+      companions: context.companions,
+      emergencyContacts: context.contacts.map((c, i) => ({
+        fullName: c.fullName,
+        email: c.email,
+        phone: context.emergencyContacts[i]?.phone ?? '',
+        relationship: c.relationship,
+      })),
+      medical: medicalRecord?.consentSigned
+        ? {
+            bloodType: medicalRecord.bloodType,
+            allergies: medicalRecord.payload.allergies,
+            conditions: medicalRecord.payload.conditions,
+            medications: medicalRecord.payload.medications,
+          }
+        : null,
+      rescueLog: confirmation
+        ? {
+            id: confirmation.id,
+            statusRescue: confirmation.status_rescue,
+            notes: confirmation.notes,
+            updatedAt: confirmation.updated_at,
+          }
+        : null,
+    };
+  }
+
+  async updateRescueLog(
+    rescuerId: string,
+    expeditionId: string,
+    input: UpdateRescueLogInput,
+  ) {
+    await this.repo.assertRescuer(rescuerId);
+
+    const expedition = await this.repo.findAlertExpedition(expeditionId);
+    if (!expedition) {
+      throw new AppError(404, 'Alerta no encontrada o expedición ya no está en alerta', 'NOT_FOUND');
+    }
+
+    const log = await this.repo.updateRescueLog(expeditionId, rescuerId, {
+      statusRescue: input.statusRescue,
+      notes: input.notes,
+    });
+
+    return {
+      message: 'Bitácora actualizada',
+      rescueLog: {
+        id: log.id,
+        expeditionId: log.expedition_id,
+        statusRescue: log.status_rescue,
+        notes: log.notes,
+        updatedAt: log.updated_at,
+      },
+    };
   }
 
   async confirmAlert(

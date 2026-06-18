@@ -53,3 +53,21 @@ export function checkInExpedition(expeditionId: string, password: string) {
     checkedInAt: string;
   }>(`/expeditions/${expeditionId}/check-in`, { password }, true);
 }
+
+export type ExpeditionHistoryStats = {
+  totalCompleted: number;
+  uniqueDestinations: number;
+  averageDurationHours: number;
+  lastCompletedAt: string | null;
+};
+
+export type CompletedExpedition = Expedition & {
+  updated_at?: string;
+};
+
+export function getExpeditionHistory() {
+  return api.get<{ expeditions: CompletedExpedition[]; stats: ExpeditionHistoryStats }>(
+    '/expeditions/history',
+    true,
+  );
+}

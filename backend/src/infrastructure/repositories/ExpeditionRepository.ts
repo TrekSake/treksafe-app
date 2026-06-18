@@ -118,6 +118,20 @@ export class ExpeditionRepository {
     return expedition;
   }
 
+  async listCompletedExpeditions(hikerId: string): Promise<ExpeditionRow[]> {
+    const { data, error } = await this.supabase
+      .from('expeditions')
+      .select(
+        'id, start_location, end_location, start_time, estimated_return_time, tolerance_minutes, status, created_at, updated_at',
+      )
+      .eq('hiker_id', hikerId)
+      .eq('status', 'completed')
+      .order('updated_at', { ascending: false });
+
+    if (error) throw new AppError(500, error.message);
+    return data ?? [];
+  }
+
   async listExpeditions(hikerId: string): Promise<ExpeditionRow[]> {
     const { data, error } = await this.supabase
       .from('expeditions')

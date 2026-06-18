@@ -191,4 +191,31 @@ export class RescueRepository {
 
     return data;
   }
+
+  async updateRescueLog(
+    expeditionId: string,
+    rescuerId: string,
+    input: { statusRescue?: string; notes?: string },
+  ): Promise<RescueLogRow> {
+    const updates: Record<string, string | null> = {
+      updated_at: new Date().toISOString(),
+    };
+    if (input.statusRescue !== undefined) updates.status_rescue = input.statusRescue;
+    if (input.notes !== undefined) updates.notes = input.notes;
+
+    const { data, error } = await this.supabase
+      .from('rescue_logs')
+      .update(updates)
+      .eq('expedition_id', expeditionId)
+      .eq('rescuer_id', rescuerId)
+      .select('id, expedition_id, status_rescue, updated_at, notes')
+      .maybeSingle();
+
+    if (error) throw new AppError(500, error.message);
+    if (!data) {
+      throw new AppError(404, 'Debes confirmar la alerta antes de actualizar la bitácora', 'NOT_FOUND');
+    }
+
+    return data;
+  }
 }

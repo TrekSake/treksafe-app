@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { confirmAlertSchema, listExpeditionsQuerySchema } from '../../../application/dto/rescue.dto.js';
+import { confirmAlertSchema, listExpeditionsQuerySchema, updateRescueLogSchema } from '../../../application/dto/rescue.dto.js';
 import { RescueService } from '../../../application/services/RescueService.js';
 import type { AuthenticatedRequest } from '../middleware/authMiddleware.js';
 
@@ -15,9 +15,22 @@ export async function getExpeditions(req: Request, res: Response): Promise<void>
   res.status(200).json({ expeditions });
 }
 
+export async function getAlertDetail(req: Request, res: Response): Promise<void> {
+  const expeditionId = String(req.params.expeditionId);
+  const detail = await rescueService.getAlertDetail(authReq(req).user.id, expeditionId);
+  res.status(200).json({ alert: detail });
+}
+
 export async function getAlerts(req: Request, res: Response): Promise<void> {
   const alerts = await rescueService.listAlerts(authReq(req).user.id);
   res.status(200).json({ alerts });
+}
+
+export async function patchRescueLog(req: Request, res: Response): Promise<void> {
+  const expeditionId = String(req.params.expeditionId);
+  const input = updateRescueLogSchema.parse(req.body ?? {});
+  const result = await rescueService.updateRescueLog(authReq(req).user.id, expeditionId, input);
+  res.status(200).json(result);
 }
 
 export async function postConfirmAlert(req: Request, res: Response): Promise<void> {
