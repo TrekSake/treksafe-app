@@ -1,17 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  LogOut,
   MapPin,
   Phone,
-  Shield,
   User,
 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { MobileShell } from '@/components/Layout';
 import { confirmRescueAlert, getRescueAlerts, type RescueAlert } from '@/services/rescue';
 
 const RESCUE_STATUS_LABEL: Record<string, string> = {
@@ -30,8 +25,6 @@ function formatDt(iso: string): string {
 }
 
 export function RescatistaHomePage() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const [alerts, setAlerts] = useState<RescueAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -51,11 +44,6 @@ export function RescatistaHomePage() {
     return () => clearInterval(poll);
   }, [loadAlerts]);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   const handleConfirm = async (expeditionId: string) => {
     setConfirmingId(expeditionId);
     setError('');
@@ -73,24 +61,12 @@ export function RescatistaHomePage() {
   const confirmed = alerts.filter((a) => a.confirmedByMe);
 
   return (
-    <MobileShell>
-      <div className="px-6 py-6 min-h-screen flex flex-col pb-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Shield className="text-secondary" size={24} />
-            <div>
-              <h1 className="text-xl font-bold">Panel de Rescate</h1>
-              <p className="text-xs text-muted-foreground">{user?.email}</p>
-            </div>
-          </div>
-          <button type="button" onClick={handleLogout} aria-label="Cerrar sesión">
-            <LogOut size={20} className="text-muted-foreground" />
-          </button>
-        </div>
+    <div className="px-6 py-6 pb-8">
+      <p className="text-sm text-muted-foreground mb-4">
+        Expediciones en alerta que requieren confirmación de recepción.
+      </p>
 
-        {error && <div className="error-banner mb-4">{error}</div>}
-
-        <div className="grid grid-cols-2 gap-3 mb-6">
+      <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-4">
             <p className="text-2xl font-bold text-destructive">{pending.length}</p>
             <p className="text-xs text-muted-foreground">Pendientes</p>
@@ -101,7 +77,9 @@ export function RescatistaHomePage() {
           </div>
         </div>
 
-        {loading ? (
+      {error && <div className="error-banner mb-4">{error}</div>}
+
+      {loading ? (
           <p className="text-sm text-muted-foreground">Cargando alertas…</p>
         ) : alerts.length === 0 ? (
           <div className="bg-muted rounded-2xl p-5 text-sm text-muted-foreground">
@@ -139,10 +117,9 @@ export function RescatistaHomePage() {
                 </div>
               </section>
             )}
-          </div>
-        )}
-      </div>
-    </MobileShell>
+        </div>
+      )}
+    </div>
   );
 }
 

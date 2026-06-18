@@ -17,6 +17,10 @@ export type AlertExpeditionRow = {
   hikers_profile: { full_name: string; phone: string } | { full_name: string; phone: string }[] | null;
 };
 
+export type MonitorExpeditionRow = AlertExpeditionRow & {
+  status: 'in_progress' | 'alert';
+};
+
 export type RescueLogRow = {
   id: string;
   expedition_id: string;
@@ -67,6 +71,49 @@ export class RescueRepository {
     }
 
     return recipients;
+  }
+
+  async listMonitorExpeditions(zone?: string): Promise<MonitorExpeditionRow[]> {
+    let query = this.supabase
+      .from('expeditions')
+      .select(
+        `
+        id, status, start_location, end_location, start_time, estimated_return_time,
+        tolerance_minutes, updated_at,
+        hikers_profile ( full_name, phone )
+      `,
+      )
+      .in('status', ['in_progress', 'alert'])
+      .order('estimated_return_time', { ascending: true });
+
+    if (zone) {
+      query = query.ilike('end_location', `%${zone}%`);
+    }
+
+    const { data, error } = await query;
+    if (error) throw new AppError(500, error.message);
+    return (data ?? []) as unknown as MonitorExpeditionRow[];
+  }
+
+  async findConfirmationsForExpeditions(
+    expeditionIds: string[],
+    rescuerId: string,
+  ): Promise<Map<string, RescueLogRow>> {
+    if (expeditionIds.length === 0) return new Map();
+
+    const { data, error } = await this.supabase
+      .from('rescue_logs')
+      .select('id, expedition_id, status_rescue, updated_at, notes')
+      .eq('rescuer_id', rescuerId)
+      .in('expedition_id', expeditionIds);
+
+    if (error) throw new AppError(500, error.message);
+
+    const map = new Map<string, RescueLogRow>();
+    for (const row of data ?? []) {
+      map.set(row.expedition_id, row);
+    }
+    return map;
   }
 
   async listAlertExpeditions(): Promise<AlertExpeditionRow[]> {

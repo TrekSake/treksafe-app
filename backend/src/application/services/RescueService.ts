@@ -1,7 +1,9 @@
 import { AppError } from '../../shared/errors/AppError.js';
-import type { ConfirmAlertInput } from '../dto/rescue.dto.js';
+import type { ConfirmAlertInput, ListExpeditionsQuery } from '../dto/rescue.dto.js';
 import { computeDeadlineAt } from '../../infrastructure/repositories/ExpeditionRepository.js';
 import { RescueRepository } from '../../infrastructure/repositories/RescueRepository.js';
+
+const URGENCY_THRESHOLD_MS = 30 * 60_000;
 
 export type RescueAlertItem = {
   expeditionId: string;
@@ -18,8 +20,121 @@ export type RescueAlertItem = {
   rescueStatus: string | null;
 };
 
+export type RescueExpeditionRiskLevel = 'green' | 'yellow' | 'red';
+
+export type RescueExpeditionItem = {
+  expeditionId: string;
+  status: 'in_progress' | 'alert';
+  riskLevel: RescueExpeditionRiskLevel;
+  hikerFullName: string;
+  hikerPhone: string;
+  startLocation: string;
+  endLocation: string;
+  startTime: string;
+  estimatedReturnTime: string;
+  deadlineAt: string;
+  minutesRemaining: number | null;
+  minutesOverdue: number | null;
+  alertSince: string | null;
+  confirmedByMe: boolean;
+  confirmedAt: string | null;
+  rescueStatus: string | null;
+};
+
+const RISK_ORDER: Record<RescueExpeditionRiskLevel, number> = {
+  red: 0,
+  yellow: 1,
+  green: 2,
+};
+
+export function computeExpeditionRiskLevel(
+  status: 'in_progress' | 'alert',
+  deadlineAt: string,
+  now = Date.now(),
+): { riskLevel: RescueExpeditionRiskLevel; minutesRemaining: number | null; minutesOverdue: number | null } {
+  const deadlineMs = new Date(deadlineAt).getTime();
+  const remainingMs = deadlineMs - now;
+
+  if (status === 'alert' || remainingMs <= 0) {
+    const overdueMs = Math.max(now - deadlineMs, 0);
+    return {
+      riskLevel: 'red',
+      minutesRemaining: null,
+      minutesOverdue: Math.ceil(overdueMs / 60_000),
+    };
+  }
+
+  if (remainingMs <= URGENCY_THRESHOLD_MS) {
+    return {
+      riskLevel: 'yellow',
+      minutesRemaining: Math.ceil(remainingMs / 60_000),
+      minutesOverdue: null,
+    };
+  }
+
+  return {
+    riskLevel: 'green',
+    minutesRemaining: Math.ceil(remainingMs / 60_000),
+    minutesOverdue: null,
+  };
+}
+
 export class RescueService {
   constructor(private readonly repo = new RescueRepository()) {}
+
+  async listExpeditions(
+    rescuerId: string,
+    query: ListExpeditionsQuery = {},
+  ): Promise<RescueExpeditionItem[]> {
+    await this.repo.assertRescuer(rescuerId);
+
+    const expeditions = await this.repo.listMonitorExpeditions(query.zone);
+    const confirmations = await this.repo.findConfirmationsForExpeditions(
+      expeditions.map((row) => row.id),
+      rescuerId,
+    );
+
+    const items: RescueExpeditionItem[] = [];
+
+    for (const row of expeditions) {
+      const hiker = Array.isArray(row.hikers_profile)
+        ? row.hikers_profile[0]
+        : row.hikers_profile;
+      if (!hiker) continue;
+
+      const deadlineAt = computeDeadlineAt(row.estimated_return_time, row.tolerance_minutes);
+      const { riskLevel, minutesRemaining, minutesOverdue } = computeExpeditionRiskLevel(
+        row.status,
+        deadlineAt,
+      );
+      const confirmation = confirmations.get(row.id) ?? null;
+
+      items.push({
+        expeditionId: row.id,
+        status: row.status,
+        riskLevel,
+        hikerFullName: hiker.full_name,
+        hikerPhone: hiker.phone,
+        startLocation: row.start_location,
+        endLocation: row.end_location,
+        startTime: row.start_time,
+        estimatedReturnTime: row.estimated_return_time,
+        deadlineAt,
+        minutesRemaining,
+        minutesOverdue,
+        alertSince: row.status === 'alert' ? row.updated_at : null,
+        confirmedByMe: confirmation !== null,
+        confirmedAt: confirmation?.updated_at ?? null,
+        rescueStatus: confirmation?.status_rescue ?? null,
+      });
+    }
+
+    return items.sort((a, b) => {
+      const riskDiff = RISK_ORDER[a.riskLevel] - RISK_ORDER[b.riskLevel];
+      if (riskDiff !== 0) return riskDiff;
+      return new Date(a.deadlineAt).getTime() - new Date(b.deadlineAt).getTime();
+    });
+  }
 
   async listAlerts(rescuerId: string): Promise<RescueAlertItem[]> {
     await this.repo.assertRescuer(rescuerId);

@@ -1,11 +1,13 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { RescatistaLayout } from '@/components/RescatistaLayout';
 import { SenderistaLayout } from '@/components/SenderistaLayout';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterHikerPage } from '@/pages/RegisterHikerPage';
 import { RegisterRescuerPage } from '@/pages/RegisterRescuerPage';
 import { RescatistaHomePage } from '@/pages/RescatistaHomePage';
+import { RescueConsolePage } from '@/pages/RescueConsolePage';
 import { SenderistaHomePage } from '@/pages/SenderistaHomePage';
 import { SenderistaProfilePage } from '@/pages/SenderistaProfilePage';
 import { MedicalInfoPage } from '@/pages/MedicalInfoPage';
@@ -19,7 +21,7 @@ function RootRedirect() {
   const { isAuthenticated, user } = useAuth();
   if (!isAuthenticated || !user) return <Navigate to="/login" replace />;
   return (
-    <Navigate to={user.role === 'rescatista' ? '/rescatista' : '/senderista'} replace />
+    <Navigate to={user.role === 'rescatista' ? '/rescatista/consola' : '/senderista'} replace />
   );
 }
 
@@ -53,10 +55,14 @@ export function App() {
             path="/rescatista"
             element={
               <ProtectedRoute role="rescatista">
-                <RescatistaHomePage />
+                <RescatistaLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<Navigate to="consola" replace />} />
+            <Route path="consola" element={<RescueConsolePage />} />
+            <Route path="alertas" element={<RescatistaHomePage />} />
+          </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
