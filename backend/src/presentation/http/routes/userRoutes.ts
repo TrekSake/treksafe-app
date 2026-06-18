@@ -6,6 +6,7 @@ import {
   getContacts,
   getMedicalInfo,
   postContact,
+  postDataRevocation,
   putMedicalInfo,
 } from '../controllers/userController.js';
 
@@ -16,6 +17,7 @@ export function createUserRoutes(): Router {
 
   router.put('/medical-info', asyncHandler(putMedicalInfo));
   router.get('/medical-info', asyncHandler(getMedicalInfo));
+  router.post('/privacy/revoke', asyncHandler(postDataRevocation));
 
   router.get('/contacts', asyncHandler(getContacts));
   router.post('/contacts', asyncHandler(postContact));

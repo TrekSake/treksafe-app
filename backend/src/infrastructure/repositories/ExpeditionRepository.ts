@@ -1,4 +1,5 @@
 import { AppError } from '../../shared/errors/AppError.js';
+import { parseDecimalCoordinates } from '../../shared/utils/coordinates.js';
 import { getSupabaseAdmin } from '../database/supabase.js';
 
 export type ExpeditionRow = {
@@ -61,6 +62,8 @@ export class ExpeditionRepository {
     input: {
       startLocation: string;
       endLocation: string;
+      startCoordinates?: string;
+      endCoordinates?: string;
       startTime: string;
       estimatedReturnTime: string;
       toleranceMinutes: number;
@@ -69,12 +72,21 @@ export class ExpeditionRepository {
       companionNames: string[];
     },
   ): Promise<ExpeditionRow> {
+    const startCoords = input.startCoordinates
+      ? parseDecimalCoordinates(input.startCoordinates)?.formatted ?? null
+      : null;
+    const endCoords = input.endCoordinates
+      ? parseDecimalCoordinates(input.endCoordinates)?.formatted ?? null
+      : null;
+
     const { data: expedition, error } = await this.supabase
       .from('expeditions')
       .insert({
         hiker_id: hikerId,
         start_location: input.startLocation,
         end_location: input.endLocation,
+        start_coordinates: startCoords,
+        end_coordinates: endCoords,
         start_time: input.startTime,
         estimated_return_time: input.estimatedReturnTime,
         tolerance_minutes: input.toleranceMinutes,

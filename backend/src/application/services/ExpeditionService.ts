@@ -64,6 +64,8 @@ export class ExpeditionService {
     return this.expeditionRepo.createExpedition(hikerId, {
       startLocation: input.startLocation,
       endLocation: input.endLocation,
+      startCoordinates: input.startCoordinates,
+      endCoordinates: input.endCoordinates,
       startTime: input.startTime,
       estimatedReturnTime: input.estimatedReturnTime,
       toleranceMinutes: input.toleranceMinutes,

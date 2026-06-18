@@ -50,3 +50,16 @@ export function createContact(data: {
 export function deleteContact(contactId: string) {
   return api.delete<{ message: string }>(`/user/contacts/${contactId}`, true);
 }
+
+export type DataRevocationAction = 'delete_personal' | 'anonymize_routes';
+
+export function revokePersonalData(action: DataRevocationAction) {
+  return api.post<{
+    message: string;
+    action: DataRevocationAction;
+    medicalDeleted?: boolean;
+    contactsDeleted?: number;
+    expeditionsDeleted?: number;
+    expeditionsAnonymized?: number;
+  }>('/user/privacy/revoke', { action, confirm: true }, true);
+}

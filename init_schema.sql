@@ -191,6 +191,8 @@ CREATE TABLE expeditions (
     hiker_id                UUID                    NOT NULL,
     start_location          VARCHAR(500)            NOT NULL,
     end_location            VARCHAR(500)            NOT NULL,
+    start_coordinates       VARCHAR(32),
+    end_coordinates         VARCHAR(32),
     start_time              TIMESTAMPTZ             NOT NULL,
     estimated_return_time   TIMESTAMPTZ             NOT NULL,
     tolerance_minutes       INTEGER                 NOT NULL DEFAULT 30,

@@ -1,4 +1,5 @@
 import type { CreateContactInput, UpsertMedicalInfoInput } from '../dto/user.dto.js';
+import type { DataRevocationInput } from '../dto/privacy.dto.js';
 import { UserRepository } from '../../infrastructure/repositories/UserRepository.js';
 
 export class UserService {
@@ -56,5 +57,25 @@ export class UserService {
   async deleteContact(hikerId: string, contactId: string) {
     await this.repo.assertHiker(hikerId);
     await this.repo.deleteContact(hikerId, contactId);
+  }
+
+  async revokePersonalData(hikerId: string, input: DataRevocationInput) {
+    await this.repo.assertHiker(hikerId);
+
+    if (input.action === 'delete_personal') {
+      const result = await this.repo.deletePersonalData(hikerId);
+      return {
+        message: 'Datos personales eliminados según solicitud ARCO',
+        action: input.action,
+        ...result,
+      };
+    }
+
+    const result = await this.repo.anonymizeRouteHistory(hikerId);
+    return {
+      message: 'Historial de rutas anonimizado correctamente',
+      action: input.action,
+      ...result,
+    };
   }
 }

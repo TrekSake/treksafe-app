@@ -1,6 +1,24 @@
 import { z } from 'zod';
+import { parseDecimalCoordinates, isValidPeruCoordinates } from '../../shared/utils/coordinates.js';
 
 const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as const;
+
+function optionalCoordinatesField(field: string) {
+  return z
+    .string()
+    .trim()
+    .optional()
+    .refine(
+      (value) => {
+        if (!value) return true;
+        const parsed = parseDecimalCoordinates(value);
+        return parsed !== null && isValidPeruCoordinates(parsed.lat, parsed.lon);
+      },
+      {
+        message: `Coordenadas de ${field} inválidas. Formato: -9.0105, -77.6042`,
+      },
+    );
+}
 
 export const upsertMedicalInfoSchema = z.object({
   bloodType: z.enum(bloodTypes),
@@ -28,6 +46,8 @@ export const createExpeditionSchema = z
   .object({
     startLocation: z.string().trim().min(3, 'Ubicación inicial obligatoria'),
     endLocation: z.string().trim().min(3, 'Destino obligatorio'),
+    startCoordinates: optionalCoordinatesField('salida'),
+    endCoordinates: optionalCoordinatesField('destino'),
     startTime: z.string().min(1, 'Hora de salida obligatoria'),
     estimatedReturnTime: z.string().min(1, 'Hora de retorno obligatoria'),
     toleranceMinutes: z.coerce.number().int().min(1).max(480).default(30),

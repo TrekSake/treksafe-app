@@ -122,4 +122,106 @@ export class UserRepository {
     if (!data?.length) throw new AppError(404, 'Contacto no encontrado', 'NOT_FOUND');
   }
 
+  async hasBlockingExpedition(hikerId: string): Promise<boolean> {
+    const { data, error } = await this.supabase
+      .from('expeditions')
+      .select('id')
+      .eq('hiker_id', hikerId)
+      .in('status', ['in_progress', 'alert'])
+      .limit(1);
+
+    if (error) throw new AppError(500, error.message);
+    return (data?.length ?? 0) > 0;
+  }
+
+  async deletePersonalData(hikerId: string): Promise<{ medicalDeleted: boolean; contactsDeleted: number; expeditionsDeleted: number }> {
+    if (await this.hasBlockingExpedition(hikerId)) {
+      throw new AppError(
+        409,
+        'No puedes revocar datos mientras tengas una expedición en curso o en alerta',
+        'ACTIVE_EXPEDITION_BLOCKS_REVOKE',
+      );
+    }
+
+    const { error: medicalError } = await this.supabase
+      .from('medical_info')
+      .delete()
+      .eq('hiker_id', hikerId);
+    if (medicalError) throw new AppError(500, medicalError.message);
+
+    const { data: contacts, error: contactsSelectError } = await this.supabase
+      .from('emergency_contacts')
+      .select('id')
+      .eq('hiker_id', hikerId);
+    if (contactsSelectError) throw new AppError(500, contactsSelectError.message);
+
+    const { error: contactsError } = await this.supabase
+      .from('emergency_contacts')
+      .delete()
+      .eq('hiker_id', hikerId);
+    if (contactsError) throw new AppError(500, contactsError.message);
+
+    const { data: expeditions, error: expSelectError } = await this.supabase
+      .from('expeditions')
+      .select('id')
+      .eq('hiker_id', hikerId)
+      .in('status', ['completed', 'programmed']);
+    if (expSelectError) throw new AppError(500, expSelectError.message);
+
+    const expeditionIds = (expeditions ?? []).map((e) => e.id);
+    if (expeditionIds.length > 0) {
+      const { error: expDeleteError } = await this.supabase
+        .from('expeditions')
+        .delete()
+        .in('id', expeditionIds);
+      if (expDeleteError) throw new AppError(500, expDeleteError.message);
+    }
+
+    return {
+      medicalDeleted: true,
+      contactsDeleted: contacts?.length ?? 0,
+      expeditionsDeleted: expeditionIds.length,
+    };
+  }
+
+  async anonymizeRouteHistory(hikerId: string): Promise<{ expeditionsAnonymized: number }> {
+    if (await this.hasBlockingExpedition(hikerId)) {
+      throw new AppError(
+        409,
+        'No puedes anonimizar rutas mientras tengas una expedición en curso o en alerta',
+        'ACTIVE_EXPEDITION_BLOCKS_REVOKE',
+      );
+    }
+
+    const { data: expeditions, error: selectError } = await this.supabase
+      .from('expeditions')
+      .select('id')
+      .eq('hiker_id', hikerId)
+      .eq('status', 'completed');
+    if (selectError) throw new AppError(500, selectError.message);
+
+    const ids = (expeditions ?? []).map((e) => e.id);
+    if (ids.length === 0) return { expeditionsAnonymized: 0 };
+
+    const now = new Date().toISOString();
+    const { error: updateError } = await this.supabase
+      .from('expeditions')
+      .update({
+        start_location: '[Anonimizado]',
+        end_location: '[Anonimizado]',
+        start_coordinates: null,
+        end_coordinates: null,
+        updated_at: now,
+      })
+      .in('id', ids);
+    if (updateError) throw new AppError(500, updateError.message);
+
+    const { error: companionsError } = await this.supabase
+      .from('expedition_companions')
+      .delete()
+      .in('expedition_id', ids);
+    if (companionsError) throw new AppError(500, companionsError.message);
+
+    return { expeditionsAnonymized: ids.length };
+  }
 }

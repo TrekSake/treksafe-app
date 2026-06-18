@@ -1,28 +1,84 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Plus, X } from 'lucide-react';
+import { ChevronLeft, Globe, Plus, WifiOff, X } from 'lucide-react';
+import { FieldError, FieldLabel } from '@/components/Layout';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { validateCoordinateInput } from '@/lib/coordinates';
+import {
+  listExpeditionDrafts,
+  listRouteTemplates,
+  removeExpeditionDraft,
+  saveExpeditionDraft,
+  saveRouteTemplate,
+  type RouteTemplate,
+} from '@/lib/offlineExpedition';
 import { getContacts, type EmergencyContact } from '@/services/user';
 import { createExpedition } from '@/services/expedition';
-import { FieldError, FieldLabel } from '@/components/Layout';
 
 export function CreateExpeditionPage() {
   const navigate = useNavigate();
+  const online = useOnlineStatus();
   const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+  const [templates, setTemplates] = useState<RouteTemplate[]>([]);
+  const [pendingDrafts, setPendingDrafts] = useState(listExpeditionDrafts().length);
   const [startLocation, setStartLocation] = useState('');
   const [endLocation, setEndLocation] = useState('');
+  const [startCoordinates, setStartCoordinates] = useState('');
+  const [endCoordinates, setEndCoordinates] = useState('');
+  const [startCoordError, setStartCoordError] = useState('');
+  const [endCoordError, setEndCoordError] = useState('');
   const [startTime, setStartTime] = useState('');
   const [estimatedReturnTime, setEstimatedReturnTime] = useState('');
   const [toleranceMinutes, setToleranceMinutes] = useState(30);
   const [selectedContactIds, setSelectedContactIds] = useState<string[]>([]);
   const [companionNames, setCompanionNames] = useState<string[]>(['']);
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getContacts()
-      .then((r) => setContacts(r.contacts))
-      .catch(() => setContacts([]));
-  }, []);
+    setTemplates(listRouteTemplates());
+    if (online) {
+      getContacts()
+        .then((r) => setContacts(r.contacts))
+        .catch(() => setContacts([]));
+    }
+  }, [online]);
+
+  useEffect(() => {
+    if (!online) return;
+
+    const drafts = listExpeditionDrafts();
+    if (drafts.length === 0) return;
+
+    const syncDrafts = async () => {
+      for (const draft of drafts) {
+        try {
+          await createExpedition({
+            startLocation: draft.startLocation,
+            endLocation: draft.endLocation,
+            startCoordinates: draft.startCoordinates || undefined,
+            endCoordinates: draft.endCoordinates || undefined,
+            startTime: draft.startTime,
+            estimatedReturnTime: draft.estimatedReturnTime,
+            toleranceMinutes: draft.toleranceMinutes,
+            contactIds: draft.contactIds,
+            companionNames: draft.companionNames,
+          });
+          removeExpeditionDraft(draft.id);
+        } catch {
+          break;
+        }
+      }
+      setPendingDrafts(listExpeditionDrafts().length);
+    };
+
+    syncDrafts().then(() => {
+      if (listExpeditionDrafts().length === 0) {
+        setInfo('Borradores offline sincronizados con el servidor.');
+      }
+    });
+  }, [online]);
 
   const toggleContact = (id: string) => {
     setSelectedContactIds((prev) =>
@@ -38,6 +94,35 @@ export function CreateExpeditionPage() {
   const removeCompanion = (index: number) =>
     setCompanionNames((prev) => prev.filter((_, i) => i !== index));
 
+  const applyTemplate = (template: RouteTemplate) => {
+    setStartLocation(template.startLocation);
+    setEndLocation(template.endLocation);
+    setStartCoordinates(template.startCoordinates ?? '');
+    setEndCoordinates(template.endCoordinates ?? '');
+    setToleranceMinutes(template.toleranceMinutes);
+    setStartCoordError('');
+    setEndCoordError('');
+  };
+
+  const validateCoords = (): boolean => {
+    let ok = true;
+    if (startCoordinates.trim()) {
+      const err = validateCoordinateInput(startCoordinates);
+      setStartCoordError(err ?? '');
+      if (err) ok = false;
+    } else {
+      setStartCoordError('');
+    }
+    if (endCoordinates.trim()) {
+      const err = validateCoordinateInput(endCoordinates);
+      setEndCoordError(err ?? '');
+      if (err) ok = false;
+    } else {
+      setEndCoordError('');
+    }
+    return ok;
+  };
+
   const validCompanions = companionNames.map((n) => n.trim()).filter((n) => n.length >= 2);
 
   const canSubmit =
@@ -46,25 +131,57 @@ export function CreateExpeditionPage() {
     startTime &&
     estimatedReturnTime &&
     selectedContactIds.length > 0 &&
-    validCompanions.length > 0;
+    validCompanions.length > 0 &&
+    !startCoordError &&
+    !endCoordError;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSubmit) return;
-    setError('');
-    setLoading(true);
-    try {
-      const startIso = new Date(startTime).toISOString();
-      const returnIso = new Date(estimatedReturnTime).toISOString();
+    if (!canSubmit || !validateCoords()) return;
 
-      const { expedition } = await createExpedition({
-        startLocation: startLocation.trim(),
-        endLocation: endLocation.trim(),
-        startTime: startIso,
-        estimatedReturnTime: returnIso,
-        toleranceMinutes,
-        contactIds: selectedContactIds,
-        companionNames: validCompanions,
+    const payload = {
+      startLocation: startLocation.trim(),
+      endLocation: endLocation.trim(),
+      startCoordinates: startCoordinates.trim() || undefined,
+      endCoordinates: endCoordinates.trim() || undefined,
+      startTime: new Date(startTime).toISOString(),
+      estimatedReturnTime: new Date(estimatedReturnTime).toISOString(),
+      toleranceMinutes,
+      contactIds: selectedContactIds,
+      companionNames: validCompanions,
+    };
+
+    setError('');
+    setInfo('');
+    setLoading(true);
+
+    if (!online) {
+      saveExpeditionDraft({
+        ...payload,
+        startCoordinates: startCoordinates.trim(),
+        endCoordinates: endCoordinates.trim(),
+      });
+      saveRouteTemplate({
+        startLocation: payload.startLocation,
+        endLocation: payload.endLocation,
+        startCoordinates: payload.startCoordinates,
+        endCoordinates: payload.endCoordinates,
+        toleranceMinutes: payload.toleranceMinutes,
+      });
+      setPendingDrafts(listExpeditionDrafts().length);
+      setInfo('Sin conexión: borrador guardado en el dispositivo para sincronizar después.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { expedition } = await createExpedition(payload);
+      saveRouteTemplate({
+        startLocation: payload.startLocation,
+        endLocation: payload.endLocation,
+        startCoordinates: payload.startCoordinates,
+        endCoordinates: payload.endCoordinates,
+        toleranceMinutes: payload.toleranceMinutes,
       });
       navigate(
         expedition.status === 'in_progress'
@@ -85,11 +202,42 @@ export function CreateExpeditionPage() {
       </Link>
 
       <h2 className="text-xl font-bold mb-1">Nueva expedición</h2>
-      <p className="text-sm text-muted-foreground mb-6">Registra tu itinerario y contactos de alerta.</p>
+      <p className="text-sm text-muted-foreground mb-4">Registra tu itinerario y contactos de alerta.</p>
 
+      {!online && (
+        <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm flex items-center gap-2">
+          <WifiOff size={16} /> Modo offline: el formulario se guardará localmente.
+        </div>
+      )}
+
+      {pendingDrafts > 0 && online && (
+        <div className="mb-4 p-3 rounded-xl bg-primary/10 text-primary text-sm">
+          {pendingDrafts} borrador(es) pendiente(s) de sincronización.
+        </div>
+      )}
+
+      {info && <div className="mb-4 p-3 rounded-xl bg-primary/10 text-primary text-sm">{info}</div>}
       {error && <div className="error-banner mb-4">{error}</div>}
 
-      {contacts.length === 0 && (
+      {templates.length > 0 && (
+        <div className="mb-6">
+          <FieldLabel>Plantillas de ruta frecuente</FieldLabel>
+          <div className="flex gap-2 overflow-x-auto pb-1 mt-2">
+            {templates.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => applyTemplate(t)}
+                className="flex-shrink-0 px-3 py-2 bg-card border border-border rounded-xl text-xs font-medium"
+              >
+                {t.endLocation}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {contacts.length === 0 && online && (
         <div className="error-banner mb-4">
           Debes registrar al menos un contacto en{' '}
           <Link to="/senderista/perfil/contactos" className="underline font-semibold">
@@ -109,6 +257,27 @@ export function CreateExpeditionPage() {
           />
         </div>
         <div>
+          <FieldLabel>Coordenadas de salida (opcional)</FieldLabel>
+          <input
+            className={`input-field ${startCoordError ? 'input-error' : ''}`}
+            value={startCoordinates}
+            onChange={(e) => {
+              setStartCoordinates(e.target.value);
+              if (startCoordError) setStartCoordError('');
+            }}
+            onBlur={() => {
+              if (startCoordinates.trim()) {
+                setStartCoordError(validateCoordinateInput(startCoordinates) ?? '');
+              }
+            }}
+            placeholder="-9.5105, -77.5275"
+          />
+          {startCoordError && <FieldError message={startCoordError} />}
+          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+            <Globe size={12} /> Formato decimal. Ejemplo: -9.0105, -77.6042
+          </p>
+        </div>
+        <div>
           <FieldLabel>Destino / Nevado</FieldLabel>
           <input
             className="input-field"
@@ -116,6 +285,24 @@ export function CreateExpeditionPage() {
             onChange={(e) => setEndLocation(e.target.value)}
             placeholder="Ej: Laguna 69"
           />
+        </div>
+        <div>
+          <FieldLabel>Coordenadas de destino (opcional)</FieldLabel>
+          <input
+            className={`input-field ${endCoordError ? 'input-error' : ''}`}
+            value={endCoordinates}
+            onChange={(e) => {
+              setEndCoordinates(e.target.value);
+              if (endCoordError) setEndCoordError('');
+            }}
+            onBlur={() => {
+              if (endCoordinates.trim()) {
+                setEndCoordError(validateCoordinateInput(endCoordinates) ?? '');
+              }
+            }}
+            placeholder="-9.0105, -77.6042"
+          />
+          {endCoordError && <FieldError message={endCoordError} />}
         </div>
         <div>
           <FieldLabel>Fecha y hora de salida</FieldLabel>
@@ -198,7 +385,11 @@ export function CreateExpeditionPage() {
         </div>
 
         <button type="submit" className="btn-primary" disabled={!canSubmit || loading}>
-          {loading ? 'Registrando…' : 'Registrar expedición'}
+          {loading
+            ? 'Registrando…'
+            : online
+              ? 'Registrar expedición'
+              : 'Guardar borrador offline'}
         </button>
       </form>
     </div>

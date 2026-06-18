@@ -37,6 +37,8 @@ export function getActiveExpedition() {
 export function createExpedition(data: {
   startLocation: string;
   endLocation: string;
+  startCoordinates?: string;
+  endCoordinates?: string;
   startTime: string;
   estimatedReturnTime: string;
   toleranceMinutes: number;

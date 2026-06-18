@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ChevronRight, Heart, Map, Phone } from 'lucide-react';
+import { ChevronRight, Heart, Map, Phone, Shield } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export function SenderistaProfilePage() {
@@ -42,6 +42,17 @@ export function SenderistaProfilePage() {
           <div className="flex items-center gap-3">
             <Map size={20} className="text-primary" />
             <span className="font-medium">Historial de expediciones</span>
+          </div>
+          <ChevronRight size={18} className="text-muted-foreground" />
+        </Link>
+
+        <Link
+          to="/senderista/perfil/privacidad"
+          className="flex items-center justify-between bg-card border border-border rounded-2xl p-4"
+        >
+          <div className="flex items-center gap-3">
+            <Shield size={20} className="text-primary" />
+            <span className="font-medium">Privacidad y datos (ARCO)</span>
           </div>
           <ChevronRight size={18} className="text-muted-foreground" />
         </Link>

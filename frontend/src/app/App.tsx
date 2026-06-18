@@ -14,6 +14,8 @@ import { SenderistaProfilePage } from '@/pages/SenderistaProfilePage';
 import { MedicalInfoPage } from '@/pages/MedicalInfoPage';
 import { ContactsPage } from '@/pages/ContactsPage';
 import { ExpeditionHistoryPage } from '@/pages/ExpeditionHistoryPage';
+import { PrivacySettingsPage } from '@/pages/PrivacySettingsPage';
+import { DataRevocationPage } from '@/pages/DataRevocationPage';
 import { ExpeditionListPage } from '@/pages/ExpeditionListPage';
 import { CreateExpeditionPage } from '@/pages/CreateExpeditionPage';
 import { ActiveExpeditionPage } from '@/pages/ActiveExpeditionPage';
@@ -49,6 +51,8 @@ export function App() {
             <Route path="perfil/medica" element={<MedicalInfoPage />} />
             <Route path="perfil/contactos" element={<ContactsPage />} />
             <Route path="perfil/historial" element={<ExpeditionHistoryPage />} />
+            <Route path="perfil/privacidad" element={<PrivacySettingsPage />} />
+            <Route path="perfil/privacidad/solicitud" element={<DataRevocationPage />} />
             <Route path="expedicion" element={<ExpeditionListPage />} />
             <Route path="expedicion/activa" element={<ActiveExpeditionPage />} />
             <Route path="expedicion/confirmada" element={<CheckInSuccessPage />} />
