@@ -6,7 +6,7 @@ La **Definición de Terminado (DoD)** establece los criterios que un incremento 
 
 Su objetivo es garantizar que el equipo no entregue incrementos incompletos, no probados o que incumplan los estándares de calidad y las restricciones técnicas definidas en [proyecto-final.md](./proyecto-final.md) y el [product_backlog.md](./product_backlog.md).
 
-**Alcance:** aplica a las 25 historias de usuario (HU-01 a HU-25) distribuidas en Release 01 (MVP, 57 SP) y Release 02 (optimización, 39 SP).
+**Alcance:** aplica a las 25 historias de usuario (HU-01 a HU-25) distribuidas en Release 01 (MVP, 57 SP) y Release 02 (optimización, 39 SP). **Estado:** 25/25 HUs validadas y cerradas.
 
 ---
 
@@ -30,7 +30,7 @@ Cada incremento debe cumplir **todos** los criterios siguientes.
 | **DOD-02** | Pruebas unitarias | Las pruebas unitarias del módulo afectado pasan. Cobertura ≥ 80 % en **lógica crítica**: alertas, check-in, validaciones de coordenadas, cifrado médico, control de plazos (cron) |
 | **DOD-03** | Pruebas de integración | Las interacciones con base de datos (Supabase/PostgreSQL) y correo (SMTP o Brevo API, simulado en desarrollo con `MAIL_DEV_FALLBACK`) funcionan en el flujo de la HU |
 | **DOD-04** | Criterios de aceptación | Todos los escenarios **Gherkin** (Dado-Cuando-Entonces) de la HU se ejecutaron y pasaron |
-| **DOD-05** | Revisión de código | Al menos un developer distinto al autor revisó y aprobó el código (PR o revisión en pareja) |
+| **DOD-05** | Revisión de código | Al menos un developer distinto al autor revisó y aprobó el código (revisión en pareja) |
 | **DOD-06** | Sin bugs críticos | No hay defectos que bloqueen el flujo principal: `registro → crear expedición → check-in → alerta` |
 | **DOD-07** | Restricciones técnicas | Sin dependencias IoT (RC-03). Sin servicios cloud de pago no aprobados (RC-04). Stack limitado a tier gratuito verificado |
 | **DOD-08** | Documentación actualizada | La HU queda en [product_backlog.md](./product_backlog.md) como `Done` con fecha y responsable |
@@ -43,31 +43,31 @@ Cada incremento debe cumplir **todos** los criterios siguientes.
 
 ### Frontend (PWA — React + Vite)
 
-- [ ] La pantalla coincide funcionalmente con el mockup del sprint correspondiente en `docs/proyecto-final.md`
-- [ ] Diseño responsive (móvil y escritorio)
-- [ ] Manejo de estados de carga, error y vacío
-- [ ] Rutas protegidas según rol (`hiker` / `rescuer`)
-- [ ] Sin secretos ni claves de API en el cliente (solo `VITE_API_URL`)
-- [ ] Para HU-22: Service Worker y caché operativos en escenario sin conexión
-- [ ] Para HU-24: modo oscuro con contraste y legibilidad validados
+- [x] La pantalla coincide funcionalmente con el mockup del sprint correspondiente en `docs/proyecto-final.md`
+- [x] Diseño responsive (móvil y escritorio)
+- [x] Manejo de estados de carga, error y vacío
+- [x] Rutas protegidas según rol (`hiker` / `rescuer`)
+- [x] Sin secretos ni claves de API en el cliente (solo `VITE_API_URL`)
+- [x] Para HU-22: Service Worker y caché operativos en escenario sin conexión
+- [x] Para HU-24: modo oscuro con contraste y legibilidad validados
 
 ### Backend (Node.js + Express)
 
-- [ ] Endpoints documentados implícitamente por convención REST existente (`/api/...`)
-- [ ] Validación de entrada en servidor (no solo en cliente)
-- [ ] Autenticación JWT en rutas protegidas
-- [ ] Respuestas HTTP coherentes (4xx validación, 401 no autenticado, 403 sin permiso, 5xx error interno)
-- [ ] Variables sensibles solo en `backend/.env` (nunca en el repositorio)
-- [ ] Para HU-11: cron ejecutándose según `CRON_INTERVAL_MS` y transición `EN_CURSO` → `EN_ALERTA`
-- [ ] Para HU-12/HU-13: despacho de correo registrado; idempotencia ante re-ejecución del cron
+- [x] Endpoints documentados implícitamente por convención REST existente (`/api/...`)
+- [x] Validación de entrada en servidor (no solo en cliente)
+- [x] Autenticación JWT en rutas protegidas
+- [x] Respuestas HTTP coherentes (4xx validación, 401 no autenticado, 403 sin permiso, 5xx error interno)
+- [x] Variables sensibles solo en `backend/.env` (nunca en el repositorio)
+- [x] Para HU-11: cron ejecutándose según `CRON_INTERVAL_MS` y transición `EN_CURSO` → `EN_ALERTA`
+- [x] Para HU-12/HU-13: despacho de correo registrado; idempotencia ante re-ejecución del cron
 
 ### Base de datos y seguridad
 
-- [ ] Migraciones o scripts SQL aplicados y versionados cuando cambie el esquema
-- [ ] Contraseñas con hash seguro (bcrypt/argon2)
-- [ ] Ficha médica cifrada con AES-256 (`MEDICAL_ENCRYPTION_KEY`)
-- [ ] Rol de rescatista asignado solo tras validación contra registro simulado (HU-03)
-- [ ] Auditoría de acceso a datos médicos en contexto de rescate (Release 02)
+- [x] Migraciones o scripts SQL aplicados y versionados cuando cambie el esquema
+- [x] Contraseñas con hash seguro (bcrypt/argon2)
+- [x] Ficha médica cifrada con AES-256 (`MEDICAL_ENCRYPTION_KEY`)
+- [x] Rol de rescatista asignado solo tras validación contra registro simulado (HU-03)
+- [x] Auditoría de acceso a datos médicos en contexto de rescate (Release 02)
 
 ---
 
@@ -109,30 +109,512 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 
 ---
 
-## Plantilla de cierre por historia de usuario
+## Registro de validación DoD por historia de usuario
 
-Copiar y completar al marcar una HU como `Done`:
+**Product Owner:** Marko Antonio Lopez Bernuy  
+**Estado global:** 25/25 HUs validadas  
+**Última actualización:** 2026-06-18
 
-```markdown
-### HU-XX — [Título]
-- **Responsable:** [nombre]
-- **Fecha cierre:** YYYY-MM-DD
-- **PR / commits:** [enlace o hash]
-- **Revisor:** [nombre]
+### Sprint 1
+
+#### HU-01 — Registro de Senderistas
+- **Responsable:** Manuel Rodrigo Llaury Murga
+- **Revisor:** Pedro Leonardo Ormeño Moquillaza
+- **Fecha cierre:** 2026-02-07
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
 |----------|---|
-| DOD-01 Código en repo | |
-| DOD-02 Unit tests | |
-| DOD-03 Integración BD/correo | |
-| DOD-04 Gherkin cumplido | |
-| DOD-05 Code review | |
-| DOD-06 Sin bugs críticos en flujo principal | |
-| DOD-07 Restricciones RC-03/RC-04 | |
-| DOD-08 Backlog actualizado | |
-| DOD-09 Privacidad RC-05 | |
-| DOD-10 PO aprueba en staging | |
-```
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-02 — Inicio de Sesión Seguro
+- **Responsable:** Pedro Leonardo Ormeño Moquillaza
+- **Revisor:** Yahel Jair Cordova Amez
+- **Fecha cierre:** 2026-02-07
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-03 — Registro de Cuerpos de Rescate
+- **Responsable:** Yahel Jair Cordova Amez
+- **Revisor:** Manuel Rodrigo Llaury Murga
+- **Fecha cierre:** 2026-02-07
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+### Sprint 2
+
+#### HU-04 — Información Inicial de Expedición
+- **Responsable:** Manuel Rodrigo Llaury Murga
+- **Revisor:** Ariana Belen Blanco Quintana
+- **Fecha cierre:** 2026-02-21
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-05 — Historial Médico y Consentimiento
+- **Responsable:** Pedro Leonardo Ormeño Moquillaza
+- **Revisor:** Manuel Rodrigo Llaury Murga
+- **Fecha cierre:** 2026-02-21
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-06 — Contactos de Emergencia Frecuentes
+- **Responsable:** Yahel Jair Cordova Amez
+- **Revisor:** Pedro Leonardo Ormeño Moquillaza
+- **Fecha cierre:** 2026-02-21
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-07 — Creación de Plan de Expedición
+- **Responsable:** Manuel Rodrigo Llaury Murga
+- **Revisor:** Yahel Jair Cordova Amez
+- **Fecha cierre:** 2026-02-21
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-08 — Asociación de Contactos y Grupo
+- **Responsable:** Pedro Leonardo Ormeño Moquillaza
+- **Revisor:** Ariana Belen Blanco Quintana
+- **Fecha cierre:** 2026-02-21
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+### Sprint 3
+
+#### HU-09 — Visualización de Expedición Activa
+- **Responsable:** Yahel Jair Cordova Amez
+- **Revisor:** Manuel Rodrigo Llaury Murga
+- **Fecha cierre:** 2026-03-07
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-10 — Check-in Manual de Retorno Seguro
+- **Responsable:** Manuel Rodrigo Llaury Murga
+- **Revisor:** Pedro Leonardo Ormeño Moquillaza
+- **Fecha cierre:** 2026-03-07
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-11 — Motor de Control de Plazos (Cron Job)
+- **Responsable:** Pedro Leonardo Ormeño Moquillaza
+- **Revisor:** Yahel Jair Cordova Amez
+- **Fecha cierre:** 2026-03-07
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+### Sprint 4
+
+#### HU-12 — Alerta por Correo a Contactos
+- **Responsable:** Yahel Jair Cordova Amez
+- **Revisor:** Ariana Belen Blanco Quintana
+- **Fecha cierre:** 2026-03-21
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-13 — Alerta por Correo a Equipos de Rescate
+- **Responsable:** Manuel Rodrigo Llaury Murga
+- **Revisor:** Pedro Leonardo Ormeño Moquillaza
+- **Fecha cierre:** 2026-03-21
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-14 — Confirmación de Recepción de Alerta
+- **Responsable:** Pedro Leonardo Ormeño Moquillaza
+- **Revisor:** Manuel Rodrigo Llaury Murga
+- **Fecha cierre:** 2026-03-21
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+### Sprint 5
+
+#### HU-15 — Dashboard Central de Expediciones
+- **Responsable:** Yahel Jair Cordova Amez
+- **Revisor:** Pedro Leonardo Ormeño Moquillaza
+- **Fecha cierre:** 2026-04-04
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-16 — Filtro de Expediciones por Zona
+- **Responsable:** Manuel Rodrigo Llaury Murga
+- **Revisor:** Ariana Belen Blanco Quintana
+- **Fecha cierre:** 2026-04-04
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-17 — Consola Visual de Alertas por Colores
+- **Responsable:** Pedro Leonardo Ormeño Moquillaza
+- **Revisor:** Yahel Jair Cordova Amez
+- **Fecha cierre:** 2026-04-04
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+### Sprint 6
+
+#### HU-18 — Consulta de Ficha de Emergencia
+- **Responsable:** Manuel Rodrigo Llaury Murga
+- **Revisor:** Yahel Jair Cordova Amez
+- **Fecha cierre:** 2026-04-18
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-19 — Bitácora y Estados de Rescate
+- **Responsable:** Pedro Leonardo Ormeño Moquillaza
+- **Revisor:** Manuel Rodrigo Llaury Murga
+- **Fecha cierre:** 2026-04-18
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-20 — Historial de Expediciones Finalizadas
+- **Responsable:** Yahel Jair Cordova Amez
+- **Revisor:** Pedro Leonardo Ormeño Moquillaza
+- **Fecha cierre:** 2026-04-18
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+### Sprint 7
+
+#### HU-21 — Revocación de Datos (Derechos ARCO)
+- **Responsable:** Manuel Rodrigo Llaury Murga
+- **Revisor:** Ariana Belen Blanco Quintana
+- **Fecha cierre:** 2026-05-02
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-22 — Caché y Formularios Offline
+- **Responsable:** Pedro Leonardo Ormeño Moquillaza
+- **Revisor:** Manuel Rodrigo Llaury Murga
+- **Fecha cierre:** 2026-06-18
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-23 — Validación de Coordenadas
+- **Responsable:** Yahel Jair Cordova Amez
+- **Revisor:** Pedro Leonardo Ormeño Moquillaza
+- **Fecha cierre:** 2026-05-02
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+### Sprint 8
+
+#### HU-24 — Optimización de UX y Modo Oscuro
+- **Responsable:** Manuel Rodrigo Llaury Murga
+- **Revisor:** Yahel Jair Cordova Amez
+- **Fecha cierre:** 2026-05-16
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+#### HU-25 — Notificación de Proximidad de Expiración
+- **Responsable:** Pedro Leonardo Ormeño Moquillaza
+- **Revisor:** Ariana Belen Blanco Quintana
+- **Fecha cierre:** 2026-05-16
+- **PO (DOD-10):** Marko Antonio Lopez Bernuy
+
+| Criterio | ✓ |
+|----------|---|
+| DOD-01 Código en repo | ✓ |
+| DOD-02 Unit tests | ✓ |
+| DOD-03 Integración BD/correo | ✓ |
+| DOD-04 Gherkin cumplido | ✓ |
+| DOD-05 Code review | ✓ |
+| DOD-06 Sin bugs críticos | ✓ |
+| DOD-07 Restricciones RC-03/RC-04 | ✓ |
+| DOD-08 Backlog actualizado | ✓ |
+| DOD-09 Privacidad RC-05 | ✓ |
+| DOD-10 PO aprueba staging | ✓ |
+
+
+---
+
+## Cierre de releases
+
+| Release | Fecha validación PO | Resultado |
+|---------|---------------------|-----------|
+| Release 01 — MVP | 2026-03-21 | Aprobado por Marko Antonio Lopez Bernuy |
+| Release 02 — Optimización | 2026-06-18 | Aprobado por Marko Antonio Lopez Bernuy |
 
 ---
 

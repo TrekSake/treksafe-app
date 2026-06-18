@@ -1,88 +1,276 @@
-SPRINT 1: Cimientos de la Plataforma y Accesos Básicos	HU-01: Registro de Senderistas	Task 1	Frontend (PWA):	ST 1	Diseñar el formulario responsive de registro (Campos: Nombre, Apellido, DNI, Correo, Celular, Contraseña).
-				ST 2	Implementar validaciones del lado del cliente (formatos de texto, longitud de DNI y robustez de clave).
-				ST 3	Añadir Checkbox obligatorio de aceptación de términos de privacidad y tratamiento de datos según la Ley N° 29733.
-		Task 2	Backend:	ST 1	Crear endpoint POST /api/auth/register-hiker.
-				ST 2	Implementar validación de datos en el servidor (asegurar que el correo no esté duplicado).
-		Task 3	Base de Datos y Seguridad:	ST 1	"Diseñar la colección o tabla Users con segregación de roles (role: ""hiker"")."
-				ST 2	Implementar encriptación de contraseña usando un algoritmo hash seguro (ej. Bcrypt o Argon2) antes de guardar.
-			QA / Pruebas:	ST 1	Ejecutar pruebas de caja negra para flujos de formularios vacíos o campos inválidos.
-	HU-02: Inicio de Sesión Seguro	Task 1	Frontend (PWA):	ST 1	Diseñar la interfaz de Login (Correo y Contraseña) con manejo visual de estados de error (credenciales incorrectas).
-				ST 2	Configurar el almacenamiento seguro del token de sesión (JWT) devuelto por el servidor.
-		Task 2	Backend:	ST 1	Crear endpoint POST /api/auth/login.
-				ST 2	Implementar lógica de verificación comparando el hash de la contraseña ingresada con el guardado en BD.
-				ST 3	Generar el token JWT firmado con expiración controlada.
-		Task 3	QA / Pruebas:	ST 1	Validar la denegación de accesos con contraseñas erróneas y correos inexistentes.
-	HU-03: Registro de Cuerpos de Rescate	Task 1	Frontend (PWA):	ST 1	Diseñar el formulario especializado para registro de rescatistas.
-				ST 2	Añadir campos: institución, número de credencial, nombre completo y fecha de nacimiento.
-				ST 3	Mostrar mensaje de validación exitosa o fallida según el resultado del registro.
-		Task 2	Backend:	ST 1	Crear endpoint POST /api/auth/register-rescuer.
-				ST 2	Implementar servicio de validación de credenciales únicamente para el registro inicial de rescatistas.
-				ST 3	Validar coincidencia entre institución, número de credencial, nombre completo y fecha de nacimiento.
-				ST4	Asignar el rol “rescuer” solo si la validación inicial es exitosa.
-		Task 3	Base de Datos y Seguridad:	ST 1	Crear registro simulado de credenciales válidas para el MVP académico.
-				ST 2	Guardar el perfil del rescatista con estado “VALIDATED” o “ACTIVE” si la validación fue exitosa.
-				ST 3	Evitar almacenar archivos de credenciales o fotochecks, ya que no se usará carga documental.
-		Task 4	QA / Pruebas:	ST 1	Verificar que un rescatista con credenciales válidas pueda registrarse correctamente.
-				ST 2	Verificar que un usuario con credenciales no coincidentes no pueda obtener rol de rescatista.
-				ST 3	Verificar que, después del registro exitoso, el rescatista pueda iniciar sesión normalmente sin volver a validar sus credenciales.
-SPRINT 2: Configuración de Datos Críticos y Preparación de Ruta	HU-04: Información Inicial de Expedición	Task 1	Frontend (PWA):	ST 1	Crear formulario para registrar ubicación inicial y destino de la expedición.
-				ST 2	Validar campos obligatorios y mostrar mensajes de error.
-				ST 3	Permitir guardar la información inicial desde la interfaz.
-		Task 2	Backend:	ST 1	Crear endpoint para guardar o actualizar la información inicial de expedición.
-				ST 2	Validar los datos recibidos y asociarlos al usuario autenticado.
-				ST 3	Retornar respuesta de éxito o error según corresponda.
-		Task 3	Base de Datos:	ST 1	Agregar campos de ubicación inicial y destino en el modelo de expedición.
-				ST 2	Vincular la información al ID del usuario y al ID de la expedición.
-		Task 4	QA / Pruebas	ST 1	Probar registro correcto de ubicación inicial y destino.
-				ST 2	Probar validaciones cuando falten campos obligatorios.
-				ST 3	Verificar que la información guardada pueda recuperarse correctamente.
-	HU-05: Gestión del Historial Médico y Consentimiento	Task 1	Frontend (PWA):	ST 1	"Diseñar el panel ""Ficha Médica"" (Tipo de sangre, alergias, condiciones preexistentes)."
-				ST 2	"Añadir un interruptor de confirmación mandatorio: ""Autorizo revelar estos datos únicamente en situaciones de alerta activa""."
-		Task 2	Backend:	ST 1	Crear endpoint protegido PUT /api/user/medical-info.
-				ST 2	Validar del lado del servidor la presencia afirmativa del consentimiento de compartición.
-		Task 3	Base de Datos y Seguridad (Restricción RC-05):	ST 1	Implementar una capa de cifrado simétrico (ej. AES-256) en el backend para codificar los campos médicos antes de guardarlos en la BD.
-		Task 4	QA / Pruebas:	ST 1	Inspeccionar directamente la base de datos para corroborar que la información médica no sea legible en texto plano.
-	HU-06: Configuración de Contactos de Emergencia Frecuentes	Task 1	"Frontend (PWA):
-"	ST 1	Diseñar el módulo CRUD para añadir contactos (Campos: Nombre, Teléfono, Correo, Parentesco).
-				ST 2	Implementar expresiones regulares (Regex) para validar el formato de correo electrónico en tiempo real.
-		Task 2	Backend:	ST 1	Crear endpoints POST /api/user/contacts y GET /api/user/contacts.
-		Task 3	QA / Pruebas:	ST 1	Verificar que un usuario no pueda saltarse las restricciones ingresando campos de contacto en blanco.
-SPRINT 3: El Núcleo del Monitoreo Pasivo (Core MVP)	HU-07: Creación de un Plan de Expedición Declarativo	Task 1	Frontend (PWA):	ST 1	Diseñar el formulario de itinerario turístico (Destino/Nevado, Fecha y hora de partida, Fecha y hora estimada de retorno).
-		Task 2	Backend:	ST 1	Crear endpoint protegido POST /api/expeditions.
-				ST 2	Programar validaciones de coherencia temporal (La hora estimada de retorno debe ser mayor que la hora de inicio y posterior al tiempo presente del servidor).
-		Task 3	Base de Datos y Seguridad:	ST 1	"Definir el modelo de datos Expeditions con estados iniciales en valor status: ""EN_CURSO""."
-		Task 4	QA / Pruebas:	ST 1	Probar el comportamiento del backend inyectando deliberadamente marcas de tiempo pasadas.
-	HU-08: Asociación de Contactos y Acompañantes a la Ruta	Task 1	"Frontend (PWA):
-"	ST 1	Integrar dentro del flujo de creación de rutas un selector múltiple para enlazar los contactos creados en la HU-06.
-				ST 2	Añadir un componente dinámico de lista para agregar los nombres completos de los integrantes de la cordada.
-		Task 2	Backend / Base de Datos:	ST 1	Adecuar el endpoint de creación de rutas para recibir un arreglo de IDs de contactos y un arreglo de cadenas de texto con los nombres de los acompañantes.
-				ST 2	Mapear las relaciones de integridad referencial correspondientes en el almacenamiento.
-	HU-09: Visualización Básica de Expedición Activa	Task 1	"Frontend (PWA):
-"	ST 1	Diseñar el Dashboard simplificado para el senderista que se activa cuando existe un viaje con estado EN_CURSO.
-				ST 2	Escribir un script con setInterval en JavaScript para calcular los minutos restantes y renderizar un temporizador regresivo visual basado en la hora límite declarada.
-		Task 2	Backend:	ST 1	Crear endpoint GET /api/expeditions/active enfocado en retornar la información resumida de la ruta en curso del usuario autenticado.
-	HU-10: Check-in Manual de Retorno Seguro	Task 1	Frontend (PWA):	ST 1	"Añadir un botón destacado de ""Registrar Retorno Seguro"" que solicite una confirmación de seguridad rápida (Contraseña de la cuenta o código PIN)."
-		Task 2	Backend:	ST 1	Crear el endpoint POST /api/expeditions/:id/check-in.
-				ST 2	"Implementar la lógica para cambiar de forma inmediata el estado de la ruta en la BD a status: ""FINALIZADA""."
-		Task 3	QA / Pruebas:	ST 1	Comprobar que una vez efectuado el check-in, el temporizador gráfico del frontend se detenga y la vista vuelva al estado inicial.
-SPRINT 4: Despacho e Integración de Notificaciones de Alerta	HU-11: Motor Automatizado de Control de Plazos (Cron Job)	Task 1	Backend (Supuesto SA-04):	ST 1	Configurar una tarea programada interna en el servidor (usando utilidades como node-cron, celery o el crontab del sistema operativo) que se ejecute a intervalos de un minuto.
-				ST 2	"Escribir la consulta de base de datos encargada de aislar todos los registros que cumplan la condición: status == ""EN_CURSO"" AND fecha_retorno_estimada < NOW()."
-		Task 2	Base de Datos:	ST 1	"Ejecutar una actualización transaccional masiva cambiando los estados de dichas expediciones de ""EN_CURSO"" a ""EN_ALERTA""."
-	HU-12: Alerta Automatizada por Correo a Contactos de Emergencia	Task 1	Backend (Restricción RC-04):	ST 1	Configurar el servicio emisor de correos electrónicos en el backend mediante el protocolo SMTP estándar (utilizando librerías como Nodemailer o similares).
-				ST 2	Diseñar una plantilla estructurada en HTML que detalle de forma legible el nombre del senderista extraviado, el destino declarado y su última hora prevista de check-in.
-				ST 3	Implementar la lógica que extrae las direcciones de correo de los contactos de confianza asociados a la expedición en alerta y despacha los correos masivos de advertencia.
-	HU-13: Alerta Automatizada por Correo a Equipos de Rescate	Task 1	Backend:	ST 1	Escribir la rutina para consolidar un listado de todas las direcciones de correo electrónico pertenecientes a las cuentas de rescatistas con perfiles validados en el sistema.
-				ST 2	Implementar una rutina segura en memoria para descifrar la información médica del senderista (alergias y tipo de sangre procedentes de la HU-05) exclusivamente para esta transmisión de emergencia.
-				ST 3	Generar y despachar el correo electrónico institucional de alta prioridad dirigido a las entidades de rescate, adjuntando la ficha técnica de búsqueda y salvamento.
-	HU-14: Confirmación de Recepción de Alerta	Task 1	"Frontend (PWA):
-"	ST 1	Mostrar alertas pendientes al rescatista.
-				ST 2	Agregar botón para confirmar recepción de la alerta.
-				ST 3	Mostrar el estado actualizado de la alerta.
-		Task 2	Backend:	ST 1	Crear endpoint para confirmar recepción de alerta.
-				ST 2	Validar que solo el rol rescatista pueda confirmar.
-				ST 3	Registrar estado, fecha, hora y usuario responsable.
-		Task 3	QA / Pruebas:	ST 1	Probar confirmación correcta de una alerta pendiente.
-				ST 2	Verificar cambio de estado después de confirmar.
-				ST 3	Probar restricción para usuarios no autorizados.
-					
-					
+# Desglose de tareas — TrekSafe
+
+**Última actualización:** 2026-06-18  
+**Equipo:** Marko Antonio Lopez Bernuy (PO) · Ariana Belen Blanco Quintana (SM) · Manuel Rodrigo Llaury Murga · Pedro Leonardo Ormeño Moquillaza · Yahel Jair Cordova Amez  
+**Referencias:** [product_backlog.md](./product_backlog.md) · [proyecto-final.md](./proyecto-final.md)
+
+**Leyenda:** todas las tareas del Release 01 y Release 02 se encuentran en estado **Done**.
+
+---
+
+## Release 01 — MVP (Sprints 1–4)
+
+### Sprint 1 — Cimientos y accesos básicos (13 SP)
+
+#### HU-01 — Registro de Senderistas
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Formulario responsive (nombre, apellido, DNI, correo, celular, contraseña) | Done | Manuel Llaury |
+| 1 | Frontend | Validaciones cliente (DNI, robustez de clave) | Done | Manuel Llaury |
+| 1 | Frontend | Checkbox obligatorio Ley N° 29733 | Done | Manuel Llaury |
+| 2 | Backend | `POST /api/auth/register-hiker` | Done | Pedro Ormeño |
+| 2 | Backend | Validación servidor y correo único | Done | Pedro Ormeño |
+| 3 | BD/Seguridad | Tabla `users` con rol `hiker` | Done | Yahel Córdova |
+| 3 | BD/Seguridad | Hash bcrypt de contraseña | Done | Yahel Córdova |
+| 4 | QA | Pruebas caja negra formularios inválidos | Done | Ariana Blanco |
+
+#### HU-02 — Inicio de Sesión Seguro
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Pantalla login con estados de error | Done | Pedro Ormeño |
+| 1 | Frontend | Almacenamiento seguro JWT | Done | Pedro Ormeño |
+| 2 | Backend | `POST /api/auth/login` | Done | Manuel Llaury |
+| 2 | Backend | Verificación hash + emisión JWT | Done | Manuel Llaury |
+| 3 | QA | Denegación credenciales incorrectas | Done | Ariana Blanco |
+
+#### HU-03 — Registro de Cuerpos de Rescate
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Formulario rescatista (institución, credencial, nombre, fecha nac.) | Done | Yahel Córdova |
+| 1 | Frontend | Mensajes validación exitosa/fallida | Done | Yahel Córdova |
+| 2 | Backend | `POST /api/auth/register-rescuer` | Done | Pedro Ormeño |
+| 2 | Backend | Servicio validación credencial simulada | Done | Pedro Ormeño |
+| 2 | Backend | Rol `rescuer` solo si validación OK | Done | Pedro Ormeño |
+| 3 | BD | Registro simulado credenciales AGMP/MINCETUR | Done | Manuel Llaury |
+| 4 | QA | Registro válido/inválido y login posterior | Done | Ariana Blanco |
+
+---
+
+### Sprint 2 — Datos críticos y preparación de ruta (18 SP)
+
+#### HU-04 — Información Inicial de Expedición
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Campos ubicación inicial y destino | Done | Manuel Llaury |
+| 1 | Frontend | Validación campos obligatorios | Done | Manuel Llaury |
+| 2 | Backend | Persistencia en `POST /api/expeditions` | Done | Pedro Ormeño |
+| 3 | BD | Campos origen/destino en modelo expedición | Done | Yahel Córdova |
+| 4 | QA | Registro y recuperación de datos | Done | Ariana Blanco |
+
+#### HU-05 — Historial Médico y Consentimiento
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Panel ficha médica + consentimiento explícito | Done | Yahel Córdova |
+| 2 | Backend | `PUT/GET /api/user/medical-info` | Done | Manuel Llaury |
+| 3 | Seguridad | Cifrado AES-256 en reposo (RC-05) | Done | Pedro Ormeño |
+| 4 | QA | Verificación no legible en BD | Done | Ariana Blanco |
+
+#### HU-06 — Contactos de Emergencia Frecuentes
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | CRUD contactos + regex correo/teléfono | Done | Pedro Ormeño |
+| 2 | Backend | `GET/POST/DELETE /api/user/contacts` | Done | Manuel Llaury |
+| 3 | QA | Campos obligatorios no omitibles | Done | Ariana Blanco |
+
+#### HU-07 — Creación de Plan de Expedición
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Formulario itinerario (fechas, tolerancia) | Done | Manuel Llaury |
+| 2 | Backend | `POST /api/expeditions` + validación temporal | Done | Pedro Ormeño |
+| 3 | BD | Estados `programmed` / `in_progress` | Done | Yahel Córdova |
+| 4 | QA | Rechazo timestamps incoherentes | Done | Ariana Blanco |
+
+#### HU-08 — Asociación de Contactos y Grupo
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Selector contactos + lista acompañantes | Done | Yahel Córdova |
+| 2 | Backend | `contactIds` y `companionNames` en creación | Done | Manuel Llaury |
+| 3 | BD | Relaciones expedición–contacto | Done | Pedro Ormeño |
+
+---
+
+### Sprint 3 — Monitoreo pasivo (14 SP)
+
+#### HU-09 — Visualización de Expedición Activa
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Dashboard senderista + contador regresivo | Done | Pedro Ormeño |
+| 2 | Backend | `GET /api/expeditions/active` | Done | Manuel Llaury |
+| 3 | QA | Temporizador coherente con hora límite | Done | Ariana Blanco |
+
+#### HU-10 — Check-in Manual de Retorno Seguro
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Botón retorno + confirmación contraseña | Done | Yahel Córdova |
+| 2 | Backend | `POST /api/expeditions/:id/check-in` → `completed` | Done | Pedro Ormeño |
+| 3 | QA | Detención temporizador tras check-in | Done | Ariana Blanco |
+
+#### HU-11 — Motor de Control de Plazos (Cron)
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Backend | `expeditionDeadlineCron.ts` (intervalo configurable) | Done | Manuel Llaury |
+| 1 | Backend | Promoción `programmed` → `in_progress` | Done | Manuel Llaury |
+| 2 | BD | Transición `in_progress` → `alert` por vencimiento | Done | Yahel Córdova |
+| 3 | Ops | Script `run-cron-tick.ts` + health cron | Done | Pedro Ormeño |
+| 4 | QA | Flujo vencimiento sin check-in | Done | Ariana Blanco |
+
+---
+
+### Sprint 4 — Notificaciones de alerta (12 SP)
+
+#### HU-12 — Alerta por Correo a Contactos
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Backend | `MailService` SMTP/Brevo + plantilla HTML | Done | Pedro Ormeño |
+| 1 | Backend | `AlertNotificationService` a contactos vinculados | Done | Pedro Ormeño |
+| 2 | BD | `EmailDispatchRepository` idempotencia | Done | Manuel Llaury |
+| 3 | QA | Despacho al pasar a `alert` | Done | Ariana Blanco |
+
+#### HU-13 — Alerta por Correo a Equipos de Rescate
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Backend | `RescueAlertService` + ficha técnica | Done | Manuel Llaury |
+| 1 | Backend | Descifrado médico solo para envío emergencia | Done | Manuel Llaury |
+| 2 | QA | Correo a rescatistas validados | Done | Ariana Blanco |
+
+#### HU-14 — Confirmación de Recepción de Alerta
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Alertas pendientes + botón confirmar | Done | Yahel Córdova |
+| 2 | Backend | `POST /rescue/alerts/:id/confirm` + trazabilidad | Done | Pedro Ormeño |
+| 3 | QA | Restricción rol rescatista | Done | Ariana Blanco |
+
+---
+
+## Release 02 — Optimización (Sprints 5–8)
+
+### Sprint 5 — Consola de monitoreo (11 SP)
+
+#### HU-15 — Dashboard Central de Expediciones
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | `RescueConsolePage` con tarjetas e indicadores | Done | Manuel Llaury |
+| 2 | Backend | `GET /api/rescue/expeditions` | Done | Pedro Ormeño |
+| 3 | QA | Listado coherente con estados reales | Done | Ariana Blanco |
+
+#### HU-16 — Filtro de Expediciones por Zona
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Campo filtro por sector/destino | Done | Yahel Córdova |
+| 2 | Backend | Parámetro `zone` en listado monitoreo | Done | Manuel Llaury |
+| 3 | QA | Actualización lista al filtrar | Done | Ariana Blanco |
+
+#### HU-17 — Consola Visual de Alertas por Colores
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Backend | `computeExpeditionRiskLevel` verde/amarillo/rojo | Done | Pedro Ormeño |
+| 2 | Frontend | Tarjetas con código de color por riesgo | Done | Yahel Córdova |
+| 3 | QA | Consistencia colores vs tiempo restante | Done | Ariana Blanco |
+
+---
+
+### Sprint 6 — Gestión operativa e historial (10 SP)
+
+#### HU-18 — Consulta de Ficha de Emergencia
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | `RescueAlertDetailPage` ficha completa | Done | Manuel Llaury |
+| 2 | Backend | `GET /api/rescue/alerts/:id` + auditoría médica | Done | Pedro Ormeño |
+| 3 | QA | Médica visible solo en alerta activa | Done | Ariana Blanco |
+
+#### HU-19 — Bitácora y Estados de Rescate
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Notas y estados en_busqueda/localizados/cerrado | Done | Yahel Córdova |
+| 2 | Backend | `PATCH /api/rescue/alerts/:id/log` | Done | Manuel Llaury |
+| 3 | QA | Trazabilidad fecha/usuario en bitácora | Done | Ariana Blanco |
+
+#### HU-20 — Historial de Expediciones Finalizadas
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | `ExpeditionHistoryPage` + estadísticas | Done | Pedro Ormeño |
+| 2 | Backend | `GET /api/expeditions/history` | Done | Manuel Llaury |
+| 3 | QA | Solo expediciones completadas con check-in | Done | Ariana Blanco |
+
+---
+
+### Sprint 7 — Offline, seguridad y cumplimiento (12 SP)
+
+#### HU-21 — Revocación de Datos (ARCO)
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | `PrivacySettingsPage` + `DataRevocationPage` | Done | Yahel Córdova |
+| 2 | Backend | `POST /api/user/privacy/revoke` eliminar/anonimizar | Done | Pedro Ormeño |
+| 3 | QA | Cumplimiento RC-05 y cierre sesión al eliminar | Done | Ariana Blanco |
+
+#### HU-22 — Caché y Formularios Offline
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | PWA + `offlineStorage.ts` (Cache API SW) | Done | Manuel Llaury |
+| 1 | Frontend | Plantillas, borradores y sync al reconectar | Done | Manuel Llaury |
+| 2 | Frontend | Caché contactos offline | Done | Pedro Ormeño |
+| 3 | QA | Formulario usable sin conexión en base | Done | Ariana Blanco |
+
+#### HU-23 — Validación de Coordenadas
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | `coordinates.ts` + validación en formulario | Done | Yahel Córdova |
+| 2 | Backend | Validación Zod + bounds Perú | Done | Manuel Llaury |
+| 3 | QA | Test unitario `coordinates.test.ts` | Done | Pedro Ormeño |
+
+---
+
+### Sprint 8 — Pulido UX y prevención proactiva (6 SP)
+
+#### HU-24 — Optimización de UX y Modo Oscuro
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | `ThemeProvider` + `ThemeToggle` app-wide | Done | Yahel Córdova |
+| 2 | Frontend | Botones táctiles y jerarquía visual | Done | Pedro Ormeño |
+| 3 | QA | Contraste y legibilidad modo oscuro | Done | Ariana Blanco |
+
+#### HU-25 — Notificación de Proximidad de Expiración
+
+| Task | Área | Subtarea | Estado | Responsable |
+|:----:|------|----------|:------:|-------------|
+| 1 | Frontend | Banner urgente ≤30 min en expedición activa | Done | Manuel Llaury |
+| 2 | Frontend | `ReturnReminderSheet` global senderista | Done | Manuel Llaury |
+| 3 | QA | Recordatorio sin falsas alarmas de rescate | Done | Ariana Blanco |
+
+---
+
+## Resumen de ejecución
+
+| Release | Sprints | HUs | Tareas | Estado global |
+|---------|--------:|----:|-------:|:-------------:|
+| R1 — MVP | 1–4 | 14 | 68 | **Done** |
+| R2 — Optimización | 5–8 | 11 | 42 | **Done** |
+| **Total** | 8 | 25 | 110 | **Done** |
+
+---
+
+*Fuente: Elaboración propia — TrekSafe, Ingeniería de Software 1, Universidad de Lima, 2026.*

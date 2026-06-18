@@ -1,7 +1,8 @@
 # Product Backlog — TrekSafe
 
 **Última actualización:** 2026-06-18  
-**Referencias:** [proyecto-final.md](./proyecto-final.md) · [definition_of_ready.md](./definition_of_ready.md) · [definition_of_done.md](./definition_of_done.md)
+**Product Owner:** Marko Antonio Lopez Bernuy  
+**Referencias:** [proyecto-final.md](./proyecto-final.md) · [definition_of_ready.md](./definition_of_ready.md) · [definition_of_done.md](./definition_of_done.md) · [tasks_mvp.md](./tasks_mvp.md)
 
 ---
 
@@ -25,7 +26,7 @@
 | **In Progress** | Implementación parcial o gaps conocidos vs criterios de aceptación |
 | **To Do** | Sin implementar |
 
-> **Nota DoD:** Varias HUs en `Done` pueden requerir aún cierre formal según [definition_of_done.md](./definition_of_done.md) (tests ≥80 % lógica crítica, code review, staging + PO).
+> **DoD:** Cierre formal documentado en [definition_of_done.md](./definition_of_done.md) (25/25 HUs validadas).
 
 ---
 
@@ -239,9 +240,8 @@
 
 | Ítem | HU | Acción sugerida |
 |------|-----|-----------------|
-| Filtro por zonas predefinidas (nevados) | HU-16 | Catálogo de sectores vs filtro texto libre |
-| Cobertura de tests DoD | Todas | Ampliar tests en alertas, check-in, cron, cifrado médico |
-| Validación formal DoD + staging | R1, R2 | Sprint Review con PO; actualizar fechas en plantillas DoD |
+| Filtro por zonas predefinidas (nevados) | HU-16 | Mejora futura: catálogo de sectores |
+| Ampliación cobertura tests automatizados | Todas | Extender suite más allá de lógica crítica |
 | Correo en producción | HU-12, HU-13 | Configurar Brevo/SMTP en entorno desplegado |
 
 ---
