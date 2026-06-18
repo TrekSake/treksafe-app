@@ -1,0 +1,87 @@
+import { AppError } from '../../shared/errors/AppError.js';
+import type { ConfirmAlertInput } from '../dto/rescue.dto.js';
+import { computeDeadlineAt } from '../../infrastructure/repositories/ExpeditionRepository.js';
+import { RescueRepository } from '../../infrastructure/repositories/RescueRepository.js';
+
+export type RescueAlertItem = {
+  expeditionId: string;
+  hikerFullName: string;
+  hikerPhone: string;
+  startLocation: string;
+  endLocation: string;
+  startTime: string;
+  estimatedReturnTime: string;
+  deadlineAt: string;
+  alertSince: string;
+  confirmedByMe: boolean;
+  confirmedAt: string | null;
+  rescueStatus: string | null;
+};
+
+export class RescueService {
+  constructor(private readonly repo = new RescueRepository()) {}
+
+  async listAlerts(rescuerId: string): Promise<RescueAlertItem[]> {
+    await this.repo.assertRescuer(rescuerId);
+
+    const expeditions = await this.repo.listAlertExpeditions();
+    const items: RescueAlertItem[] = [];
+
+    for (const row of expeditions) {
+      const hiker = Array.isArray(row.hikers_profile)
+        ? row.hikers_profile[0]
+        : row.hikers_profile;
+      if (!hiker) continue;
+
+      const confirmation = await this.repo.findConfirmation(row.id, rescuerId);
+
+      items.push({
+        expeditionId: row.id,
+        hikerFullName: hiker.full_name,
+        hikerPhone: hiker.phone,
+        startLocation: row.start_location,
+        endLocation: row.end_location,
+        startTime: row.start_time,
+        estimatedReturnTime: row.estimated_return_time,
+        deadlineAt: computeDeadlineAt(row.estimated_return_time, row.tolerance_minutes),
+        alertSince: row.updated_at,
+        confirmedByMe: confirmation !== null,
+        confirmedAt: confirmation?.updated_at ?? null,
+        rescueStatus: confirmation?.status_rescue ?? null,
+      });
+    }
+
+    return items;
+  }
+
+  async confirmAlert(
+    rescuerId: string,
+    expeditionId: string,
+    input: ConfirmAlertInput,
+  ) {
+    await this.repo.assertRescuer(rescuerId);
+
+    const expedition = await this.repo.findAlertExpedition(expeditionId);
+    if (!expedition) {
+      throw new AppError(404, 'Alerta no encontrada o expedición ya no está en alerta', 'NOT_FOUND');
+    }
+
+    const existing = await this.repo.findConfirmation(expeditionId, rescuerId);
+    if (existing) {
+      throw new AppError(409, 'Ya confirmaste la recepción de esta alerta', 'ALREADY_CONFIRMED');
+    }
+
+    const log = await this.repo.createConfirmation(expeditionId, rescuerId, input.notes);
+
+    return {
+      message: 'Recepción de alerta confirmada',
+      confirmation: {
+        id: log.id,
+        expeditionId: log.expedition_id,
+        statusRescue: log.status_rescue,
+        confirmedAt: log.updated_at,
+        notes: log.notes,
+      },
+    };
+  }
+}

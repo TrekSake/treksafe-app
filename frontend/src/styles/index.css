@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f0f5f1;
+  --color-foreground: #0c1a10;
+  --color-card: #ffffff;
+  --color-card-foreground: #0c1a10;
+  --color-primary: #16a34a;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #0f2749;
+  --color-secondary-foreground: #ffffff;
+  --color-muted: #e2ede4;
+  --color-muted-foreground: #587060;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: rgba(12, 26, 16, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  font-size: 0.875rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+}
+
+.input-field.input-error {
+  border-color: var(--color-destructive);
+}
+
+.input-field::placeholder {
+  color: var(--color-muted-foreground);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 1rem;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 1rem;
+  background: var(--color-secondary);
+  color: var(--color-secondary-foreground);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+}
+
+.error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--color-destructive);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-xl);
+  font-size: 0.875rem;
+}
+
+.field-error {
+  color: var(--color-destructive);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
