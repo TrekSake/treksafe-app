@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, Trash2 } from 'lucide-react';
 import { createContact, deleteContact, getContacts, type EmergencyContact } from '@/services/user';
+import { cacheContacts } from '@/lib/offlineContacts';
 import { FieldError, FieldLabel } from '@/components/Layout';
 import { isValidEmail, isValidPhone } from '@/lib/validation';
 
@@ -16,7 +17,10 @@ export function ContactsPage() {
 
   const load = () => {
     getContacts()
-      .then((r) => setContacts(r.contacts))
+      .then((r) => {
+        setContacts(r.contacts);
+        void cacheContacts(r.contacts);
+      })
       .catch((e) => setError(e instanceof Error ? e.message : 'Error al cargar'));
   };
 
@@ -49,7 +53,8 @@ export function ContactsPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, name: string) => {
+    if (!window.confirm(`¿Eliminar a ${name} de tus contactos de emergencia?`)) return;
     try {
       await deleteContact(id);
       load();
@@ -77,7 +82,12 @@ export function ContactsPage() {
               <p className="text-sm mt-1">{c.phone}</p>
               <p className="text-sm text-muted-foreground">{c.email}</p>
             </div>
-            <button type="button" onClick={() => handleDelete(c.id)} aria-label="Eliminar">
+            <button
+              type="button"
+              onClick={() => handleDelete(c.id, c.full_name)}
+              aria-label="Eliminar"
+              className="btn-touch"
+            >
               <Trash2 size={18} className="text-destructive" />
             </button>
           </div>

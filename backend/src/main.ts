@@ -6,7 +6,7 @@ import { startExpeditionDeadlineCron } from './infrastructure/jobs/expeditionDea
 
 async function bootstrap() {
   loadEnv();
-  const { port } = loadEnv();
+  const { port, nodeEnv, mailDevFallback } = loadEnv();
 
   try {
     await verifyDatabaseConnection();
@@ -19,8 +19,11 @@ async function bootstrap() {
   try {
     await new MailService().verifyConnection();
   } catch (err) {
-    console.error('[TrekSafe API] Mail configuration failed:', err);
-    process.exit(1);
+    if (nodeEnv === 'production' && !mailDevFallback) {
+      console.error('[TrekSafe API] Mail configuration failed:', err);
+      process.exit(1);
+    }
+    console.warn('[TrekSafe API] Mail verify warning (dev continues):', err);
   }
 
   startExpeditionDeadlineCron();

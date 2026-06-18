@@ -4,6 +4,7 @@ import { AlertRepository } from '../../infrastructure/repositories/AlertReposito
 import { computeDeadlineAt } from '../../infrastructure/repositories/ExpeditionRepository.js';
 import { RescueRepository } from '../../infrastructure/repositories/RescueRepository.js';
 import { UserRepository } from '../../infrastructure/repositories/UserRepository.js';
+import { MedicalAccessAuditRepository } from '../../infrastructure/repositories/MedicalAccessAuditRepository.js';
 
 const URGENCY_THRESHOLD_MS = 30 * 60_000;
 
@@ -87,6 +88,8 @@ export type RescueAlertDetail = {
   hikerPhone: string;
   startLocation: string;
   endLocation: string;
+  startCoordinates: string | null;
+  endCoordinates: string | null;
   startTime: string;
   estimatedReturnTime: string;
   toleranceMinutes: number;
@@ -113,6 +116,7 @@ export class RescueService {
     private readonly repo = new RescueRepository(),
     private readonly alertRepo = new AlertRepository(),
     private readonly userRepo = new UserRepository(),
+    private readonly auditRepo = new MedicalAccessAuditRepository(),
   ) {}
 
   async listExpeditions(
@@ -173,6 +177,11 @@ export class RescueService {
     await this.repo.assertRescuer(rescuerId);
 
     const expeditions = await this.repo.listAlertExpeditions();
+    const confirmations = await this.repo.findConfirmationsForExpeditions(
+      expeditions.map((row) => row.id),
+      rescuerId,
+    );
+
     const items: RescueAlertItem[] = [];
 
     for (const row of expeditions) {
@@ -181,7 +190,7 @@ export class RescueService {
         : row.hikers_profile;
       if (!hiker) continue;
 
-      const confirmation = await this.repo.findConfirmation(row.id, rescuerId);
+      const confirmation = confirmations.get(row.id) ?? null;
 
       items.push({
         expeditionId: row.id,
@@ -211,6 +220,16 @@ export class RescueService {
     }
 
     const medicalRecord = await this.userRepo.getMedicalInfo(context.hikerId);
+    if (medicalRecord?.consentSigned) {
+      await this.auditRepo.logAccess({
+        hikerId: context.hikerId,
+        expeditionId,
+        accessorId: rescuerId,
+        accessorRole: 'rescatista',
+        accessType: 'alert_dossier_medical',
+      });
+    }
+
     const confirmation = await this.repo.findConfirmation(expeditionId, rescuerId);
 
     const expedition = await this.repo.findAlertExpedition(expeditionId);
@@ -221,6 +240,8 @@ export class RescueService {
       hikerPhone: context.hikerPhone,
       startLocation: context.startLocation,
       endLocation: context.endLocation,
+      startCoordinates: context.startCoordinates,
+      endCoordinates: context.endCoordinates,
       startTime: context.startTime,
       estimatedReturnTime: context.estimatedReturnTime,
       toleranceMinutes: context.toleranceMinutes,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Mountain, Shield } from 'lucide-react';
 import { login } from '@/services/auth';
 import { useAuth } from '@/context/AuthContext';
@@ -9,12 +9,18 @@ type LoginTab = 'senderista' | 'rescatista';
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { loginSession } = useAuth();
+  const { loginSession, isAuthenticated, user } = useAuth();
   const [tab, setTab] = useState<LoginTab>('senderista');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  if (isAuthenticated && user) {
+    return (
+      <Navigate to={user.role === 'rescatista' ? '/rescatista' : '/senderista'} replace />
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

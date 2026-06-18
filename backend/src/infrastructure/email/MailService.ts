@@ -35,13 +35,19 @@ export class MailService {
   private getSmtpTransporter(): Transporter {
     if (!this.transporter) {
       const { smtpHost, smtpPort, smtpSecure, smtpUser, smtpPass } = loadEnv();
+      // Brevo regional relays present certs for *.sendinblue.com, not smtp-relay.brevo.com
+      const tlsServername =
+        smtpHost === 'smtp-relay.brevo.com' ? 'smtp-relay.sendinblue.com' : undefined;
       this.transporter = nodemailer.createTransport({
         host: smtpHost,
         port: smtpPort,
         secure: smtpSecure,
         requireTLS: !smtpSecure && smtpPort === 587,
         auth: { user: smtpUser, pass: smtpPass },
-        tls: { minVersion: 'TLSv1.2' },
+        tls: {
+          minVersion: 'TLSv1.2',
+          ...(tlsServername ? { servername: tlsServername } : {}),
+        },
       });
     }
     return this.transporter;
@@ -83,7 +89,7 @@ export class MailService {
       console.log('[Mail] conexión SMTP verificada');
     } catch (err) {
       const outboundIp = await fetchOutboundIp();
-      const hint = brevoIpAuthHint(outboundIp);
+      const hint = brevoIpAuthHint(outboundIp, err);
       console.warn(`[Mail] verificación SMTP falló: ${formatMailError(err)}`);
       console.warn(`[Mail] ${hint}`);
       if (this.shouldDevFallback()) {
@@ -116,7 +122,7 @@ export class MailService {
 
       const outboundIp = await fetchOutboundIp();
       console.warn(`[Mail] envío falló (${formatMailError(err)}). Fallback dev-log.`);
-      console.warn(`[Mail] ${brevoIpAuthHint(outboundIp)}`);
+      console.warn(`[Mail] ${brevoIpAuthHint(outboundIp, err)}`);
       this.devLog(input);
       return 'logged';
     }

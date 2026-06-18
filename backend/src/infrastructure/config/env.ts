@@ -17,7 +17,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1).optional(),
   JWT_SECRET: z.string().min(32),
   JWT_EXPIRES_IN: z.string().default('24h'),
-  MEDICAL_ENCRYPTION_KEY: z.string().min(32).optional(),
+  MEDICAL_ENCRYPTION_KEY: z.string().min(32),
   CRON_INTERVAL_MS: z.coerce.number().default(60_000),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   SMTP_HOST: z.string().default(''),
@@ -45,7 +45,7 @@ export type Env = {
   databaseUrl?: string;
   jwtSecret: string;
   jwtExpiresIn: string;
-  medicalEncryptionKey?: string;
+  medicalEncryptionKey: string;
   cronIntervalMs: number;
   corsOrigin: string;
   smtpHost: string;

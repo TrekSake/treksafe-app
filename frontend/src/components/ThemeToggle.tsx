@@ -7,8 +7,27 @@ const LABELS: Record<ThemeMode, string> = {
   system: 'Sistema',
 };
 
-export function ThemeToggle() {
+export function ThemeToggle({ compact = false }: { compact?: boolean }) {
   const { mode, resolved, setMode } = useTheme();
+
+  if (compact) {
+    const cycle = (): void => {
+      const order: ThemeMode[] = ['light', 'dark', 'system'];
+      const next = order[(order.indexOf(mode) + 1) % order.length];
+      setMode(next);
+    };
+    return (
+      <button
+        type="button"
+        onClick={cycle}
+        className="btn-touch opacity-80 hover:opacity-100"
+        aria-label={`Tema: ${LABELS[mode]}`}
+        title={`Tema: ${LABELS[mode]}`}
+      >
+        {resolved === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
+      </button>
+    );
+  }
 
   return (
     <div className="bg-card border border-border rounded-2xl p-4">

@@ -1,5 +1,7 @@
-const TEMPLATES_KEY = 'treksafe-route-templates';
-const DRAFTS_KEY = 'treksafe-expedition-drafts';
+import { readOfflineJson, writeOfflineJson } from '@/lib/offlineStorage';
+
+const TEMPLATES_KEY = 'route-templates';
+const DRAFTS_KEY = 'expedition-drafts';
 
 export type RouteTemplate = {
   id: string;
@@ -26,28 +28,19 @@ export type ExpeditionDraft = {
   savedAt: string;
 };
 
-function readJson<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return fallback;
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
-}
-
-function writeJson<T>(key: string, value: T): void {
-  localStorage.setItem(key, JSON.stringify(value));
-}
-
-export function listRouteTemplates(): RouteTemplate[] {
-  return readJson<RouteTemplate[]>(TEMPLATES_KEY, []).sort(
+export async function listRouteTemplates(): Promise<RouteTemplate[]> {
+  const templates = await readOfflineJson<RouteTemplate[]>(TEMPLATES_KEY, [], [
+    'treksafe-route-templates',
+  ]);
+  return templates.sort(
     (a, b) => b.usedCount - a.usedCount || b.updatedAt.localeCompare(a.updatedAt),
   );
 }
 
-export function saveRouteTemplate(input: Omit<RouteTemplate, 'id' | 'usedCount' | 'updatedAt'>): void {
-  const templates = listRouteTemplates();
+export async function saveRouteTemplate(
+  input: Omit<RouteTemplate, 'id' | 'usedCount' | 'updatedAt'>,
+): Promise<void> {
+  const templates = await listRouteTemplates();
   const existing = templates.find(
     (t) =>
       t.startLocation === input.startLocation &&
@@ -69,31 +62,33 @@ export function saveRouteTemplate(input: Omit<RouteTemplate, 'id' | 'usedCount' 
     });
   }
 
-  writeJson(TEMPLATES_KEY, templates.slice(0, 12));
+  await writeOfflineJson(TEMPLATES_KEY, templates.slice(0, 12));
 }
 
-export function listExpeditionDrafts(): ExpeditionDraft[] {
-  return readJson<ExpeditionDraft[]>(DRAFTS_KEY, []).sort((a, b) =>
-    b.savedAt.localeCompare(a.savedAt),
-  );
+export async function listExpeditionDrafts(): Promise<ExpeditionDraft[]> {
+  const drafts = await readOfflineJson<ExpeditionDraft[]>(DRAFTS_KEY, [], [
+    'treksafe-expedition-drafts',
+  ]);
+  return drafts.sort((a, b) => b.savedAt.localeCompare(a.savedAt));
 }
 
-export function saveExpeditionDraft(
+export async function saveExpeditionDraft(
   draft: Omit<ExpeditionDraft, 'id' | 'savedAt'>,
-): ExpeditionDraft {
-  const drafts = listExpeditionDrafts();
+): Promise<ExpeditionDraft> {
+  const drafts = await listExpeditionDrafts();
   const entry: ExpeditionDraft = {
     id: crypto.randomUUID(),
     ...draft,
     savedAt: new Date().toISOString(),
   };
-  writeJson(DRAFTS_KEY, [entry, ...drafts].slice(0, 5));
+  await writeOfflineJson(DRAFTS_KEY, [entry, ...drafts].slice(0, 5));
   return entry;
 }
 
-export function removeExpeditionDraft(id: string): void {
-  writeJson(
+export async function removeExpeditionDraft(id: string): Promise<void> {
+  const drafts = await listExpeditionDrafts();
+  await writeOfflineJson(
     DRAFTS_KEY,
-    listExpeditionDrafts().filter((d) => d.id !== id),
+    drafts.filter((d) => d.id !== id),
   );
 }

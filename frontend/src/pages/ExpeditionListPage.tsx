@@ -36,11 +36,16 @@ export function ExpeditionListPage() {
 
       <div className="space-y-3">
         {expeditions.map((exp) => {
-          const isActive = exp.status === 'in_progress';
+          const isActive = exp.status === 'in_progress' || exp.status === 'alert';
+          const isAlert = exp.status === 'alert';
           const card = (
             <div
-              className={`bg-card border border-border rounded-2xl p-4 ${
-                isActive ? 'border-primary/30' : ''
+              className={`bg-card border rounded-2xl p-4 ${
+                isAlert
+                  ? 'border-destructive/50 bg-destructive/5'
+                  : isActive
+                    ? 'border-primary/30'
+                    : 'border-border'
               }`}
             >
               <div className="flex justify-between items-start gap-2">
@@ -48,7 +53,11 @@ export function ExpeditionListPage() {
                   <p className="font-semibold">{exp.end_location}</p>
                   <p className="text-xs text-muted-foreground mt-1">Desde: {exp.start_location}</p>
                 </div>
-                <span className="text-xs font-bold px-2 py-1 rounded-lg bg-muted">
+                <span
+                  className={`text-xs font-bold px-2 py-1 rounded-lg ${
+                    isAlert ? 'bg-destructive/15 text-destructive' : 'bg-muted'
+                  }`}
+                >
                   {STATUS_LABEL[exp.status] ?? exp.status}
                 </span>
               </div>
@@ -59,8 +68,13 @@ export function ExpeditionListPage() {
                 Retorno: {new Date(exp.estimated_return_time).toLocaleString('es-PE')}
               </p>
               {isActive && (
-                <p className="text-sm text-primary font-semibold mt-3 flex items-center gap-1">
-                  Ver expedición activa <ChevronRight size={16} />
+                <p
+                  className={`text-sm font-semibold mt-3 flex items-center gap-1 ${
+                    isAlert ? 'text-destructive' : 'text-primary'
+                  }`}
+                >
+                  {isAlert ? 'Ver expedición en alerta' : 'Ver expedición activa'}{' '}
+                  <ChevronRight size={16} />
                 </p>
               )}
             </div>

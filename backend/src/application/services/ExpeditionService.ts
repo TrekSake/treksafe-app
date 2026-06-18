@@ -34,10 +34,10 @@ export class ExpeditionService {
   async createExpedition(hikerId: string, input: CreateExpeditionInput) {
     await this.userRepo.assertHiker(hikerId);
 
-    if (await this.expeditionRepo.hasActiveInProgress(hikerId)) {
+    if (await this.expeditionRepo.hasBlockingExpedition(hikerId)) {
       throw new AppError(
         409,
-        'Ya tienes una expedición en curso. Confirma tu retorno antes de crear otra.',
+        'Ya tienes una expedición en curso o en alerta. Confirma tu retorno antes de crear otra.',
         'ACTIVE_EXPEDITION_EXISTS',
       );
     }
@@ -115,10 +115,10 @@ export class ExpeditionService {
     if (!expedition) {
       throw new AppError(404, 'Expedición no encontrada', 'NOT_FOUND');
     }
-    if (expedition.status !== 'in_progress') {
+    if (expedition.status !== 'in_progress' && expedition.status !== 'alert') {
       throw new AppError(
         409,
-        'Solo puedes confirmar retorno en expediciones en curso',
+        'Solo puedes confirmar retorno en expediciones en curso o en alerta',
         'EXPEDITION_NOT_ACTIVE',
       );
     }

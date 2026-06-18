@@ -2,10 +2,13 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { setUnauthorizedHandler } from '@/lib/authEvents';
 import { clearSession, getSessionUser, saveSession, type SessionUser } from '@/lib/session';
 
 type AuthContextValue = {
@@ -41,6 +44,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function AuthSessionBridge() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      logout();
+      navigate('/login', { replace: true });
+    });
+    return () => setUnauthorizedHandler(null);
+  }, [logout, navigate]);
+
+  return null;
 }
 
 export function useAuth(): AuthContextValue {

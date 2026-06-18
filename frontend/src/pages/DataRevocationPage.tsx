@@ -1,13 +1,24 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AlertTriangle, CheckCircle, ChevronLeft, Database, Trash2 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 import { revokePersonalData, type DataRevocationAction } from '@/services/user';
 
 export function DataRevocationPage() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [modal, setModal] = useState<DataRevocationAction | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    const action = searchParams.get('action');
+    if (action === 'delete_personal' || action === 'anonymize_routes') {
+      setModal(action);
+    }
+  }, [searchParams]);
 
   const handleConfirm = async () => {
     if (!modal) return;
@@ -18,6 +29,12 @@ export function DataRevocationPage() {
       const result = await revokePersonalData(modal);
       setSuccess(result.message);
       setModal(null);
+      if (modal === 'delete_personal') {
+        setTimeout(() => {
+          logout();
+          navigate('/login', { replace: true });
+        }, 2000);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'No se pudo procesar la solicitud');
       setModal(null);
@@ -40,9 +57,9 @@ export function DataRevocationPage() {
         Ejerce tus derechos de acceso, rectificación, cancelación y oposición.
       </p>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3 mb-6">
-        <AlertTriangle size={16} className="text-amber-600 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-amber-800 leading-relaxed">
+      <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-start gap-3 mb-6">
+        <AlertTriangle size={16} className="text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-900 dark:text-amber-100 leading-relaxed">
           No puedes revocar datos si tienes una expedición en curso o en alerta activa.
         </p>
       </div>
@@ -83,7 +100,7 @@ export function DataRevocationPage() {
           <button
             type="button"
             onClick={() => setModal('anonymize_routes')}
-            className="w-full py-3 bg-amber-50 text-amber-800 border border-amber-200 rounded-xl font-semibold text-sm"
+            className="w-full py-3 bg-amber-500/10 text-amber-800 dark:text-amber-200 border border-amber-500/30 rounded-xl font-semibold text-sm"
           >
             Solicitar anonimización
           </button>
@@ -92,9 +109,20 @@ export function DataRevocationPage() {
 
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-5">
-          <div className="absolute inset-0 bg-black/40" onClick={() => !loading && setModal(null)} />
-          <div className="relative w-full max-w-sm bg-card rounded-3xl p-6 shadow-2xl">
-            <h3 className="font-bold text-lg mb-2 text-center">Confirmar solicitud</h3>
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => !loading && setModal(null)}
+            aria-hidden
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="revoke-dialog-title"
+            className="relative w-full max-w-sm bg-card rounded-3xl p-6 shadow-2xl"
+          >
+            <h3 id="revoke-dialog-title" className="font-bold text-lg mb-2 text-center">
+              Confirmar solicitud
+            </h3>
             <p className="text-sm text-muted-foreground text-center mb-5 leading-relaxed">
               {modal === 'delete_personal'
                 ? 'Se eliminarán datos personales sensibles de forma irreversible.'

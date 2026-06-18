@@ -7,6 +7,8 @@ export type ExpeditionAlertContext = {
   hikerFullName: string;
   startLocation: string;
   endLocation: string;
+  startCoordinates: string | null;
+  endCoordinates: string | null;
   estimatedReturnTime: string;
   toleranceMinutes: number;
   deadlineAt: string;
@@ -34,6 +36,8 @@ type AlertContextRow = {
   hiker_id: string;
   start_location: string;
   end_location: string;
+  start_coordinates: string | null;
+  end_coordinates: string | null;
   start_time: string;
   estimated_return_time: string;
   tolerance_minutes: number;
@@ -63,6 +67,8 @@ export class AlertRepository {
       hikerFullName: full.hikerFullName,
       startLocation: full.startLocation,
       endLocation: full.endLocation,
+      startCoordinates: full.startCoordinates,
+      endCoordinates: full.endCoordinates,
       estimatedReturnTime: full.estimatedReturnTime,
       toleranceMinutes: full.toleranceMinutes,
       deadlineAt: full.deadlineAt,
@@ -75,7 +81,8 @@ export class AlertRepository {
       .from('expeditions')
       .select(
         `
-        id, hiker_id, start_location, end_location, start_time,
+        id, hiker_id, start_location, end_location, start_coordinates, end_coordinates,
+        start_time,
         estimated_return_time, tolerance_minutes, status,
         hikers_profile ( user_id, full_name, phone ),
         expedition_companions ( companion_name ),
@@ -106,6 +113,8 @@ export class AlertRepository {
       hikerPhone: hiker.phone,
       startLocation: row.start_location,
       endLocation: row.end_location,
+      startCoordinates: row.start_coordinates ?? null,
+      endCoordinates: row.end_coordinates ?? null,
       startTime: row.start_time,
       estimatedReturnTime: row.estimated_return_time,
       toleranceMinutes: row.tolerance_minutes,

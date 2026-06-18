@@ -3,6 +3,7 @@ import { RescueAlertService } from '../../application/services/RescueAlertServic
 import { MailService } from '../email/MailService.js';
 import { loadEnv } from '../config/env.js';
 import { ExpeditionRepository } from '../repositories/ExpeditionRepository.js';
+import { cronHealth } from './cronState.js';
 
 export type DeadlineCronTickResult = {
   promoted: number;
@@ -45,12 +46,18 @@ export function startExpeditionDeadlineCron(): () => void {
       const { promoted, alerted, contactEmails, rescueEmails } =
         await runExpeditionDeadlineTick(repo, contactAlerts, rescueAlerts);
 
+      cronHealth.lastTickAt = new Date().toISOString();
+      cronHealth.lastError = null;
+      cronHealth.lastPromoted = promoted;
+      cronHealth.lastAlerted = alerted;
+
       if (promoted > 0 || alerted > 0) {
         console.log(
           `[Cron] expedition deadlines: promoted=${promoted} alerted=${alerted} contactEmails=${contactEmails} rescueEmails=${rescueEmails}`,
         );
       }
     } catch (err) {
+      cronHealth.lastError = err instanceof Error ? err.message : String(err);
       console.error('[Cron] expedition deadline tick failed:', err);
     }
   };

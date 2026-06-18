@@ -124,7 +124,7 @@ export function RescueAlertDetailPage() {
           <h2 className="text-xl font-bold">{detail.endLocation}</h2>
           <p className="text-sm text-muted-foreground mt-1">{detail.hikerFullName}</p>
         </div>
-        <span className="text-xs font-bold px-2 py-1 rounded-lg bg-red-100 text-red-700">
+        <span className="text-xs font-bold px-2 py-1 rounded-lg bg-destructive/15 text-destructive">
           Alerta activa
         </span>
       </div>
@@ -158,6 +158,12 @@ export function RescueAlertDetailPage() {
           <MapPin size={14} /> Ruta declarada
         </h3>
         <p className="font-medium">{detail.startLocation} → {detail.endLocation}</p>
+        {(detail.startCoordinates || detail.endCoordinates) && (
+          <div className="mt-2 text-sm text-muted-foreground space-y-1">
+            {detail.startCoordinates && <p>Inicio: {detail.startCoordinates}</p>}
+            {detail.endCoordinates && <p>Destino: {detail.endCoordinates}</p>}
+          </div>
+        )}
         <div className="mt-3 space-y-1 text-sm text-muted-foreground">
           <p className="flex items-center gap-2">
             <Clock size={14} /> Salida: {formatDt(detail.startTime)}
@@ -171,7 +177,10 @@ export function RescueAlertDetailPage() {
           <p className="text-xs">Alerta desde {formatDt(detail.alertSince)}</p>
         </div>
         <p className="mt-3 flex items-center gap-2 text-sm">
-          <Phone size={14} className="text-muted-foreground" /> {detail.hikerPhone}
+          <Phone size={14} className="text-muted-foreground" />
+          <a href={`tel:${detail.hikerPhone}`} className="text-primary font-medium">
+            {detail.hikerPhone}
+          </a>
         </p>
       </section>
 
@@ -194,7 +203,11 @@ export function RescueAlertDetailPage() {
               <div key={`${c.fullName}-${c.phone}`} className="text-sm">
                 <p className="font-medium">{c.fullName}</p>
                 <p className="text-muted-foreground text-xs">{c.relationship}</p>
-                <p className="text-muted-foreground">{c.phone} · {c.email}</p>
+                <p className="text-muted-foreground">
+                  <a href={`tel:${c.phone}`} className="text-primary">{c.phone}</a>
+                  {' · '}
+                  <a href={`mailto:${c.email}`} className="text-primary">{c.email}</a>
+                </p>
               </div>
             ))}
           </div>

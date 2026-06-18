@@ -4,6 +4,7 @@ import { ChevronLeft, Globe, Plus, WifiOff, X } from 'lucide-react';
 import { FieldError, FieldLabel } from '@/components/Layout';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { validateCoordinateInput } from '@/lib/coordinates';
+import { cacheContacts, getCachedContacts } from '@/lib/offlineContacts';
 import {
   listExpeditionDrafts,
   listRouteTemplates,
@@ -20,7 +21,7 @@ export function CreateExpeditionPage() {
   const online = useOnlineStatus();
   const [contacts, setContacts] = useState<EmergencyContact[]>([]);
   const [templates, setTemplates] = useState<RouteTemplate[]>([]);
-  const [pendingDrafts, setPendingDrafts] = useState(listExpeditionDrafts().length);
+  const [pendingDrafts, setPendingDrafts] = useState(0);
   const [startLocation, setStartLocation] = useState('');
   const [endLocation, setEndLocation] = useState('');
   const [startCoordinates, setStartCoordinates] = useState('');
@@ -37,21 +38,30 @@ export function CreateExpeditionPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setTemplates(listRouteTemplates());
+    void listRouteTemplates().then(setTemplates);
+    void listExpeditionDrafts().then((d) => setPendingDrafts(d.length));
+
     if (online) {
       getContacts()
-        .then((r) => setContacts(r.contacts))
-        .catch(() => setContacts([]));
+        .then((r) => {
+          setContacts(r.contacts);
+          void cacheContacts(r.contacts);
+        })
+        .catch(() => {
+          void getCachedContacts().then(setContacts);
+        });
+    } else {
+      void getCachedContacts().then(setContacts);
     }
   }, [online]);
 
   useEffect(() => {
     if (!online) return;
 
-    const drafts = listExpeditionDrafts();
-    if (drafts.length === 0) return;
-
     const syncDrafts = async () => {
+      const drafts = await listExpeditionDrafts();
+      if (drafts.length === 0) return;
+
       for (const draft of drafts) {
         try {
           await createExpedition({
@@ -65,19 +75,20 @@ export function CreateExpeditionPage() {
             contactIds: draft.contactIds,
             companionNames: draft.companionNames,
           });
-          removeExpeditionDraft(draft.id);
+          await removeExpeditionDraft(draft.id);
         } catch {
           break;
         }
       }
-      setPendingDrafts(listExpeditionDrafts().length);
-    };
 
-    syncDrafts().then(() => {
-      if (listExpeditionDrafts().length === 0) {
+      const remaining = await listExpeditionDrafts();
+      setPendingDrafts(remaining.length);
+      if (remaining.length === 0) {
         setInfo('Borradores offline sincronizados con el servidor.');
       }
-    });
+    };
+
+    void syncDrafts();
   }, [online]);
 
   const toggleContact = (id: string) => {
@@ -120,6 +131,12 @@ export function CreateExpeditionPage() {
     } else {
       setEndCoordError('');
     }
+    if (startTime && estimatedReturnTime && new Date(estimatedReturnTime) <= new Date(startTime)) {
+      setError('La hora de retorno debe ser posterior a la hora de salida');
+      ok = false;
+    } else if (!error.startsWith('La hora')) {
+      setError('');
+    }
     return ok;
   };
 
@@ -156,27 +173,29 @@ export function CreateExpeditionPage() {
     setLoading(true);
 
     if (!online) {
-      saveExpeditionDraft({
+      await saveExpeditionDraft({
         ...payload,
         startCoordinates: startCoordinates.trim(),
         endCoordinates: endCoordinates.trim(),
       });
-      saveRouteTemplate({
+      await saveRouteTemplate({
         startLocation: payload.startLocation,
         endLocation: payload.endLocation,
         startCoordinates: payload.startCoordinates,
         endCoordinates: payload.endCoordinates,
         toleranceMinutes: payload.toleranceMinutes,
       });
-      setPendingDrafts(listExpeditionDrafts().length);
-      setInfo('Sin conexión: borrador guardado en el dispositivo para sincronizar después.');
+      const remaining = await listExpeditionDrafts();
+      setPendingDrafts(remaining.length);
+      setTemplates(await listRouteTemplates());
+      setInfo('Sin conexión: borrador guardado en caché offline (Service Worker) para sincronizar después.');
       setLoading(false);
       return;
     }
 
     try {
       const { expedition } = await createExpedition(payload);
-      saveRouteTemplate({
+      await saveRouteTemplate({
         startLocation: payload.startLocation,
         endLocation: payload.endLocation,
         startCoordinates: payload.startCoordinates,
@@ -205,8 +224,8 @@ export function CreateExpeditionPage() {
       <p className="text-sm text-muted-foreground mb-4">Registra tu itinerario y contactos de alerta.</p>
 
       {!online && (
-        <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm flex items-center gap-2">
-          <WifiOff size={16} /> Modo offline: el formulario se guardará localmente.
+        <div className="mb-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-100 text-sm flex items-center gap-2">
+          <WifiOff size={16} /> Modo offline: plantillas y borradores en caché del Service Worker.
         </div>
       )}
 
@@ -237,12 +256,18 @@ export function CreateExpeditionPage() {
         </div>
       )}
 
-      {contacts.length === 0 && online && (
+      {contacts.length === 0 && (
         <div className="error-banner mb-4">
-          Debes registrar al menos un contacto en{' '}
-          <Link to="/senderista/perfil/contactos" className="underline font-semibold">
-            Perfil → Contactos
-          </Link>
+          {online ? (
+            <>
+              Debes registrar al menos un contacto en{' '}
+              <Link to="/senderista/perfil/contactos" className="underline font-semibold">
+                Perfil → Contactos
+              </Link>
+            </>
+          ) : (
+            'Sin contactos en caché. Conéctate una vez para sincronizar contactos antes de salir offline.'
+          )}
         </div>
       )}
 

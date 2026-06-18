@@ -1,4 +1,5 @@
-import { getToken } from '@/lib/session';
+import { getToken, clearSession } from '@/lib/session';
+import { handleUnauthorized } from '@/lib/authEvents';
 
 const API_URL = import.meta.env.VITE_API_URL ?? '/api';
 
@@ -55,6 +56,11 @@ export async function apiRequest<T>(
     );
   }
 
+  if (res.status === 401 && auth) {
+    handleUnauthorized();
+    throw new ApiClientError('Sesión expirada. Inicia sesión nuevamente.', 401, 'UNAUTHORIZED');
+  }
+
   if (!res.ok) {
     const err = await parseError(res);
     throw new ApiClientError(err.message ?? 'Error en la solicitud', res.status, err.code, err.details);
@@ -74,3 +80,5 @@ export const api = {
     apiRequest<T>(path, { method: 'PATCH', body: JSON.stringify(body) }, auth),
   delete: <T>(path: string, auth = false) => apiRequest<T>(path, { method: 'DELETE' }, auth),
 };
+
+export { clearSession };

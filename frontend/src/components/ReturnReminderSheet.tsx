@@ -24,6 +24,7 @@ export function ReturnReminderSheet({ expedition, minutesRemaining, onDismiss, c
       <div className="absolute inset-0 bg-secondary/50 dark:bg-black/60" aria-hidden onClick={onDismiss} />
       <div
         role="dialog"
+        aria-modal="true"
         aria-labelledby="return-reminder-title"
         className="relative w-full max-w-sm mx-4 mb-20 bg-card rounded-3xl p-6 shadow-2xl border-t-4 border-amber-400 dark:border-amber-500"
       >

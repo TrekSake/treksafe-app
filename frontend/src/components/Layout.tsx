@@ -21,8 +21,18 @@ export function LogoHeader() {
   );
 }
 
-export function FieldLabel({ children }: { children: ReactNode }) {
-  return <label className="block text-sm font-semibold mb-1.5">{children}</label>;
+export function FieldLabel({
+  children,
+  htmlFor,
+}: {
+  children: ReactNode;
+  htmlFor?: string;
+}) {
+  return (
+    <label htmlFor={htmlFor} className="block text-sm font-semibold mb-1.5">
+      {children}
+    </label>
+  );
 }
 
 export function FieldError({ message }: { message?: string }) {

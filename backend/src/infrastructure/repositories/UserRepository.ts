@@ -134,7 +134,12 @@ export class UserRepository {
     return (data?.length ?? 0) > 0;
   }
 
-  async deletePersonalData(hikerId: string): Promise<{ medicalDeleted: boolean; contactsDeleted: number; expeditionsDeleted: number }> {
+  async deletePersonalData(hikerId: string): Promise<{
+    medicalDeleted: boolean;
+    contactsDeleted: number;
+    expeditionsDeleted: number;
+    accountDeleted: boolean;
+  }> {
     if (await this.hasBlockingExpedition(hikerId)) {
       throw new AppError(
         409,
@@ -177,10 +182,17 @@ export class UserRepository {
       if (expDeleteError) throw new AppError(500, expDeleteError.message);
     }
 
+    const { error: userDeleteError } = await this.supabase
+      .from('users')
+      .delete()
+      .eq('id', hikerId);
+    if (userDeleteError) throw new AppError(500, userDeleteError.message);
+
     return {
       medicalDeleted: true,
       contactsDeleted: contacts?.length ?? 0,
       expeditionsDeleted: expeditionIds.length,
+      accountDeleted: true,
     };
   }
 

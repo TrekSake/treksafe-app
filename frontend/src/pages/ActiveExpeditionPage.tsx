@@ -112,15 +112,29 @@ export function ActiveExpeditionPage() {
     );
   }
 
-  const timerBg = countdown.expired
+  const isAlert = expedition.status === 'alert';
+
+  const timerBg = isAlert
     ? 'bg-destructive'
-    : countdown.isUrgent
-      ? 'bg-amber-500'
-      : 'bg-secondary';
+    : countdown.expired
+      ? 'bg-destructive'
+      : countdown.isUrgent
+        ? 'bg-amber-500'
+        : 'bg-secondary';
 
   return (
     <div className="px-6 py-6 pb-8">
-      {countdown.isUrgent && !countdown.expired && !bannerDismissed && (
+      {isAlert && (
+        <div className="error-banner mb-4 flex items-start gap-2" role="alert">
+          <AlertTriangle size={18} className="flex-shrink-0 mt-0.5" />
+          <span>
+            <strong>Alerta activa.</strong> Tus contactos y rescatistas fueron notificados. Confirma
+            tu retorno en cuanto estés a salvo.
+          </span>
+        </div>
+      )}
+
+      {countdown.isUrgent && !countdown.expired && !isAlert && !bannerDismissed && (
         <div className="urgent-banner -mx-6 -mt-6 mb-4 flex items-center gap-3 px-5 py-3">
           <AlertTriangle size={18} className="flex-shrink-0" />
           <p className="text-sm font-semibold flex-1">
@@ -141,7 +155,9 @@ export function ActiveExpeditionPage() {
         <ChevronLeft size={16} /> Inicio
       </Link>
 
-      <p className="text-xs text-muted-foreground uppercase tracking-wide">Expedición activa</p>
+      <p className="text-xs text-muted-foreground uppercase tracking-wide">
+        {isAlert ? 'Expedición en alerta' : 'Expedición activa'}
+      </p>
       <h2 className="text-xl font-bold mb-5 leading-tight">{expedition.endLocation}</h2>
 
       {countdown.expired && (
@@ -158,9 +174,9 @@ export function ActiveExpeditionPage() {
         </div>
       )}
 
-      <div className={`${timerBg} rounded-3xl px-6 py-8 text-center mb-5`}>
+      <div className={`${timerBg} rounded-3xl px-6 py-8 text-center mb-5`} aria-live="polite">
         <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-4">
-          Tiempo restante
+          {isAlert || countdown.expired ? 'Plazo vencido' : 'Tiempo restante'}
         </p>
         <div className="flex items-end justify-center gap-1 mb-6">
           <span className="font-extrabold text-6xl text-white leading-none">
@@ -220,13 +236,23 @@ export function ActiveExpeditionPage() {
         </div>
       )}
 
-      <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 mb-5">
+      <div
+        className={`rounded-2xl p-4 mb-5 border ${
+          isAlert
+            ? 'bg-destructive/5 border-destructive/30'
+            : 'bg-primary/5 border-primary/20'
+        }`}
+      >
         <div className="flex items-center gap-2 mb-2">
-          <Shield size={15} className="text-primary" />
-          <span className="text-sm font-bold text-primary">Monitoreo activo</span>
+          <Shield size={15} className={isAlert ? 'text-destructive' : 'text-primary'} />
+          <span className={`text-sm font-bold ${isAlert ? 'text-destructive' : 'text-primary'}`}>
+            {isAlert ? 'Alerta de seguridad activa' : 'Monitoreo activo'}
+          </span>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Tus contactos serán notificados si no confirmas tu retorno antes del límite declarado.
+          {isAlert
+            ? 'El equipo de rescate tiene acceso a tu ficha. Confirma retorno para cerrar la alerta.'
+            : 'Tus contactos serán notificados si no confirmas tu retorno antes del límite declarado.'}
         </p>
       </div>
 

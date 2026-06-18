@@ -20,21 +20,21 @@ const RISK_META: Record<
 > = {
   green: {
     label: 'En plazo',
-    badge: 'bg-emerald-100 text-emerald-700',
-    card: 'border-emerald-200 bg-emerald-50/30',
+    badge: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
+    card: 'border-emerald-500/30 bg-emerald-500/5',
     dot: 'bg-emerald-500',
   },
   yellow: {
     label: 'Próximo al límite',
-    badge: 'bg-amber-100 text-amber-700',
-    card: 'border-amber-200 bg-amber-50/40',
+    badge: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
+    card: 'border-amber-500/30 bg-amber-500/5',
     dot: 'bg-amber-500',
   },
   red: {
     label: 'Alerta activa',
-    badge: 'bg-red-100 text-red-700',
-    card: 'border-red-300 bg-red-50/50',
-    dot: 'bg-red-600',
+    badge: 'bg-destructive/15 text-destructive',
+    card: 'border-destructive/40 bg-destructive/5',
+    dot: 'bg-destructive',
   },
 };
 

@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { AuthProvider, useAuth, AuthSessionBridge } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { RescatistaLayout } from '@/components/RescatistaLayout';
@@ -35,6 +35,7 @@ export function App() {
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
+        <AuthSessionBridge />
         <Routes>
           <Route path="/" element={<RootRedirect />} />
           <Route path="/login" element={<LoginPage />} />

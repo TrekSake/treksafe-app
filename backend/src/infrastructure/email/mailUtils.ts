@@ -35,12 +35,23 @@ export class MailSendError extends Error {
 
 export function isSmtpAuthOrIpError(err: unknown): boolean {
   if (!err || typeof err !== 'object') return false;
-  const e = err as { code?: string; responseCode?: number; response?: string };
+  const e = err as { code?: string; responseCode?: number; response?: string; message?: string };
+  const text = [e.response, e.message].filter(Boolean).join(' ');
   return (
     e.code === 'EAUTH' ||
     e.responseCode === 525 ||
-    (typeof e.response === 'string' &&
-      (e.response.includes('Unauthorized IP') || e.response.includes('not verified')))
+    text.includes('Unauthorized IP') ||
+    text.includes('not verified')
+  );
+}
+
+export function isBrevoTlsHostnameError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false;
+  const e = err as { code?: string; message?: string };
+  return (
+    e.code === 'ESOCKET' &&
+    typeof e.message === 'string' &&
+    e.message.includes("does not match certificate's altnames")
   );
 }
 
@@ -57,7 +68,32 @@ export async function fetchOutboundIp(): Promise<string | null> {
   }
 }
 
-export function brevoIpAuthHint(outboundIp: string | null): string {
+export function isBrevoApiIpError(err: unknown): boolean {
+  if (err instanceof MailSendError) return err.code === 'BREVO_IP_BLOCKED';
+  if (!err || typeof err !== 'object') return false;
+  const e = err as { message?: string };
+  return typeof e.message === 'string' && e.message.includes('unrecognised IP address');
+}
+
+export function brevoIpAuthHint(outboundIp: string | null, err?: unknown): string {
+  if (isBrevoApiIpError(err)) {
+    const ipLine = outboundIp
+      ? `Brevo API bloqueó la IP ${outboundIp}. Añádela en https://app.brevo.com/security/authorised-ips o desactiva la restricción de IPs.`
+      : 'Brevo API bloqueó la IP saliente. Configúrala en Brevo → Security → Authorized IPs.';
+    return `${ipLine} La API key es válida; el bloqueo es solo por IP.`;
+  }
+  if (isBrevoTlsHostnameError(err)) {
+    return (
+      'Brevo en tu región usa certificado sendinblue.com; el backend ya ajusta TLS servername. ' +
+      'Reinicia el servidor si ves este error tras actualizar el código.'
+    );
+  }
+  if (isSmtpAuthOrIpError(err)) {
+    const ipLine = outboundIp
+      ? `IP no autorizada en Brevo (${outboundIp}). Añádela en Settings → Security → Authorized IPs.`
+      : 'IP no autorizada en Brevo. Añádela en Settings → Security → Authorized IPs.';
+    return `${ipLine} Las credenciales SMTP parecen válidas (error 525, no de contraseña).`;
+  }
   const ipLine = outboundIp
     ? `Tu IP saliente actual: ${outboundIp}. Autorízala en Brevo → Settings → Security → Authorized IPs.`
     : 'Autoriza la IP saliente de tu servidor en Brevo → Settings → Security → Authorized IPs.';

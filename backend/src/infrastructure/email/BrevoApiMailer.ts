@@ -28,9 +28,11 @@ export async function sendViaBrevoApi(input: SendMailInput): Promise<void> {
 
   if (!res.ok) {
     const body = await res.text();
+    const isIpBlocked =
+      res.status === 401 && body.includes('unrecognised IP address');
     throw new MailSendError(
-      `Brevo API ${res.status}: ${body.slice(0, 200)}`,
-      String(res.status),
+      `Brevo API ${res.status}: ${body.slice(0, 300)}`,
+      isIpBlocked ? 'BREVO_IP_BLOCKED' : String(res.status),
     );
   }
 }

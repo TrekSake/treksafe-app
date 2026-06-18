@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Lock, X } from 'lucide-react';
 import { checkInExpedition } from '@/services/expedition';
 import { FieldLabel } from '@/components/Layout';
@@ -14,6 +14,15 @@ export function CheckInConfirmDialog({ expeditionId, open, onClose, onSuccess }:
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
 
   if (!open) return null;
 
@@ -42,13 +51,20 @@ export function CheckInConfirmDialog({ expeditionId, open, onClose, onSuccess }:
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-24">
       <div className="absolute inset-0 bg-black/40" onClick={handleClose} aria-hidden />
-      <div className="relative w-full max-w-sm bg-card rounded-3xl p-6 shadow-2xl">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="checkin-dialog-title"
+        className="relative w-full max-w-sm bg-card rounded-3xl p-6 shadow-2xl"
+      >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Lock size={18} className="text-primary" />
-            <h3 className="font-bold">Confirmar retorno seguro</h3>
+            <h3 id="checkin-dialog-title" className="font-bold">
+              Confirmar retorno seguro
+            </h3>
           </div>
-          <button type="button" onClick={handleClose} aria-label="Cerrar">
+          <button type="button" onClick={handleClose} aria-label="Cerrar" className="btn-touch">
             <X size={20} className="text-muted-foreground" />
           </button>
         </div>
@@ -61,8 +77,9 @@ export function CheckInConfirmDialog({ expeditionId, open, onClose, onSuccess }:
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <FieldLabel>Contraseña</FieldLabel>
+            <FieldLabel htmlFor="checkin-password">Contraseña</FieldLabel>
             <input
+              id="checkin-password"
               type="password"
               className="input-field"
               value={password}

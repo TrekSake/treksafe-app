@@ -34,7 +34,7 @@ export function PrivacySettingsPage() {
         </h3>
         <div className="space-y-3">
           <Link
-            to="/senderista/perfil/privacidad/solicitud"
+            to="/senderista/perfil/privacidad/solicitud?action=delete_personal"
             className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4"
           >
             <div className="w-10 h-10 bg-destructive/10 rounded-xl flex items-center justify-center">
@@ -48,11 +48,11 @@ export function PrivacySettingsPage() {
           </Link>
 
           <Link
-            to="/senderista/perfil/privacidad/solicitud"
+            to="/senderista/perfil/privacidad/solicitud?action=anonymize_routes"
             className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4"
           >
-            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-              <Database size={18} className="text-amber-700" />
+            <div className="w-10 h-10 bg-amber-500/15 rounded-xl flex items-center justify-center">
+              <Database size={18} className="text-amber-700 dark:text-amber-300" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-sm">Anonimizar historial de rutas</p>
