@@ -1,0 +1,77 @@
+<mxfile host="app.diagrams.net" agent="TrekSafe" version="24.0.0">
+  <diagram id="flujo-cun03" name="Flujo CUN-03">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1300" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="title" value="CUN-03 — Flujo: Coordinar y Ejecutar Operaciones de Rescate" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=15;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="180" y="16" width="840" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="pre" value="Precondición: plazo vencido sin check-in" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9E6;strokeColor=#999999;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="360" y="56" width="480" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="start" value="" style="ellipse;aspect=fixed;fillColor=#1A1A1A;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="584" y="112" width="32" height="32" as="geometry"/>
+        </mxCell>
+        <mxCell id="a1" value="Cambiar estado a ALERTA (automático)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="390" y="168" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" value="Enviar correo a contactos de emergencia" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="390" y="248" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" value="Enviar ficha técnica a cuerpos de rescate" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="390" y="328" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="fork-label" value="Paralelo: notificación a actores" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="430" y="390" width="340" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane-contacto" value="Contacto de Emergencia" style="swimlane;startSize=28;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="420" width="460" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="lc1" value="Recibe notificación por correo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="lane-contacto">
+          <mxGeometry x="24" y="48" width="412" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane-rescatista" value="Rescatista" style="swimlane;startSize=28;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="420" width="460" height="580" as="geometry"/>
+        </mxCell>
+        <mxCell id="lr1" value="Visualizar alerta en consola (semáforo)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="lane-rescatista">
+          <mxGeometry x="24" y="48" width="412" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="d-zona" value="¿Filtrar zona?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;" vertex="1" parent="lane-rescatista">
+          <mxGeometry x="150" y="120" width="160" height="72" as="geometry"/>
+        </mxCell>
+        <mxCell id="lr-alt" value="Filtro por sector/nevado (HU-16)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="lane-rescatista">
+          <mxGeometry x="24" y="220" width="412" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="lr2" value="Confirmar recepción de alerta" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="lane-rescatista">
+          <mxGeometry x="24" y="300" width="412" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="lr3" value="Consultar ficha (itinerario, médica si alerta)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="lane-rescatista">
+          <mxGeometry x="24" y="380" width="412" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="lr4" value="Actualizar bitácora: Búsqueda → Localizado → Cerrado" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="lane-rescatista">
+          <mxGeometry x="24" y="460" width="412" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="post" value="Postcondición: caso cerrado trazable en bitácora" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9E6;strokeColor=#999999;fontColor=#1A1A1A;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1060" width="480" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="end" value="" style="ellipse;aspect=fixed;fillColor=#FFFFFF;strokeColor=#1A1A1A;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="584" y="1130" width="32" height="32" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="start" target="a1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a1" target="a2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a2" target="a3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;exitX=0;exitY=0.75;entryX=0.5;entryY=0;" edge="1" parent="1" source="a3" target="lc1"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="290" y="364"/><mxPoint x="290" y="468"/></Array></mxGeometry></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;exitX=1;exitY=0.75;entryX=0.5;entryY=0;" edge="1" parent="1" source="a3" target="lr1"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="910" y="364"/><mxPoint x="910" y="468"/></Array></mxGeometry></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="lr1" target="d-zona"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="d-zona" target="lr-alt"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="d-zona" target="lr2"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1110" y="604"/><mxPoint x="1110" y="772"/></Array></mxGeometry></mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="lr-alt" target="lr2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="lr2" target="lr3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="lr3" target="lr4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;exitX=0.5;exitY=1;entryX=0.75;entryY=0;" edge="1" parent="1" source="lr4" target="post"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="910" y="1020"/><mxPoint x="720" y="1020"/></Array></mxGeometry></mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;dashed=1;exitX=0.5;exitY=1;entryX=0.25;entryY=0;" edge="1" parent="1" source="lc1" target="post"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="290" y="1020"/><mxPoint x="480" y="1020"/></Array></mxGeometry></mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="post" target="end"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

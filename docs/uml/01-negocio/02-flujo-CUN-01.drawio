@@ -1,0 +1,76 @@
+<mxfile host="app.diagrams.net" agent="TrekSafe" version="24.0.0">
+  <diagram id="flujo-cun01" name="Flujo CUN-01">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1100" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="title" value="CUN-01 — Flujo: Planificar y Registrar Expedición Segura" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=15;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="800" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="pre" value="Precondición: senderista registrado + consentimiento Ley N° 29733" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9E6;strokeColor=#999999;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="60" width="540" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="start" value="" style="ellipse;aspect=fixed;fillColor=#1A1A1A;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="534" y="120" width="32" height="32" as="geometry"/>
+        </mxCell>
+        <mxCell id="a1" value="Ingresar ubicación de inicio y destino" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="180" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="d-coord" value="¿Coordenadas manuales?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="260" width="240" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" value="Registrar o actualizar ficha médica crítica" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="400" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" value="Seleccionar contactos de emergencia y acompañantes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="490" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="d-offline" value="¿Sin señal?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="460" y="570" width="180" height="72" as="geometry"/>
+        </mxCell>
+        <mxCell id="a4" value="Especificar fecha, hora de salida y retorno estimado" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="690" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="a5" value="Almacenar plan (programado / en curso) — cifrado RC-05" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="780" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="post" value="Postcondición: monitoreo pasivo activado" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9E6;strokeColor=#999999;fontColor=#1A1A1A;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="860" width="420" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="end" value="" style="ellipse;aspect=fixed;fillColor=#FFFFFF;strokeColor=#1A1A1A;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="534" y="930" width="32" height="32" as="geometry"/>
+        </mxCell>
+        <mxCell id="alt-coord" value="Validar formato lat/long (HU-23)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="276" width="260" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="err-coord" value="Alerta y corrección de campos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="370" width="260" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="alt-offline" value="Guardar borrador local (HU-22)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="582" width="260" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="sync" value="Sincronizar al recuperar internet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="680" width="260" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="start" target="a1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a1" target="d-coord"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="d-coord" target="alt-coord"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="d-coord" target="a2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="inválido" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="alt-coord" target="err-coord"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" value="válido" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=0.5;exitY=1;entryX=1;entryY=0.5;" edge="1" parent="1" source="alt-coord" target="a2"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1010" y="460"/><mxPoint x="760" y="460"/></Array></mxGeometry></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;dashed=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="err-coord" target="a1"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1160" y="394"/><mxPoint x="1160" y="204"/></Array></mxGeometry></mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a2" target="a3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a3" target="d-offline"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="d-offline" target="alt-offline"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="d-offline" target="a4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="alt-offline" target="sync"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="sync" target="a4"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="820" y="704"/><mxPoint x="820" y="714"/></Array></mxGeometry></mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a4" target="a5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a5" target="post"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="post" target="end"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="note" value="Actor: Senderista · SA-05 veracidad bajo responsabilidad del usuario" style="text;html=1;fontColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="980" width="480" height="24" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

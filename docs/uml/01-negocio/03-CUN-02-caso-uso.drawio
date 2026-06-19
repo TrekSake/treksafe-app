@@ -1,0 +1,45 @@
+<mxfile host="app.diagrams.net" agent="TrekSafe" version="24.0.0">
+  <diagram id="cun02-detail" name="CUN-02 Detalle">
+    <mxGraphModel dx="1100" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="720" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="title" value="CUN-02 — Caso de Uso de Negocio (detalle)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=15;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="250" y="16" width="600" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="boundary" value="Negocio TrekSafe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="200" y="56" width="700" height="500" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-main" value="CUN-02&#xa;Verificar Retorno Seguro" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="240" width="240" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc1" value="Consultar countdown" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="260" y="120" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc2" value="Confirmar check-in" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="260" y="380" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc3" value="Archivar en historial" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="660" y="380" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc4" value="Recordatorio 30 min&#xa;&lt;&lt;extend&gt;&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="120" width="180" height="72" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc5" value="Detener temporizadores" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="430" y="420" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor" value="Senderista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="60" y="240" width="48" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="actor" target="uc-main"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e1" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0.25;exitY=0;entryX=0.75;entryY=1;" edge="1" parent="1" source="uc-main" target="uc1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0;exitY=0.75;entryX=1;entryY=0.25;" edge="1" parent="1" source="uc-main" target="uc2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0.75;exitY=0.75;entryX=0.25;entryY=0.25;" edge="1" parent="1" source="uc-main" target="uc3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="&lt;&lt;extend&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0;exitY=0.5;entryX=1;entryY=0.25;" edge="1" parent="1" source="uc4" target="uc-main"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="uc-main" target="uc5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="note" value="HU-09, HU-10, HU-20, HU-25" style="text;html=1;fontColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="200" y="570" width="240" height="24" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,180 @@
+<mxfile host="65bd71144e">
+    <diagram id="class-domain" name="Diagrama de Clases">
+        <mxGraphModel dx="490" dy="473" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1000" background="#FFFFFF" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="TrekSafe — Diagrama de Clases (Dominio + Application + Infrastructure)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=15;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="16" width="900" height="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg-domain" value="&lt;&lt;domain&gt;&gt; Entidades" style="swimlane;startSize=32;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="60" width="1720" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="cls-user" value="User&#10;─────────────&#10;- id: UUID&#10;- email: string&#10;- passwordHash: string&#10;- role: UserRole&#10;- createdAt: DateTime" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="40" y="50" width="200" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="enum-role" value="&lt;&lt;enum&gt;&gt;&#10;UserRole&#10;senderista | rescatista" style="swimlane;fontStyle=2;startSize=28;fillColor=#EEEEEE;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="40" y="200" width="200" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="cls-hiker" value="HikerProfile&#10;─────────────&#10;- userId: UUID&#10;- fullName: string&#10;- phone: string&#10;- documentId: string" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="300" y="50" width="200" height="108" as="geometry"/>
+                </mxCell>
+                <mxCell id="cls-rescuer" value="RescuerProfile&#10;─────────────&#10;- userId: UUID&#10;- credentialNumber: string&#10;- fullName: string&#10;- validatedAt: DateTime" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="560" y="50" width="220" height="108" as="geometry"/>
+                </mxCell>
+                <mxCell id="cls-contact" value="EmergencyContact&#10;─────────────&#10;- id, hikerId&#10;- fullName, relationship&#10;- phone, email" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="840" y="50" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cls-exp" value="Expedition&#10;─────────────&#10;- id: UUID&#10;- hikerId: UUID&#10;- startLocation, endLocation: string&#10;- startTime, estimatedReturnTime&#10;- toleranceMinutes: int&#10;- status: ExpeditionStatus&#10;+ getDeadlineAt(): DateTime" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="40" y="300" width="260" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="enum-exp" value="&lt;&lt;enum&gt;&gt;&#10;ExpeditionStatus&#10;programmed | in_progress&#10;| completed | alert" style="swimlane;fontStyle=2;startSize=28;fillColor=#EEEEEE;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="360" y="300" width="220" height="88" as="geometry"/>
+                </mxCell>
+                <mxCell id="cls-medical" value="MedicalInfo&#10;─────────────&#10;- hikerId: UUID&#10;- bloodType: string&#10;- encryptedConditions: string&#10;- consentSigned: boolean" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="640" y="300" width="220" height="108" as="geometry"/>
+                </mxCell>
+                <mxCell id="cls-rescuelog" value="RescueLog&#10;─────────────&#10;- expeditionId, rescuerId&#10;- notes: string&#10;- statusRescue: RescueStatus&#10;- updatedAt: DateTime" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="920" y="300" width="220" height="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="enum-rescue" value="&lt;&lt;enum&gt;&gt;&#10;RescueStatus&#10;en_busqueda | localizados | cerrado" style="swimlane;fontStyle=2;startSize=28;fillColor=#EEEEEE;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-domain" vertex="1">
+                    <mxGeometry x="1200" y="300" width="220" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg-app" value="&lt;&lt;application&gt;&gt; Servicios" style="swimlane;startSize=32;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="580" width="860" height="360" as="geometry"/>
+                </mxCell>
+                <mxCell id="svc-auth" value="AuthService&#10;─────────────&#10;+ registerHiker()&#10;+ registerRescuer()&#10;+ login(): JWT" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-app" vertex="1">
+                    <mxGeometry x="40" y="50" width="200" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="svc-exp" value="ExpeditionService&#10;─────────────&#10;+ createExpedition()&#10;+ getActiveExpedition()&#10;+ checkIn()&#10;+ getExpeditionHistory()" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-app" vertex="1">
+                    <mxGeometry x="300" y="50" width="220" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="svc-user" value="UserService&#10;─────────────&#10;+ getMedicalInfo()&#10;+ updateMedicalInfo()&#10;+ manageContacts()&#10;+ revokePrivacy()" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-app" vertex="1">
+                    <mxGeometry x="580" y="50" width="220" height="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="svc-rescue" value="RescueService&#10;─────────────&#10;+ listExpeditions()&#10;+ listAlerts()&#10;+ getAlertDetail()&#10;+ confirmAlert()&#10;+ updateRescueLog()&#10;+ computeExpeditionRiskLevel()" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-app" vertex="1">
+                    <mxGeometry x="40" y="200" width="240" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="svc-alert" value="AlertNotificationService&#10;─────────────&#10;+ notifyEmergencyContacts()" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-app" vertex="1">
+                    <mxGeometry x="340" y="210" width="240" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="svc-rescue-alert" value="RescueAlertService&#10;─────────────&#10;+ notifyRescueTeams()" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-app" vertex="1">
+                    <mxGeometry x="340" y="300" width="240" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="svc-cron" value="expeditionDeadlineCron&#10;─────────────&#10;+ runExpeditionDeadlineTick()&#10;+ startExpeditionDeadlineCron()" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-app" vertex="1">
+                    <mxGeometry x="620" y="200" width="200" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg-infra" value="&lt;&lt;infrastructure&gt;&gt; Repositorios e infraestructura" style="swimlane;startSize=32;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="580" width="820" height="360" as="geometry"/>
+                </mxCell>
+                <mxCell id="repo-exp" value="ExpeditionRepository&#10;+ createExpedition()&#10;+ markExpiredInProgressAsAlert()&#10;+ completeCheckIn()" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-infra" vertex="1">
+                    <mxGeometry x="40" y="50" width="230" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="repo-user" value="UserRepository&#10;PostgresAuthRepository" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-infra" vertex="1">
+                    <mxGeometry x="330" y="50" width="190" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="repo-rescue" value="RescueRepository&#10;AlertRepository" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-infra" vertex="1">
+                    <mxGeometry x="580" y="50" width="170" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="repo-mail" value="MailService&#10;EmailDispatchRepository" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-infra" vertex="1">
+                    <mxGeometry x="40" y="180" width="200" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="repo-audit" value="MedicalAccessAuditRepository" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-infra" vertex="1">
+                    <mxGeometry x="300" y="180" width="230" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="sec" value="EncryptionService (AES-256)&#10;JwtService · PasswordHasher (bcrypt)" style="swimlane;fontStyle=0;startSize=28;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-infra" vertex="1">
+                    <mxGeometry x="580" y="170" width="230" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="db" value="PostgreSQL / Supabase&#10;(pool + RLS)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=12;fillColor=#EEEEEE;strokeColor=#333333;fontColor=#1A1A1A;" parent="pkg-infra" vertex="1">
+                    <mxGeometry x="40" y="280" width="120" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg-pres" value="&lt;&lt;presentation&gt;&gt; HTTP: authController · expeditionController · userController · rescueController + authMiddleware" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;align=left;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="960" width="900" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="r-user-hiker" value="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=none;endFill=0;startArrow=diamond;startFill=0;" parent="1" source="cls-user" target="cls-hiker" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="r-user-rescuer" value="0..1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=none;endFill=0;startArrow=diamond;startFill=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="cls-user" target="cls-rescuer" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="280" y="134"/>
+                            <mxPoint x="280" y="134"/>
+                            <mxPoint x="560" y="134"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="r-hiker-exp" value="1..*" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=open;endFill=0;" parent="1" source="cls-hiker" target="cls-exp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="r-hiker-contact" value="*" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=open;endFill=0;" parent="1" source="cls-hiker" target="cls-contact" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="r-hiker-med" value="0..1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=none;endFill=0;startArrow=diamond;startFill=0;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" parent="1" source="cls-hiker" target="cls-medical" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="540" y="284"/>
+                            <mxPoint x="640" y="284"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="r-exp-log" value="0..*" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=open;endFill=0;" parent="1" source="cls-exp" target="cls-rescuelog" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="r-rescuer-log" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=open;endFill=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="cls-rescuer" target="cls-rescuelog" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="670" y="280"/>
+                            <mxPoint x="1030" y="280"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="r-exp-contact" value="* (M:N)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontColor=#1A1A1A;endArrow=open;endFill=0;dashed=1;exitX=1;exitY=0.25;entryX=0;entryY=0.75;" parent="1" source="cls-exp" target="cls-contact" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="340" y="335"/>
+                            <mxPoint x="840" y="335"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d-exp-svc" value="&lt;&lt;uses&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=open;endFill=0;dashed=1;" parent="1" source="svc-exp" target="repo-exp" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="450" y="560"/>
+                            <mxPoint x="1115" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d-rescue-svc" value="&lt;&lt;uses&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=open;endFill=0;dashed=1;" parent="1" source="svc-rescue" target="repo-rescue" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="200" y="560"/>
+                            <mxPoint x="1075" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d-alert-mail" value="&lt;&lt;uses&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=open;endFill=0;dashed=1;" parent="1" source="svc-alert" target="repo-mail" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="500" y="560"/>
+                            <mxPoint x="1040" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d-cron-exp" value="&lt;&lt;uses&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=open;endFill=0;dashed=1;" parent="1" source="svc-cron" target="repo-exp" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="760" y="560"/>
+                            <mxPoint x="1115" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="d-repo-db" value="&lt;&lt;uses&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=open;endFill=0;" parent="1" source="repo-exp" target="db" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend" value="Fuente: backend/src/application/services · infrastructure/repositories · init_schema.sql · Clean Architecture" style="text;html=1;align=left;fontSize=11;fontColor=#666666;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="920" width="700" height="24" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

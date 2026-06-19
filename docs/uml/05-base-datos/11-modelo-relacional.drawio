@@ -1,0 +1,129 @@
+<mxfile host="65bd71144e">
+    <diagram id="er-treksafe" name="Modelo Relacional">
+        <mxGraphModel dx="833" dy="1577" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1400" background="#FFFFFF" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="TrekSafe — Modelo Relacional PostgreSQL (Supabase)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="16" width="800" height="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="note-enum" value="ENUMs:&#10;• user_role_enum (senderista | rescatista)&#10;• expedition_status_enum (programmed | in_progress | completed | alert)&#10;• rescue_status_enum (en_busqueda | localizados | cerrado)&#10;&#10;Índice parcial cron (HU-11): idx_expeditions_cron_in_progress&#10;RLS deny-by-default en todas las tablas (enable_rls.sql)" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF9E6;strokeColor=#999999;fontColor=#1A1A1A;align=left;verticalAlign=top;spacingLeft=10;size=14;" parent="1" vertex="1">
+                    <mxGeometry x="1480" y="50" width="460" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="users" value="&lt;b&gt;users&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;email VARCHAR(255) UNIQUE&lt;br&gt;password_hash VARCHAR(255)&lt;br&gt;role user_role_enum&lt;br&gt;created_at TIMESTAMPTZ" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="220" width="400" height="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="hikers_profile" value="&lt;b&gt;hikers_profile&lt;/b&gt;&lt;hr&gt;PK,FK &lt;b&gt;user_id&lt;/b&gt; UUID → users&lt;br&gt;full_name VARCHAR(200)&lt;br&gt;phone VARCHAR(20)&lt;br&gt;document_id VARCHAR(20) UNIQUE" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="220" width="400" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="rescuers_profile" value="&lt;b&gt;rescuers_profile&lt;/b&gt;&lt;hr&gt;PK,FK &lt;b&gt;user_id&lt;/b&gt; UUID → users&lt;br&gt;credential_number VARCHAR(50) UNIQUE&lt;br&gt;full_name VARCHAR(200)&lt;br&gt;birth_date DATE&lt;br&gt;validated_at TIMESTAMPTZ" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="980" y="220" width="400" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="institutional_rescuer_registry" value="&lt;b&gt;institutional_rescuer_registry&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;institution VARCHAR(50) AGMP|MINCETUR&lt;br&gt;credential_number VARCHAR(50) UNIQUE&lt;br&gt;full_name VARCHAR(200)&lt;br&gt;birth_date DATE&lt;br&gt;is_active BOOLEAN" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="1440" y="220" width="400" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="medical_info" value="&lt;b&gt;medical_info&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;FK hiker_id → hikers_profile&lt;br&gt;blood_type VARCHAR(5)&lt;br&gt;encrypted_conditions TEXT (AES-256)&lt;br&gt;consent_signed BOOLEAN&lt;br&gt;created_at, updated_at" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="520" width="400" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="emergency_contacts" value="&lt;b&gt;emergency_contacts&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;FK hiker_id → hikers_profile&lt;br&gt;full_name VARCHAR(200)&lt;br&gt;relationship VARCHAR(100)&lt;br&gt;phone, email" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="520" width="400" height="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="expeditions" value="&lt;b&gt;expeditions&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;FK hiker_id → hikers_profile&lt;br&gt;start_location, end_location&lt;br&gt;start_coordinates, end_coordinates&lt;br&gt;start_time, estimated_return_time&lt;br&gt;tolerance_minutes INT&lt;br&gt;status expedition_status_enum" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="980" y="520" width="400" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="expedition_companions" value="&lt;b&gt;expedition_companions&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;FK expedition_id → expeditions&lt;br&gt;companion_name VARCHAR(200)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="1440" y="520" width="400" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="expedition_emergency_contacts" value="&lt;b&gt;expedition_emergency_contacts&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;FK expedition_id → expeditions&lt;br&gt;FK contact_id → emergency_contacts&lt;br&gt;UNIQUE (expedition_id, contact_id)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="820" width="400" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="rescue_logs" value="&lt;b&gt;rescue_logs&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;FK expedition_id → expeditions&lt;br&gt;FK rescuer_id → rescuers_profile&lt;br&gt;notes TEXT&lt;br&gt;status_rescue rescue_status_enum&lt;br&gt;UNIQUE (expedition_id, rescuer_id)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="820" width="400" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="email_dispatches" value="&lt;b&gt;email_dispatches&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;FK expedition_id → expeditions&lt;br&gt;dispatch_type VARCHAR(32)&lt;br&gt;recipient_key VARCHAR(255)&lt;br&gt;sent_at TIMESTAMPTZ&lt;br&gt;UNIQUE (expedition_id, dispatch_type, recipient_key)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="980" y="820" width="400" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="medical_access_audit" value="&lt;b&gt;medical_access_audit&lt;/b&gt;&lt;hr&gt;PK &lt;b&gt;id&lt;/b&gt; UUID&lt;br&gt;hiker_id UUID&lt;br&gt;FK expedition_id → expeditions (nullable)&lt;br&gt;accessor_id UUID&lt;br&gt;accessor_role, access_type&lt;br&gt;accessed_at TIMESTAMPTZ" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" parent="1" vertex="1">
+                    <mxGeometry x="1440" y="820" width="400" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-users-hikers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERzeroToOne;startArrow=ERone;endFill=0;startFill=0;" parent="1" source="users" target="hikers_profile" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-users-rescuers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERzeroToOne;startArrow=ERone;endFill=0;startFill=0;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" parent="1" source="users" target="rescuers_profile" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="260" y="470"/>
+                            <mxPoint x="980" y="470"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-registry-rescuers" value="credential_number" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;endArrow=ERzeroToOne;startArrow=ERone;endFill=0;startFill=0;" parent="1" source="institutional_rescuer_registry" target="rescuers_profile" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-hikers-medical" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERzeroToOne;startArrow=ERone;endFill=0;startFill=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="hikers_profile" target="medical_info" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="720" y="490"/>
+                            <mxPoint x="260" y="490"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-hikers-contacts" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERmany;startArrow=ERone;endFill=0;startFill=0;" parent="1" source="hikers_profile" target="emergency_contacts" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-hikers-exp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERmany;startArrow=ERone;endFill=0;startFill=0;exitX=1;exitY=0.75;entryX=0;entryY=0.25;" parent="1" source="hikers_profile" target="expeditions" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="960" y="510"/>
+                            <mxPoint x="980" y="510"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-exp-comp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERmany;startArrow=ERone;endFill=0;startFill=0;" parent="1" source="expeditions" target="expedition_companions" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-exp-bridge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERmany;startArrow=ERone;endFill=0;startFill=0;exitX=0;exitY=0.75;entryX=1;entryY=0.25;" parent="1" source="expeditions" target="expedition_emergency_contacts" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="960" y="760"/>
+                            <mxPoint x="460" y="760"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-contacts-bridge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERmany;startArrow=ERone;endFill=0;startFill=0;" parent="1" source="emergency_contacts" target="expedition_emergency_contacts" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-exp-rescue" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERmany;startArrow=ERone;endFill=0;startFill=0;exitX=0;exitY=1;entryX=1;entryY=0.25;" parent="1" source="expeditions" target="rescue_logs" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="960" y="790"/>
+                            <mxPoint x="920" y="790"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-rescuer-rescue" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERmany;startArrow=ERone;endFill=0;startFill=0;exitX=0.5;exitY=1;entryX=1;entryY=0.5;" parent="1" source="rescuers_profile" target="rescue_logs" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1180" y="770"/>
+                            <mxPoint x="920" y="770"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e-exp-email" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERmany;startArrow=ERone;endFill=0;startFill=0;" parent="1" source="expeditions" target="email_dispatches" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e-exp-audit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;endArrow=ERmany;startArrow=ERone;endFill=0;startFill=0;exitX=1;exitY=1;entryX=0;entryY=0.25;" parent="1" source="expeditions" target="medical_access_audit" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1420" y="810"/>
+                            <mxPoint x="1440" y="810"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="legend" value="Fuente: init_schema.sql + post_mvp_migration.sql&#10;Tipo: Relacional PostgreSQL · Supabase · Ley N° 29733 (consentimiento + cifrado médico)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="1100" width="600" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

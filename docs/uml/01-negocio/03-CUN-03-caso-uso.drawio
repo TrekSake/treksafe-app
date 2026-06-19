@@ -1,0 +1,76 @@
+<mxfile host="app.diagrams.net" agent="TrekSafe" version="24.0.0">
+  <diagram id="cun03-detail" name="CUN-03 Detalle">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="title" value="CUN-03 — Caso de Uso de Negocio (detalle)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=15;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="380" y="16" width="640" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="boundary" value="Negocio TrekSafe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="240" y="56" width="920" height="680" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-main" value="CUN-03&#xa;Coordinar Operaciones de Rescate" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="320" width="240" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="pkg-auto" value="Automático (Motor Plazos)" style="swimlane;startSize=24;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="88" width="220" height="240" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-auto1" value="Escalar a ALERTA" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="pkg-auto">
+          <mxGeometry x="30" y="40" width="160" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-auto2" value="Notificar contactos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="pkg-auto">
+          <mxGeometry x="30" y="110" width="160" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-auto3" value="Notificar rescate" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="pkg-auto">
+          <mxGeometry x="30" y="180" width="160" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-c1" value="Recibir alerta email" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="520" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="pkg-rescue" value="Rescatista" style="swimlane;startSize=24;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="88" width="220" height="496" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-r1" value="Monitorear consola" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="pkg-rescue">
+          <mxGeometry x="30" y="40" width="160" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-r2" value="Filtrar zona&#xa;&lt;&lt;extend&gt;&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;dashed=1;" vertex="1" parent="pkg-rescue">
+          <mxGeometry x="30" y="120" width="160" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-r3" value="Confirmar recepción" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="pkg-rescue">
+          <mxGeometry x="30" y="210" width="160" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-r4" value="Consultar ficha emergencia" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="pkg-rescue">
+          <mxGeometry x="30" y="290" width="160" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-r5" value="Gestionar bitácora" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="610" y="520" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor-r" value="Rescatista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="300" width="48" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor-c" value="Contacto" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="120" y="504" width="48" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor-sys" value="Motor Plazos" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="120" y="140" width="48" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="er1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.25;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="uc-r1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="er2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="uc-r3"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1180" y="348"/><mxPoint x="1180" y="238"/></Array></mxGeometry></mxCell>
+        <mxCell id="er3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.75;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="uc-r4"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1180" y="372"/><mxPoint x="1180" y="318"/></Array></mxGeometry></mxCell>
+        <mxCell id="er4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="uc-r5"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1180" y="348"/><mxPoint x="1180" y="552"/></Array></mxGeometry></mxCell>
+        <mxCell id="ec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="actor-c" target="uc-c1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="es1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.25;" edge="1" parent="1" source="actor-sys" target="uc-auto1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mi1" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0;exitY=0.25;entryX=1;entryY=0.5;" edge="1" parent="1" source="uc-main" target="uc-auto1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mi2" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="uc-main" target="uc-auto2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mi3" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0;exitY=0.75;entryX=1;entryY=0.5;" edge="1" parent="1" source="uc-main" target="uc-auto3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mi4" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" edge="1" parent="1" source="uc-main" target="uc-r1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mi5" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="uc-main" target="uc-r5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="mx1" value="&lt;&lt;extend&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="uc-r2" target="uc-r1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ma2" value="provoca" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="uc-auto2" target="uc-c1"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="390" y="480"/><mxPoint x="370" y="480"/></Array></mxGeometry></mxCell>
+        <mxCell id="note" value="HU-11 a HU-19 · Ficha médica solo en alerta activa" style="text;html=1;fontColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="240" y="750" width="360" height="24" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

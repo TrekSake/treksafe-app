@@ -1,0 +1,59 @@
+<mxfile host="app.diagrams.net" agent="TrekSafe" version="24.0.0">
+  <diagram id="flujo-cun02" name="Flujo CUN-02">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1200" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="title" value="CUN-02 — Flujo: Verificar Retorno Seguro de Montaña" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=15;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="150" y="20" width="800" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="pre" value="Precondición: expedición en curso activa" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9E6;strokeColor=#999999;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="60" width="440" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="start" value="" style="ellipse;aspect=fixed;fillColor=#1A1A1A;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="484" y="120" width="32" height="32" as="geometry"/>
+        </mxCell>
+        <mxCell id="a1" value="Acceder a app con expedición activa" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="180" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" value="Visualizar contador de tiempo restante" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="260" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="d-30" value="¿Faltan ≤30 min?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="400" y="340" width="200" height="72" as="geometry"/>
+        </mxCell>
+        <mxCell id="d-checkin" value="¿Confirma retorno a tiempo?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="370" y="480" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" value="Confirmar retorno seguro (check-in)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="620" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="a4" value="Finalizar expedición y detener temporizadores" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="710" width="420" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="post" value="Postcondición: archivada en historial" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9E6;strokeColor=#999999;fontColor=#1A1A1A;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="800" width="420" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="end" value="" style="ellipse;aspect=fixed;fillColor=#FFFFFF;strokeColor=#1A1A1A;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="484" y="870" width="32" height="32" as="geometry"/>
+        </mxCell>
+        <mxCell id="alt-reminder" value="Notificación preventiva (HU-25)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="780" y="352" width="240" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="escalate" value="Escalamiento → CUN-03" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="496" width="240" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="start" target="a1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a1" target="a2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a2" target="d-30"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="d-30" target="alt-reminder"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="d-30" target="d-checkin"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;dashed=1;exitX=0.5;exitY=1;entryX=1;entryY=0.5;" edge="1" parent="1" source="alt-reminder" target="d-checkin"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="900" y="440"/><mxPoint x="630" y="440"/></Array></mxGeometry></mxCell>
+        <mxCell id="e7" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="d-checkin" target="a3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="d-checkin" target="escalate"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a3" target="a4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="a4" target="post"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;" edge="1" parent="1" source="post" target="end"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

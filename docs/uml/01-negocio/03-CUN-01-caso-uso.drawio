@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net" agent="TrekSafe" version="24.0.0">
+  <diagram id="cun01-detail" name="CUN-01 Detalle">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="820" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="title" value="CUN-01 — Caso de Uso de Negocio (detalle)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=15;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="280" y="16" width="640" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="boundary" value="Negocio TrekSafe" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="220" y="56" width="760" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-main" value="CUN-01&#xa;Planificar y Registrar&#xa;Expedición Segura" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="300" width="240" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc1" value="Declarar itinerario" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="260" y="100" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc2" value="Registrar datos médicos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="260" y="220" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc3" value="Vincular contactos y acompañantes" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="260" y="480" width="200" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc4" value="Programar fecha y retorno" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="100" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc5" value="Activar monitoreo pasivo" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="480" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc6" value="Registro offline&#xa;&lt;&lt;extend&gt;&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="290" width="180" height="72" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor" value="Senderista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="60" y="310" width="48" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-actor" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="actor" target="uc-main"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e-i1" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;fontColor=#1A1A1A;exitX=0.25;exitY=0;entryX=0.75;entryY=1;" edge="1" parent="1" source="uc-main" target="uc1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e-i2" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0;exitY=0.25;entryX=1;entryY=0.75;" edge="1" parent="1" source="uc-main" target="uc2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e-i3" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0;exitY=0.75;entryX=1;entryY=0.25;" edge="1" parent="1" source="uc-main" target="uc3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e-i4" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0.75;exitY=0;entryX=0.25;entryY=1;" edge="1" parent="1" source="uc-main" target="uc4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e-i5" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0.75;exitY=1;entryX=0.25;entryY=0;" edge="1" parent="1" source="uc-main" target="uc5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e-x6" value="&lt;&lt;extend&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#666666;fontSize=9;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="uc6" target="uc-main"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="note" value="HU-04 a HU-08, HU-22, HU-23" style="text;html=1;fontColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="220" y="670" width="280" height="24" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
