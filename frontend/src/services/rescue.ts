@@ -10,6 +10,8 @@ export type RescueExpedition = {
   hikerPhone: string;
   startLocation: string;
   endLocation: string;
+  startCoordinates: string | null;
+  endCoordinates: string | null;
   startTime: string;
   estimatedReturnTime: string;
   deadlineAt: string;

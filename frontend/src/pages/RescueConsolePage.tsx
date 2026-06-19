@@ -13,6 +13,8 @@ import {
   type RescueExpedition,
   type RescueExpeditionRiskLevel,
 } from '@/services/rescue';
+import type { RescueExpeditionMapPoint } from '@/components/maps/RescueExpeditionsMap';
+import { RescueExpeditionsMapLazy } from '@/components/maps/RescueExpeditionsMapLazy';
 
 const RISK_META: Record<
   RescueExpeditionRiskLevel,
@@ -64,6 +66,29 @@ function formatTimeStatus(exp: RescueExpedition): string {
   return `Límite: ${formatDt(exp.deadlineAt)}`;
 }
 
+function pickMapCoordinates(exp: RescueExpedition): string | null {
+  return exp.startCoordinates ?? exp.endCoordinates ?? null;
+}
+
+function toMapPoints(expeditions: RescueExpedition[]): RescueExpeditionMapPoint[] {
+  return expeditions.flatMap((exp) => {
+    const coordinates = pickMapCoordinates(exp);
+    if (!coordinates) return [];
+    return [
+      {
+        expeditionId: exp.expeditionId,
+        label: exp.endLocation,
+        sublabel: exp.hikerFullName,
+        routeLabel: `${exp.startLocation} → ${exp.endLocation}`,
+        coordinates,
+        riskLevel: exp.riskLevel,
+        alertHref:
+          exp.riskLevel === 'red' ? `/rescatista/alertas/${exp.expeditionId}` : undefined,
+      },
+    ];
+  });
+}
+
 export function RescueConsolePage() {
   const [expeditions, setExpeditions] = useState<RescueExpedition[]>([]);
   const [zoneInput, setZoneInput] = useState('');
@@ -94,6 +119,8 @@ export function RescueConsolePage() {
     }),
     [expeditions],
   );
+
+  const mapPoints = useMemo(() => toMapPoints(expeditions), [expeditions]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,6 +183,15 @@ export function RescueConsolePage() {
           </div>
         ))}
       </div>
+
+      {!loading && mapPoints.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2 flex items-center gap-1">
+            <MapPin size={14} /> Mapa de expediciones activas
+          </h3>
+          <RescueExpeditionsMapLazy expeditions={mapPoints} />
+        </div>
+      )}
 
       {error && <div className="error-banner mb-4">{error}</div>}
 

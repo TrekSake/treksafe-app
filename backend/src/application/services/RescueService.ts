@@ -33,6 +33,8 @@ export type RescueExpeditionItem = {
   hikerPhone: string;
   startLocation: string;
   endLocation: string;
+  startCoordinates: string | null;
+  endCoordinates: string | null;
   startTime: string;
   estimatedReturnTime: string;
   deadlineAt: string;
@@ -154,6 +156,8 @@ export class RescueService {
         hikerPhone: hiker.phone,
         startLocation: row.start_location,
         endLocation: row.end_location,
+        startCoordinates: row.start_coordinates ?? null,
+        endCoordinates: row.end_coordinates ?? null,
         startTime: row.start_time,
         estimatedReturnTime: row.estimated_return_time,
         deadlineAt,

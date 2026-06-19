@@ -19,6 +19,8 @@ export type AlertExpeditionRow = {
 
 export type MonitorExpeditionRow = AlertExpeditionRow & {
   status: 'in_progress' | 'alert';
+  start_coordinates: string | null;
+  end_coordinates: string | null;
 };
 
 export type RescueLogRow = {
@@ -78,7 +80,8 @@ export class RescueRepository {
       .from('expeditions')
       .select(
         `
-        id, status, start_location, end_location, start_time, estimated_return_time,
+        id, status, start_location, end_location, start_coordinates, end_coordinates,
+        start_time, estimated_return_time,
         tolerance_minutes, updated_at,
         hikers_profile ( full_name, phone )
       `,

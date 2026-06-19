@@ -160,3 +160,12 @@ button {
   font-size: 0.75rem;
   margin-top: 0.25rem;
 }
+
+.treksafe-map-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-container {
+  font-family: inherit;
+}

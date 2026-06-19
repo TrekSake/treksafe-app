@@ -10,6 +10,7 @@ import {
   Phone,
   Users,
 } from 'lucide-react';
+import { ExpeditionRouteMapLazy } from '@/components/maps/ExpeditionRouteMapLazy';
 import {
   confirmRescueAlert,
   getRescueAlertDetail,
@@ -158,6 +159,13 @@ export function RescueAlertDetailPage() {
           <MapPin size={14} /> Ruta declarada
         </h3>
         <p className="font-medium">{detail.startLocation} → {detail.endLocation}</p>
+        <ExpeditionRouteMapLazy
+          startCoordinates={detail.startCoordinates}
+          endCoordinates={detail.endCoordinates}
+          startLabel={detail.startLocation}
+          endLabel={detail.endLocation}
+          className="mt-3"
+        />
         {(detail.startCoordinates || detail.endCoordinates) && (
           <div className="mt-2 text-sm text-muted-foreground space-y-1">
             {detail.startCoordinates && <p>Inicio: {detail.startCoordinates}</p>}

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Globe, Plus, WifiOff, X } from 'lucide-react';
 import { FieldError, FieldLabel } from '@/components/Layout';
+import { CoordinatePickerMapLazy } from '@/components/maps/CoordinatePickerMapLazy';
+import type { CoordinatePickerTarget } from '@/components/maps/CoordinatePickerMap';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { validateCoordinateInput } from '@/lib/coordinates';
 import { cacheContacts, getCachedContacts } from '@/lib/offlineContacts';
@@ -33,6 +35,7 @@ export function CreateExpeditionPage() {
   const [toleranceMinutes, setToleranceMinutes] = useState(30);
   const [selectedContactIds, setSelectedContactIds] = useState<string[]>([]);
   const [companionNames, setCompanionNames] = useState<string[]>(['']);
+  const [pickerTarget, setPickerTarget] = useState<CoordinatePickerTarget>('start');
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
@@ -329,6 +332,32 @@ export function CreateExpeditionPage() {
           />
           {endCoordError && <FieldError message={endCoordError} />}
         </div>
+
+        {online && (
+          <div>
+            <FieldLabel>Ubicación en mapa (opcional)</FieldLabel>
+            <CoordinatePickerMapLazy
+              className="mt-2"
+              activeTarget={pickerTarget}
+              onActiveTargetChange={setPickerTarget}
+              startCoordinates={startCoordinates}
+              endCoordinates={endCoordinates}
+              startLabel={startLocation}
+              endLabel={endLocation}
+              onStartChange={(value) => {
+                setStartCoordinates(value);
+                if (startCoordError) setStartCoordError('');
+              }}
+              onEndChange={(value) => {
+                setEndCoordinates(value);
+                if (endCoordError) setEndCoordError('');
+              }}
+              onStartError={setStartCoordError}
+              onEndError={setEndCoordError}
+            />
+          </div>
+        )}
+
         <div>
           <FieldLabel>Fecha y hora de salida</FieldLabel>
           <input
