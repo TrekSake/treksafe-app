@@ -1,11 +1,11 @@
 # Modelos UML — TrekSafe
 
-Diagramas del **Capítulo 5** (`docs/proyecto-final.md`). Archivos fuente Draw.io para el **Anexo B**.
+Diagramas UML del sistema TrekSafe. Archivos fuente Draw.io organizados por capa.
 
 ## Herramienta
 
 - Extensión Cursor/VS Code: **Draw.io Integration** (`hediet.vscode-drawio`)
-- Abrir cualquier `.drawio` → editar visualmente → exportar PNG/SVG a `exports/`
+- Abrir cualquier `.drawio` → editar visualmente → exportar PNG/SVG si se necesita una imagen estática
 
 ### Convenciones visuales (legibilidad)
 
@@ -22,37 +22,35 @@ Diagramas del **Capítulo 5** (`docs/proyecto-final.md`). Archivos fuente Draw.i
 
 Si un diagrama se ve amontonado al abrirlo, usa **View → Fit** o amplía el zoom; los tamaños de página están dimensionados para A4/letter al exportar.
 
-## Estado de avance
+## Índice de diagramas
 
-| Fase | Diagramas | Estado |
-|------|-----------|:------:|
-| **1 — Base técnica** | ER, Componentes, Despliegue | ✅ |
-| **2 — Negocio** | CU negocio general, flujos y CU por CUN | ✅ |
-| **3 — Sistema** | CU sistema general + CUS por CUN | ✅ |
-| **4 — Detalle** | Secuencias + Clases | ✅ |
-| 5 — Cierre | Exports + referencias en informe | Pendiente |
+| Capa | Contenido |
+|------|-----------|
+| **1 — Base técnica** | Componentes, despliegue |
+| **2 — Negocio** | CU negocio general, flujos y CU por CUN |
+| **3 — Sistema** | CU sistema general + CUS por CUN |
+| **4 — Detalle** | Secuencias + clases |
 
 ---
 
-## Fase 1 — Archivos creados
+## Fase 1 — Base técnica
 
 | # | Archivo | Descripción |
 |---|---------|-------------|
-| 11 | [`05-base-datos/11-modelo-relacional.drawio`](./05-base-datos/11-modelo-relacional.drawio) | ER PostgreSQL — 12 tablas, ENUMs, FK |
-| 12 | [`06-componentes/12-diagrama-componentes.drawio`](./06-componentes/12-diagrama-componentes.drawio) | Clean Architecture — frontend + backend |
+| 12 | [`06-componentes/12-diagrama-componentes-simple.drawio`](./06-componentes/12-diagrama-componentes-simple.drawio) | Vista general — actores, componentes básicos, BD y correo |
 | 13 | [`07-despliegue/13-diagrama-despliegue.drawio`](./07-despliegue/13-diagrama-despliegue.drawio) | Nodos: PWA, API Node, Supabase, correo |
 
 ### Fuentes de verdad (Fase 1)
 
 | Diagrama | Referencia en código/docs |
 |----------|---------------------------|
-| ER | `init_schema.sql`, `post_mvp_migration.sql`, `enable_rls.sql` |
+| Modelo de datos | `init_schema.sql`, `post_mvp_migration.sql`, `enable_rls.sql` |
 | Componentes | `backend/src/{presentation,application,infrastructure}/`, `frontend/src/` |
 | Despliegue | `README.md`, `backend/.env.example`, `main.ts` |
 
 ---
 
-## Fase 2 — Archivos creados
+## Fase 2 — Negocio
 
 | # | Archivo | Descripción |
 |---|---------|-------------|
@@ -74,7 +72,7 @@ Si un diagrama se ve amontonado al abrirlo, usa **View → Fit** o amplía el zo
 
 ---
 
-## Fase 3 — Archivos creados
+## Fase 3 — Sistema
 
 | # | Archivo | Descripción |
 |---|---------|-------------|
@@ -112,7 +110,7 @@ Si un diagrama se ve amontonado al abrirlo, usa **View → Fit** o amplía el zo
 
 ---
 
-## Fase 4 — Archivos creados
+## Fase 4 — Detalle
 
 | # | Archivo | Descripción |
 |---|---------|-------------|
@@ -120,7 +118,7 @@ Si un diagrama se ve amontonado al abrirlo, usa **View → Fit** o amplía el zo
 | 07 | [`03-secuencia/07-secuencia-checkin-retorno.drawio`](./03-secuencia/07-secuencia-checkin-retorno.drawio) | CUS-09 · countdown, re-auth bcrypt, status completed |
 | 08 | [`03-secuencia/08-secuencia-escalamiento-alerta.drawio`](./03-secuencia/08-secuencia-escalamiento-alerta.drawio) | CUS-12/13/14 · cron → alert → emails idempotentes |
 | 09 | [`03-secuencia/09-secuencia-gestion-rescate.drawio`](./03-secuencia/09-secuencia-gestion-rescate.drawio) | CUS-15/17/18/19 · consola, confirm, ficha, bitácora |
-| 10 | [`04-clases/10-diagrama-clases-dominio.drawio`](./04-clases/10-diagrama-clases-dominio.drawio) | Entidades, servicios, repositorios, relaciones |
+| 10 | [`04-clases/10-diagrama-clases-negocio.drawio`](./04-clases/10-diagrama-clases-negocio.drawio) | Entidades de dominio y relaciones de negocio |
 
 ### Secuencias — trazabilidad
 
@@ -133,9 +131,11 @@ Si un diagrama se ve amontonado al abrirlo, usa **View → Fit** o amplía el zo
 
 ---
 
-## Modelo relacional (diagrama 11)
+## Modelo relacional
 
 **Tipo:** PostgreSQL relacional (Supabase). No NoSQL.
+
+Referencia principal: `init_schema.sql`, `enable_rls.sql`, `post_mvp_migration.sql`.
 
 ### Tablas (12)
 
@@ -163,6 +163,18 @@ Si un diagrama se ve amontonado al abrirlo, usa **View → Fit** o amplía el zo
 ---
 
 ## Componentes (diagrama 12)
+
+Archivo: [`12-diagrama-componentes-simple.drawio`](./06-componentes/12-diagrama-componentes-simple.drawio)
+
+| Elemento | Rol |
+|----------|-----|
+| App del Senderista | Plan de ruta, check-in |
+| Consola del Rescatista | Alertas y bitácora |
+| Servidor TrekSafe | Lógica central |
+| Control de Plazos | Vigila vencimientos |
+| Base de Datos | Persistencia |
+| Correo Electrónico | Alertas y notificaciones |
+| Actores | Senderista, Rescatista, Contacto de Emergencia |
 
 ```
 Frontend PWA          Backend API                    Externos
@@ -193,26 +205,10 @@ PWA Service Worker    security/ jwt, encryption
 
 ---
 
-## Exportar imágenes para el informe
-
-1. Abrir el `.drawio` en Cursor.
-2. *File → Export as → PNG* (o SVG).
-3. Guardar en `docs/uml/exports/` con el mismo prefijo numérico:
-   - Fase 1: `11-*.png`, `12-*.png`, `13-*.png`
-   - Fase 2: `01-*.png`, `02-flujo-CUN-0X.png`, `03-CUN-0X.png`
-   - Fase 3: `04-caso-uso-sistema-general.png`, `05-CUN-0X-caso-uso-sistema.png`
-   - Fase 4: `06-secuencia-*.png`, `07-09-*.png`, `10-diagrama-clases-dominio.png`
-
----
-
-## Trazabilidad CUN ↔ HU (referencia fases 2–4)
+## Trazabilidad CUN ↔ HU
 
 | CUN | Historias clave |
 |-----|----------------|
 | CUN-01 Planificar expedición | HU-01–08, 21–23 |
 | CUN-02 Verificar retorno | HU-09, 10, 20, 25 |
 | CUN-03 Coordinar rescate | HU-03, 11–19 |
-
----
-
-*Última actualización: Fase 4 completada — 2026-06-18*

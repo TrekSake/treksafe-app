@@ -144,7 +144,7 @@ treksake-app/
 │       ├── pages/           # Pantallas por rol
 │       ├── components/      # UI reutilizable
 │       └── services/        # Cliente API
-├── docs/                    # Backlog, DoR, DoD, mockups Figma, proyecto final
+├── docs/                    # Backlog, DoR, DoD, UML, mockups Figma
 ├── init_schema.sql          # Esquema base + datos mock de prueba
 ├── enable_rls.sql           # Políticas RLS
 ├── sprint2_migration.sql    # Cifrado médico
@@ -335,11 +335,11 @@ Prefijo base: `/api` · Autenticación: `Authorization: Bearer <JWT>`
 
 | Documento | Contenido |
 |-----------|-----------|
-| [`docs/proyecto-final.md`](docs/proyecto-final.md) | Visión, alcance, reglas de negocio, mockups |
 | [`docs/product_backlog.md`](docs/product_backlog.md) | 25 historias de usuario (HU-01 a HU-25) |
 | [`docs/tasks_mvp.md`](docs/tasks_mvp.md) | Desglose de tareas por sprint |
 | [`docs/definition_of_ready.md`](docs/definition_of_ready.md) | Criterios DoR (CONNEXTRA, INVEST, Gherkin) |
 | [`docs/definition_of_done.md`](docs/definition_of_done.md) | Criterios DoD y validación de cierre |
+| [`docs/uml/README.md`](docs/uml/README.md) | Diagramas UML (Draw.io) |
 | [`docs/mockups/`](docs/mockups/) | Prototipos Figma exportados |
 
 ---

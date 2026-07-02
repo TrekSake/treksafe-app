@@ -1,8 +1,7 @@
 # Desglose de tareas — TrekSafe
 
-**Última actualización:** 2026-06-18  
 **Equipo:** Marko Antonio Lopez Bernuy (PO) · Ariana Belen Blanco Quintana (SM) · Manuel Rodrigo Llaury Murga · Pedro Leonardo Ormeño Moquillaza · Yahel Jair Cordova Amez  
-**Referencias:** [product_backlog.md](./product_backlog.md) · [proyecto-final.md](./proyecto-final.md)
+**Referencias:** [product_backlog.md](./product_backlog.md) · [definition_of_ready.md](./definition_of_ready.md) · [definition_of_done.md](./definition_of_done.md)
 
 **Leyenda:** todas las tareas del Release 01 y Release 02 se encuentran en estado **Done**.
 

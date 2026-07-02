@@ -1,10 +1,10 @@
-# Definition of Done (DoD) — TrekSafe
+﻿# Definition of Done (DoD) — TrekSafe
 
 ## Propósito
 
 La **Definición de Terminado (DoD)** establece los criterios que un incremento (historia de usuario o funcionalidad completa) debe cumplir para considerarse **terminado** y potencialmente liberable.
 
-Su objetivo es garantizar que el equipo no entregue incrementos incompletos, no probados o que incumplan los estándares de calidad y las restricciones técnicas definidas en [proyecto-final.md](./proyecto-final.md) y el [product_backlog.md](./product_backlog.md).
+Su objetivo es garantizar que el equipo no entregue incrementos incompletos, no probados o que incumplan los estándares de calidad y las restricciones técnicas definidas en el [product_backlog.md](./product_backlog.md).
 
 **Alcance:** aplica a las 25 historias de usuario (HU-01 a HU-25) distribuidas en Release 01 (MVP, 57 SP) y Release 02 (optimización, 39 SP). **Estado:** 25/25 HUs validadas y cerradas.
 
@@ -13,7 +13,7 @@ Su objetivo es garantizar que el equipo no entregue incrementos incompletos, no 
 ## Cuándo aplicar la DoD
 
 | Nivel | Momento de verificación |
-|-------|-------------------------|
+|-------|| Release | Resultado |`n|---------|-----------|`n| Release 01 — MVP | Aprobado por Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Aprobado por Marko Antonio Lopez Bernuy |----|
 | **Historia de usuario** | Antes de mover la HU a `Done` en el backlog |
 | **Sprint** | En la Sprint Review, sobre el incremento integrado |
 | **Release** | Antes de declarar Release 01 o Release 02 como completado |
@@ -25,7 +25,7 @@ Su objetivo es garantizar que el equipo no entregue incrementos incompletos, no 
 Cada incremento debe cumplir **todos** los criterios siguientes.
 
 | ID | Criterio | Requisito verificable |
-|----|----------|----------------------|
+|----|----------|| Release | Resultado |`n|---------|-----------|`n| Release 01 — MVP | Aprobado por Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Aprobado por Marko Antonio Lopez Bernuy |-|
 | **DOD-01** | Código implementado | La funcionalidad está en el repositorio (`main` o rama integrada) con commits descriptivos bajo convención `type(scope): description` |
 | **DOD-02** | Pruebas unitarias | Las pruebas unitarias del módulo afectado pasan. Cobertura ≥ 80 % en **lógica crítica**: alertas, check-in, validaciones de coordenadas, cifrado médico, control de plazos (cron) |
 | **DOD-03** | Pruebas de integración | Las interacciones con base de datos (Supabase/PostgreSQL) y correo (SMTP o Brevo API, simulado en desarrollo con `MAIL_DEV_FALLBACK`) funcionan en el flujo de la HU |
@@ -33,7 +33,7 @@ Cada incremento debe cumplir **todos** los criterios siguientes.
 | **DOD-05** | Revisión de código | Al menos un developer distinto al autor revisó y aprobó el código (revisión en pareja) |
 | **DOD-06** | Sin bugs críticos | No hay defectos que bloqueen el flujo principal: `registro → crear expedición → check-in → alerta` |
 | **DOD-07** | Restricciones técnicas | Sin dependencias IoT (RC-03). Sin servicios cloud de pago no aprobados (RC-04). Stack limitado a tier gratuito verificado |
-| **DOD-08** | Documentación actualizada | La HU queda en [product_backlog.md](./product_backlog.md) como `Done` con fecha y responsable |
+| **DOD-08** | Documentación actualizada | La HU queda en [product_backlog.md](./product_backlog.md) como `Done` con responsable |
 | **DOD-09** | Privacidad y consentimiento | Cumple RC-05 (Ley N° 29733): consentimiento explícito donde aplique; datos sensibles cifrados en reposo; acceso médico solo en contexto de alerta activa |
 | **DOD-10** | Aprobación del PO | Despliegue exitoso en **staging** y validación del Product Owner en Sprint Review |
 
@@ -43,7 +43,7 @@ Cada incremento debe cumplir **todos** los criterios siguientes.
 
 ### Frontend (PWA — React + Vite)
 
-- [x] La pantalla coincide funcionalmente con el mockup del sprint correspondiente en `docs/proyecto-final.md`
+- [x] La pantalla coincide funcionalmente con el mockup del sprint correspondiente en `docs/mockups/`
 - [x] Diseño responsive (móvil y escritorio)
 - [x] Manejo de estados de carga, error y vacío
 - [x] Rutas protegidas según rol (`hiker` / `rescuer`)
@@ -88,7 +88,7 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 ### Release 01 — MVP (HU-01 a HU-14, Sprints 1–4)
 
 | Sprint | HUs | Verificación mínima al cerrar sprint |
-|--------|-----|--------------------------------------|
+|--------|-----|| Release | Resultado |`n|---------|-----------|`n| Release 01 — MVP | Aprobado por Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Aprobado por Marko Antonio Lopez Bernuy || Release | Resultado |`n|---------|-----------|`n| Release 01 — MVP | Aprobado por Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Aprobado por Marko Antonio Lopez Bernuy |------|
 | 1 | HU-01, HU-02, HU-03 | Cuentas demo operativas; login diferenciado por rol; validación de credencial rescatista solo en registro |
 | 2 | HU-04 a HU-08 | Expedición creada con origen/destino, contactos, acompañantes; médica cifrada en BD |
 | 3 | HU-09, HU-10, HU-11 | Temporizador en UI; check-in finaliza expedición; cron genera alerta automática |
@@ -99,7 +99,7 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 ### Release 02 — Optimización (HU-15 a HU-25, Sprints 5–8)
 
 | Sprint | HUs | Verificación mínima al cerrar sprint |
-|--------|-----|--------------------------------------|
+|--------|-----|| Release | Resultado |`n|---------|-----------|`n| Release 01 — MVP | Aprobado por Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Aprobado por Marko Antonio Lopez Bernuy || Release | Resultado |`n|---------|-----------|`n| Release 01 — MVP | Aprobado por Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Aprobado por Marko Antonio Lopez Bernuy |------|
 | 5 | HU-15, HU-16, HU-17 | Dashboard rescatista con filtros por zona y semáforo verde/amarillo/rojo |
 | 6 | HU-18, HU-19, HU-20 | Ficha de emergencia desbloqueada solo en alerta; bitácora con estados; historial senderista |
 | 7 | HU-21, HU-22, HU-23 | Revocación/anonimización ARCO; formularios offline con sincronización; validación de coordenadas |
@@ -113,14 +113,12 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 
 **Product Owner:** Marko Antonio Lopez Bernuy  
 **Estado global:** 25/25 HUs validadas  
-**Última actualización:** 2026-06-18
 
 ### Sprint 1
 
 #### HU-01 — Registro de Senderistas
 - **Responsable:** Manuel Rodrigo Llaury Murga
 - **Revisor:** Pedro Leonardo Ormeño Moquillaza
-- **Fecha cierre:** 2026-02-07
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -139,7 +137,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-02 — Inicio de Sesión Seguro
 - **Responsable:** Pedro Leonardo Ormeño Moquillaza
 - **Revisor:** Yahel Jair Cordova Amez
-- **Fecha cierre:** 2026-02-07
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -158,7 +155,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-03 — Registro de Cuerpos de Rescate
 - **Responsable:** Yahel Jair Cordova Amez
 - **Revisor:** Manuel Rodrigo Llaury Murga
-- **Fecha cierre:** 2026-02-07
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -179,7 +175,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-04 — Información Inicial de Expedición
 - **Responsable:** Manuel Rodrigo Llaury Murga
 - **Revisor:** Ariana Belen Blanco Quintana
-- **Fecha cierre:** 2026-02-21
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -198,7 +193,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-05 — Historial Médico y Consentimiento
 - **Responsable:** Pedro Leonardo Ormeño Moquillaza
 - **Revisor:** Manuel Rodrigo Llaury Murga
-- **Fecha cierre:** 2026-02-21
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -217,7 +211,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-06 — Contactos de Emergencia Frecuentes
 - **Responsable:** Yahel Jair Cordova Amez
 - **Revisor:** Pedro Leonardo Ormeño Moquillaza
-- **Fecha cierre:** 2026-02-21
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -236,7 +229,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-07 — Creación de Plan de Expedición
 - **Responsable:** Manuel Rodrigo Llaury Murga
 - **Revisor:** Yahel Jair Cordova Amez
-- **Fecha cierre:** 2026-02-21
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -255,7 +247,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-08 — Asociación de Contactos y Grupo
 - **Responsable:** Pedro Leonardo Ormeño Moquillaza
 - **Revisor:** Ariana Belen Blanco Quintana
-- **Fecha cierre:** 2026-02-21
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -276,7 +267,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-09 — Visualización de Expedición Activa
 - **Responsable:** Yahel Jair Cordova Amez
 - **Revisor:** Manuel Rodrigo Llaury Murga
-- **Fecha cierre:** 2026-03-07
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -295,7 +285,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-10 — Check-in Manual de Retorno Seguro
 - **Responsable:** Manuel Rodrigo Llaury Murga
 - **Revisor:** Pedro Leonardo Ormeño Moquillaza
-- **Fecha cierre:** 2026-03-07
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -314,7 +303,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-11 — Motor de Control de Plazos (Cron Job)
 - **Responsable:** Pedro Leonardo Ormeño Moquillaza
 - **Revisor:** Yahel Jair Cordova Amez
-- **Fecha cierre:** 2026-03-07
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -335,7 +323,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-12 — Alerta por Correo a Contactos
 - **Responsable:** Yahel Jair Cordova Amez
 - **Revisor:** Ariana Belen Blanco Quintana
-- **Fecha cierre:** 2026-03-21
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -354,7 +341,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-13 — Alerta por Correo a Equipos de Rescate
 - **Responsable:** Manuel Rodrigo Llaury Murga
 - **Revisor:** Pedro Leonardo Ormeño Moquillaza
-- **Fecha cierre:** 2026-03-21
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -373,7 +359,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-14 — Confirmación de Recepción de Alerta
 - **Responsable:** Pedro Leonardo Ormeño Moquillaza
 - **Revisor:** Manuel Rodrigo Llaury Murga
-- **Fecha cierre:** 2026-03-21
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -394,7 +379,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-15 — Dashboard Central de Expediciones
 - **Responsable:** Yahel Jair Cordova Amez
 - **Revisor:** Pedro Leonardo Ormeño Moquillaza
-- **Fecha cierre:** 2026-04-04
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -413,7 +397,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-16 — Filtro de Expediciones por Zona
 - **Responsable:** Manuel Rodrigo Llaury Murga
 - **Revisor:** Ariana Belen Blanco Quintana
-- **Fecha cierre:** 2026-04-04
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -432,7 +415,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-17 — Consola Visual de Alertas por Colores
 - **Responsable:** Pedro Leonardo Ormeño Moquillaza
 - **Revisor:** Yahel Jair Cordova Amez
-- **Fecha cierre:** 2026-04-04
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -453,7 +435,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-18 — Consulta de Ficha de Emergencia
 - **Responsable:** Manuel Rodrigo Llaury Murga
 - **Revisor:** Yahel Jair Cordova Amez
-- **Fecha cierre:** 2026-04-18
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -472,7 +453,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-19 — Bitácora y Estados de Rescate
 - **Responsable:** Pedro Leonardo Ormeño Moquillaza
 - **Revisor:** Manuel Rodrigo Llaury Murga
-- **Fecha cierre:** 2026-04-18
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -491,7 +471,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-20 — Historial de Expediciones Finalizadas
 - **Responsable:** Yahel Jair Cordova Amez
 - **Revisor:** Pedro Leonardo Ormeño Moquillaza
-- **Fecha cierre:** 2026-04-18
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -512,7 +491,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-21 — Revocación de Datos (Derechos ARCO)
 - **Responsable:** Manuel Rodrigo Llaury Murga
 - **Revisor:** Ariana Belen Blanco Quintana
-- **Fecha cierre:** 2026-05-02
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -531,7 +509,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-22 — Caché y Formularios Offline
 - **Responsable:** Pedro Leonardo Ormeño Moquillaza
 - **Revisor:** Manuel Rodrigo Llaury Murga
-- **Fecha cierre:** 2026-06-18
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -550,7 +527,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-23 — Validación de Coordenadas
 - **Responsable:** Yahel Jair Cordova Amez
 - **Revisor:** Pedro Leonardo Ormeño Moquillaza
-- **Fecha cierre:** 2026-05-02
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -571,7 +547,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-24 — Optimización de UX y Modo Oscuro
 - **Responsable:** Manuel Rodrigo Llaury Murga
 - **Revisor:** Yahel Jair Cordova Amez
-- **Fecha cierre:** 2026-05-16
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -590,7 +565,6 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 #### HU-25 — Notificación de Proximidad de Expiración
 - **Responsable:** Pedro Leonardo Ormeño Moquillaza
 - **Revisor:** Ariana Belen Blanco Quintana
-- **Fecha cierre:** 2026-05-16
 - **PO (DOD-10):** Marko Antonio Lopez Bernuy
 
 | Criterio | ✓ |
@@ -611,10 +585,10 @@ Rescatista:  Login → Panel alertas → Confirmar recepción → (R2) Ficha eme
 
 ## Cierre de releases
 
-| Release | Fecha validación PO | Resultado |
-|---------|---------------------|-----------|
-| Release 01 — MVP | 2026-03-21 | Aprobado por Marko Antonio Lopez Bernuy |
-| Release 02 — Optimización | 2026-06-18 | Aprobado por Marko Antonio Lopez Bernuy |
+| Release | Resultado |
+|---------|-----------|
+| Release 01 — MVP | Aprobado por Marko Antonio Lopez Bernuy |
+| Release 02 — Optimización | Aprobado por Marko Antonio Lopez Bernuy |
 
 ---
 

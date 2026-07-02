@@ -1,99 +1,102 @@
-<mxfile host="app.diagrams.net" agent="TrekSafe" version="24.0.0">
+<mxfile host="Electron" agent="TrekSafe">
   <diagram id="cus-cun03" name="CUS CUN-03">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" background="#FFFFFF" math="0" shadow="0">
+    <mxGraphModel dx="1323" dy="838" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" background="#FFFFFF" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
-        <mxCell id="title" value="CUS — CUN-03: Coordinar y Ejecutar Operaciones de Rescate" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=15;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="250" y="20" width="900" height="32" as="geometry" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=15;fontColor=#1A1A1A;" value="CUS — CUN-03: Coordinar y Ejecutar Operaciones de Rescate" vertex="1">
+          <mxGeometry height="32" width="900" x="190" y="30" as="geometry" />
         </mxCell>
-
-        <mxCell id="boundary" value="«system» TrekSafe PWA + API + Cron" style="swimlane;startSize=32;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;fontSize=13;" vertex="1" parent="1">
-          <mxGeometry x="220" y="70" width="960" height="620" as="geometry" />
+        <mxCell id="boundary" parent="1" style="swimlane;startSize=32;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;fontSize=13;" value="«system» TrekSafe" vertex="1">
+          <mxGeometry height="720" width="840" x="220" y="70" as="geometry" />
         </mxCell>
-
-        <mxCell id="cun-ref" value="«realiza» CUN-03" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FFF9E6;strokeColor=#999999;fontColor=#1A1A1A;fontStyle=1;size=16;align=left;spacingLeft=10;" vertex="1" parent="boundary">
-          <mxGeometry x="30" y="50" width="130" height="52" as="geometry" />
+        <mxCell id="cus02" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" value="CUS-02&#xa;Registrar Rescatista" vertex="1">
+          <mxGeometry height="60" width="140" x="360" y="50" as="geometry" />
         </mxCell>
-
-        <!-- Auth -->
-        <mxCell id="cus02" value="CUS-02&#xa;Registrar Rescatista" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="boundary">
-          <mxGeometry x="40" y="130" width="140" height="60" as="geometry" />
+        <mxCell id="cus03" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" value="CUS-03&#xa;Iniciar Sesión" vertex="1">
+          <mxGeometry height="60" width="140" x="370" y="130" as="geometry" />
         </mxCell>
-        <mxCell id="cus03" value="CUS-03&#xa;Iniciar Sesión" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="boundary">
-          <mxGeometry x="260" y="130" width="140" height="60" as="geometry" />
+        <mxCell id="cron-box" parent="boundary" style="swimlane;startSize=24;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;" value="Motor automatizado" vertex="1">
+          <mxGeometry height="210" width="780" x="30" y="470" as="geometry" />
         </mxCell>
-
-        <!-- Cron sub-band -->
-        <mxCell id="cron-box" value="Motor automatizado" style="swimlane;startSize=24;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;" vertex="1" parent="boundary">
-          <mxGeometry x="40" y="230" width="880" height="140" as="geometry" />
+        <mxCell id="cus12" parent="cron-box" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;fontStyle=1;" value="CUS-12&#xa;Motor Control Plazos" vertex="1">
+          <mxGeometry height="65" width="140" x="10" y="80" as="geometry" />
         </mxCell>
-        <mxCell id="cus12" value="CUS-12&#xa;Motor Control Plazos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;fontStyle=1;" vertex="1" parent="cron-box">
-          <mxGeometry x="260" y="50" width="140" height="65" as="geometry" />
+        <mxCell id="cus13" parent="cron-box" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" value="CUS-13&lt;br&gt;Alerta Contactos" vertex="1">
+          <mxGeometry height="65" width="140" x="590" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="cus13" value="CUS-13&#xa;Alerta Contactos&#xa;&lt;&lt;include&gt;&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;dashed=1;" vertex="1" parent="cron-box">
-          <mxGeometry x="480" y="50" width="140" height="65" as="geometry" />
+        <mxCell id="cus14" parent="cron-box" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" value="CUS-14&lt;br&gt;Alerta Rescate" vertex="1">
+          <mxGeometry height="65" width="140" x="460" y="120" as="geometry" />
         </mxCell>
-        <mxCell id="cus14" value="CUS-14&#xa;Alerta Rescate&#xa;&lt;&lt;include&gt;&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;dashed=1;" vertex="1" parent="cron-box">
-          <mxGeometry x="700" y="50" width="140" height="65" as="geometry" />
+        <mxCell id="console-box" parent="boundary" style="swimlane;startSize=24;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;" value="Consola rescatista" vertex="1">
+          <mxGeometry height="240" width="780" x="30" y="200" as="geometry" />
         </mxCell>
-
-        <!-- Console sub-band -->
-        <mxCell id="console-box" value="Consola rescatista" style="swimlane;startSize=24;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;" vertex="1" parent="boundary">
-          <mxGeometry x="40" y="400" width="880" height="200" as="geometry" />
+        <mxCell id="cus15" parent="console-box" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" value="CUS-15&#xa;Panel Monitoreo&#xa;(semáforo)" vertex="1">
+          <mxGeometry height="65" width="140" x="10" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="cus15" value="CUS-15&#xa;Panel Monitoreo&#xa;(semáforo)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="console-box">
-          <mxGeometry x="40" y="50" width="140" height="65" as="geometry" />
+        <mxCell id="cus16" parent="console-box" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" value="CUS-16&#xa;Filtrar Zona&#xa;&lt;&lt;extend&gt;&gt;" vertex="1">
+          <mxGeometry height="65" width="140" x="130" y="170" as="geometry" />
         </mxCell>
-        <mxCell id="cus16" value="CUS-16&#xa;Filtrar Zona&#xa;&lt;&lt;extend&gt;&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;dashed=1;" vertex="1" parent="console-box">
-          <mxGeometry x="40" y="130" width="140" height="65" as="geometry" />
+        <mxCell id="cus17" parent="console-box" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" value="CUS-17&#xa;Confirmar Alerta" vertex="1">
+          <mxGeometry height="65" width="140" x="220" y="87.5" as="geometry" />
         </mxCell>
-        <mxCell id="cus17" value="CUS-17&#xa;Confirmar Alerta" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="console-box">
-          <mxGeometry x="260" y="50" width="140" height="65" as="geometry" />
+        <mxCell id="cus18" parent="console-box" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" value="CUS-18&#xa;Ficha Emergencia&#xa;(desbloqueo médico)" vertex="1">
+          <mxGeometry height="65" width="140" x="390" y="160" as="geometry" />
         </mxCell>
-        <mxCell id="cus18" value="CUS-18&#xa;Ficha Emergencia&#xa;(desbloqueo médico)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="console-box">
-          <mxGeometry x="480" y="50" width="140" height="65" as="geometry" />
+        <mxCell id="cus19" parent="console-box" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" value="CUS-19&#xa;Bitácora Rescate" vertex="1">
+          <mxGeometry height="65" width="140" x="630" y="160" as="geometry" />
         </mxCell>
-        <mxCell id="cus19" value="CUS-19&#xa;Bitácora Rescate" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;" vertex="1" parent="console-box">
-          <mxGeometry x="700" y="50" width="140" height="65" as="geometry" />
+        <mxCell id="ext16" edge="1" parent="console-box" source="cus16" style="rounded=0;endArrow=open;html=1;endFill=0;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;exitX=0.5;exitY=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" target="cus15" value="&amp;lt;extend&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-
-        <!-- Actors -->
-        <mxCell id="actor-r" value="Rescatista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="1240" y="480" width="48" height="96" as="geometry" />
+        <mxCell id="flow17-18" edge="1" parent="console-box" source="cus17" style="rounded=0;endArrow=open;html=1;endFill=0;strokeColor=#666666;exitX=1;exitY=1;entryX=0;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" target="cus18">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="actor-cron" value="Sistema Cron" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="60" y="360" width="48" height="96" as="geometry" />
-        </mxCell>
-
-        <mxCell id="e-r02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.15;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="cus02"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1200" y="494"/><mxPoint x="1200" y="192"/></Array></mxGeometry></mxCell>
-        <mxCell id="e-r03" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.3;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="cus03"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1210" y="509"/><mxPoint x="1210" y="192"/></Array></mxGeometry></mxCell>
-        <mxCell id="e-r15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="cus15"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1220" y="528"/><mxPoint x="1220" y="542"/></Array></mxGeometry></mxCell>
-        <mxCell id="e-r17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.65;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="cus17"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1230" y="542"/><mxPoint x="1230" y="542"/></Array></mxGeometry></mxCell>
-        <mxCell id="e-r18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.8;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="cus18"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1240" y="557"/><mxPoint x="1240" y="542"/></Array></mxGeometry></mxCell>
-        <mxCell id="e-r19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="actor-r" target="cus19"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1250" y="528"/><mxPoint x="1250" y="542"/></Array></mxGeometry></mxCell>
-        <mxCell id="e-c12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="actor-cron" target="cus12"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="170" y="408"/><mxPoint x="170" y="352"/></Array></mxGeometry></mxCell>
-
-        <mxCell id="inc13" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=open;dashed=1;html=1;endFill=0;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="cus12" target="cus13"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="inc14" value="&lt;&lt;include&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=open;dashed=1;html=1;endFill=0;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" edge="1" parent="1" source="cus12" target="cus14"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="640" y="379"/><mxPoint x="880" y="379"/></Array></mxGeometry></mxCell>
-        <mxCell id="ext16" value="&lt;&lt;extend&gt;&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=open;dashed=1;html=1;endFill=0;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="cus16" target="cus15"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="flow12-15" value="estado → alert" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=open;html=1;dashed=1;endFill=0;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="cus12" target="cus15">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="560" y="410" />
-              <mxPoint x="330" y="410" />
-            </Array>
+        <mxCell id="Css8yqXkE1RnN32wIxUu-3" connectable="0" parent="flow17-18" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;&lt;font&gt;&amp;lt;include&amp;gt;&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.3696" y="1" as="geometry">
+            <mxPoint x="8" y="10" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="flow17-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=open;html=1;dashed=1;endFill=0;strokeColor=#666666;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="cus17" target="cus18"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="flow18-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=open;html=1;dashed=1;endFill=0;strokeColor=#666666;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="cus18" target="cus19"><mxGeometry relative="1" as="geometry" /></mxCell>
-
-        <mxCell id="api-note" value="Cron: expeditionDeadlineCron.ts · MailService · AlertNotificationService · RescueAlertService&#xa;API: GET /rescue/expeditions · /rescue/alerts · POST confirm · PATCH log&#xa;Pantallas: RescueConsolePage · RescueAlertDetailPage · polling 30s" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FFF9E6;strokeColor=#999999;fontColor=#1A1A1A;align=left;verticalAlign=top;spacingLeft=10;size=16;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="220" y="720" width="600" height="72" as="geometry" />
+        <mxCell id="flow18-19" edge="1" parent="console-box" source="cus18" style="rounded=0;endArrow=open;html=1;endFill=0;strokeColor=#666666;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;" target="cus19">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="hu-note" value="HUs: HU-03, HU-11–19 · Ficha médica solo si status = alert · email_dispatches idempotente" style="text;html=1;align=left;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
-          <mxGeometry x="220" y="808" width="600" height="24" as="geometry" />
+        <mxCell id="Css8yqXkE1RnN32wIxUu-4" connectable="0" parent="flow18-19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;&lt;font&gt;&amp;lt;include&amp;gt;&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.1193" y="-2" as="geometry">
+            <mxPoint x="-6" y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flow12-15" edge="1" parent="boundary" source="cus12" style="rounded=0;endArrow=open;html=1;endFill=0;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="cus15" value="estado → alert">
+          <mxGeometry relative="1" x="0.3073" y="3" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="190" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="actor-r" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontColor=#1A1A1A;" value="Rescatista" vertex="1">
+          <mxGeometry height="96" width="48" x="1120" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-cron" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontColor=#1A1A1A;" value="Sistema Cron" vertex="1">
+          <mxGeometry height="96" width="48" x="60" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="e-r02" edge="1" parent="1" source="actor-r" style="rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.15;entryX=1;entryY=0.5;" target="cus02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-r03" edge="1" parent="1" source="actor-r" style="rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.3;entryX=1;entryY=0.5;" target="cus03">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-r15" edge="1" parent="1" source="actor-r" style="rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="cus15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-r17" edge="1" parent="1" source="actor-r" style="rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=0;exitY=0.65;entryX=1;entryY=0.5;" target="cus17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-c12" edge="1" parent="1" source="actor-cron" style="rounded=0;html=1;endArrow=none;strokeColor=#333333;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="cus12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc13" edge="1" parent="1" source="cus12" style="rounded=0;endArrow=open;html=1;endFill=0;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="cus13" value="&amp;lt;include&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc14" edge="1" parent="1" source="cus12" style="rounded=0;endArrow=open;html=1;endFill=0;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" target="cus14" value="&amp;lt;include&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

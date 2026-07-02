@@ -1,0 +1,92 @@
+<mxfile host="Electron" agent="TrekSafe">
+  <diagram id="comp-simple" name="Diagrama de Componentes (Simple)">
+    <mxGraphModel dx="1323" dy="838" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1A1A1A;" value="TrekSafe — Diagrama de Componentes (Vista General)" vertex="1">
+          <mxGeometry height="32" width="600" x="284" y="24" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-senderista" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontColor=#1A1A1A;" value="Senderista" vertex="1">
+          <mxGeometry height="96" width="48" x="60" y="134" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-rescatista" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontColor=#1A1A1A;" value="Rescatista" vertex="1">
+          <mxGeometry height="96" width="48" x="1060" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-contacto" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontColor=#1A1A1A;" value="Contacto de&#xa;Emergencia" vertex="1">
+          <mxGeometry height="96" width="48" x="1060" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="sys-boundary" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=8;align=left;spacingLeft=16;" value="Sistema TrekSafe" vertex="1">
+          <mxGeometry height="480" width="770" x="200" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-app" parent="1" style="shape=component;align=center;spacingLeft=12;verticalAlign=top;spacingTop=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=12;" value="App del Senderista&#xa;&#xa;• Registro e inicio de sesión&#xa;• Plan de ruta y expedición&#xa;• Check-in de retorno seguro" vertex="1">
+          <mxGeometry height="100" width="280" x="240" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-consola" parent="1" style="shape=component;align=center;spacingLeft=12;verticalAlign=top;spacingTop=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=12;" value="Consola del Rescatista&#xa;&#xa;• Panel de alertas activas&#xa;• Detalle de emergencia&#xa;• Bitácora de rescate" vertex="1">
+          <mxGeometry height="100" width="280" x="650" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-servidor" parent="1" style="shape=component;align=center;spacingLeft=12;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontStyle=1;fontSize=12;" value="Servidor TrekSafe&#xa;&#xa;Procesa las peticiones, aplica las reglas&#xa;del negocio y coordina alertas" vertex="1">
+          <mxGeometry height="80" width="490" x="340" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="comp-cron" parent="1" style="shape=component;align=center;spacingLeft=12;verticalAlign=top;spacingTop=8;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;fontSize=12;" value="Control de Plazos&#xa;&#xa;Revisa automáticamente si una expedición&#xa;venció sin check-in de retorno" vertex="1">
+          <mxGeometry height="90" width="390" x="390" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-db" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#EEEEEE;strokeColor=#333333;fontColor=#1A1A1A;fontSize=12;align=center;" value="Base de Datos&#xa;&#xa;Usuarios, expediciones,&#xa;alertas y ficha médica" vertex="1">
+          <mxGeometry height="110" width="180" x="240" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-mail" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;fontSize=12;align=center;" value="Correo Electrónico&#xa;&#xa;Envío de alertas y&#xa;notificaciones" vertex="1">
+          <mxGeometry height="100" width="200" x="720" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s-app" edge="1" parent="1" source="actor-senderista" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="comp-app" value="Usa">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-r-consola" edge="1" parent="1" source="actor-rescatista" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=11;endArrow=block;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="comp-consola" value="Usa">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-app-srv" edge="1" parent="1" source="comp-app" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="comp-servidor" value="Registra plan&#xa;y confirma retorno">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-consola-srv" edge="1" parent="1" source="comp-consola" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" target="comp-servidor" value="Consulta y gestiona&#xa;alertas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-srv-db" edge="1" parent="1" source="comp-servidor" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;endArrow=block;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="ext-db" value="Guarda y consulta&#xa;información">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="330" />
+              <mxPoint x="290" y="580" />
+              <mxPoint x="330" y="580" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-srv-mail" edge="1" parent="1" source="comp-servidor" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.88;entryY=0.25;entryDx=0;entryDy=0;entryPerimeter=0;" target="ext-mail" value="Envía&#xa;notificaciones">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="896" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-srv-cron" edge="1" parent="1" source="comp-servidor" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="comp-cron">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-cron-db" edge="1" parent="1" source="comp-cron" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;endArrow=block;endFill=1;exitX=0.095;exitY=1.004;exitDx=0;exitDy=0;entryX=0.855;entryY=0;entryDx=0;entryDy=3.4799999999999995;entryPerimeter=0;exitPerimeter=0;" target="ext-db" value="Revisa expediciones&#xa;vencidas">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="427" y="540" />
+              <mxPoint x="394" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-cron-mail" edge="1" parent="1" source="comp-cron" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;fontColor=#1A1A1A;fontSize=10;endArrow=block;endFill=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.4;entryY=0.1;entryDx=0;entryDy=0;entryPerimeter=0;" target="ext-mail" value="Dispara alertas&#xa;automáticas">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="488" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-mail-contacto" edge="1" parent="1" source="ext-mail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;fontColor=#1A1A1A;fontSize=10;dashed=1;endArrow=open;endFill=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="actor-contacto" value="Avisa por email">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

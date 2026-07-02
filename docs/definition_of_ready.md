@@ -1,10 +1,10 @@
-# Definition of Ready (DoR) — TrekSafe
+﻿# Definition of Ready (DoR) — TrekSafe
 
 ## Propósito
 
 La **Definición de Listo (DoR)** establece los criterios que una Historia de Usuario (HU) debe cumplir para considerarse **lista** y poder planificarse en un Sprint.
 
-Su objetivo es evitar que el equipo inicie trabajo sobre requisitos ambiguos, incompletos o no testeables, alineado con [proyecto-final.md](./proyecto-final.md) y el [product_backlog.md](./product_backlog.md).
+Su objetivo es evitar que el equipo inicie trabajo sobre requisitos ambiguos, incompletos o no testeables, alineado con el [product_backlog.md](./product_backlog.md).
 
 **Alcance:** aplica a las 25 historias de usuario (HU-01 a HU-25). **Estado:** proyecto completado — todas las HUs cumplieron DoR y DoD.
 
@@ -13,7 +13,7 @@ Su objetivo es evitar que el equipo inicie trabajo sobre requisitos ambiguos, in
 ## Cuándo aplicar la DoR
 
 | Momento | Acción |
-|---------|--------|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |----|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |---|
 | **Backlog Refinement** | El equipo y el PO revisan cada HU candidata al próximo sprint |
 | **Sprint Planning** | Solo se comprometen HUs con columna `Dev Ready = Yes` |
 | **Cambio de alcance** | Si la HU se modifica durante el sprint, debe re-validarse la DoR |
@@ -23,7 +23,7 @@ Su objetivo es evitar que el equipo inicie trabajo sobre requisitos ambiguos, in
 ## Checklist general (DoR)
 
 | ID | Criterio | Requisito verificable |
-|----|----------|----------------------|
+|----|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |----|
 | **DOR-01** | CONNEXTRA completo | La HU documenta: **C**omo, **N**ecesito, **P**ara, **E**ntidades, **R**estricciones, **N**egocio, **E**xcepciones, **T**amaño, **T**est |
 | **DOR-02** | INVEST validado | Independiente, Negociable, Valiosa, Estimable, Pequeña, Testeable |
 | **DOR-03** | SMART validado | Criterios de aceptación: Específicos, Medibles, Alcanzables, Relevantes, Time-boxed |
@@ -78,7 +78,7 @@ Completar antes de marcar `Dev Ready = Yes`. Cada HU debe documentar los nueve e
 ## DOR-02 — Checklist INVEST
 
 | Letra | Pregunta | ✓ |
-|-------|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |--|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | **I** — Independiente | ¿Se puede desarrollar sin esperar otra HU del mismo sprint? | ✓ |
 | **N** — Negociable | ¿El *qué* está claro y el *cómo* queda al equipo? | ✓ |
 | **V** — Valiosa | ¿Aporta al flujo crítico o a un objetivo de release? | ✓ |
@@ -124,7 +124,7 @@ Y detiene el temporizador de monitoreo
 Una HU **no está lista** si depende de otra HU aún no terminada (salvo que esa dependencia esté explícita y resuelta).
 
 | HU | Depende de (mínimo) |
-|----|---------------------|
+|----|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |---|
 | HU-02 | HU-01 (usuarios registrados) |
 | HU-04 a HU-08 | HU-02 (sesión autenticada) |
 | HU-08 | HU-06, HU-07 |
@@ -151,7 +151,7 @@ Una HU **no está lista** si depende de otra HU aún no terminada (salvo que esa
 ## DOR-06 — Restricciones del proyecto (RC)
 
 | ID | Restricción | Implicancia en refinement |
-|----|-------------|---------------------------|
+|----|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |---|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |----|
 | **RC-01** | Escalabilidad limitada (MVP) | No planificar monitoreo masivo ni optimizaciones prematuras |
 | **RC-02** | Plazo académico por releases | Priorizar MVP (R1) antes de R2; no mezclar alcance de releases sin acuerdo del PO |
 | **RC-03** | Sin hardware / IoT | Geolocalización **declarativa**; sin sensores ni trackers |
@@ -170,7 +170,7 @@ Si una HU contradice alguna RC, debe **renegociarse** o dividirse antes de entra
 - Una HU **> 8 SP** debe dividirse o justificarse en refinement
 
 | Release | Sprint | Capacidad SP | HUs planificadas |
-|---------|--------|--------------|------------------|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |----|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |---|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |----|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||
 | R1 | 1 | 13 | HU-01, HU-02, HU-03 |
 | R1 | 2 | 18 | HU-04 a HU-08 |
 | R1 | 3 | 14 | HU-09, HU-10, HU-11 |
@@ -190,7 +190,7 @@ En backlog refinement el PO confirma:
 
 - [x] La user story refleja la necesidad del senderista/rescatista
 - [x] Los criterios de aceptación Gherkin son suficientes para la demo
-- [x] El mockup de referencia existe en `docs/proyecto-final.md` (o se acordó excepción)
+- [x] El mockup de referencia existe en `docs/mockups/` (o se acordó excepción)
 - [x] La prioridad y el sprint asignado siguen siendo válidos
 - [x] Las tareas técnicas preliminares están en [tasks_mvp.md](./tasks_mvp.md) o equivalente
 
@@ -201,20 +201,20 @@ En backlog refinement el PO confirma:
 Antes de `Dev Ready = Yes`, la HU debe tener:
 
 | Artefacto | Ubicación |
-|-----------|-----------|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |-|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |-|
 | User story (Como-Quiero-Para) | `product_backlog.md` |
-| Criterios de aceptación Gherkin | `proyecto-final.md` (capítulo del sprint) o ficha de la HU |
+| Criterios de aceptación Gherkin | `product_backlog.md` o ficha de la HU |
 | Story points y prioridad | `product_backlog.md` |
-| Mockup de pantalla | `docs/proyecto-final.md` (figuras por sprint) |
+| Mockup de pantalla | `docs/mockups/` |
 | Desglose de tareas | `tasks_mvp.md` |
-| Caso de uso de sistema (CUS) | `proyecto-final.md` — Capítulo 5 |
+| Caso de uso de sistema (CUS) | `docs/uml/` (diagramas Draw.io) |
 
 ---
 
 ## Estado actual del backlog (Dev Ready)
 
 | Release | HUs | Dev Ready | Notas |
-|---------|-----|-----------|-------|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |----|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |-|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy |--|
 | **R1** — Sprints 1–4 | HU-01 a HU-14 | **Yes** | Refinement y desarrollo completados |
 | **R2** — Sprints 5–8 | HU-15 a HU-25 | **Yes** | Refinement y desarrollo completados |
 
@@ -224,20 +224,18 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 
 **Product Owner:** Marko Antonio Lopez Bernuy  
 **Estado global:** 25/25 HUs con Dev Ready = Yes  
-**Última actualización:** 2026-06-18
 
 ### Sprint 1
 
 #### HU-01 — Registro de Senderistas
 - **Sprint objetivo:** 1
 - **Story points:** 5
-- **Refinement:** 2026-01-26
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** N/A
-- **Mockup:** Figura 6 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -250,13 +248,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-02 — Inicio de Sesión Seguro
 - **Sprint objetivo:** 1
 - **Story points:** 3
-- **Refinement:** 2026-01-26
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-01
-- **Mockup:** Figura 5 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -269,13 +266,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-03 — Registro de Cuerpos de Rescate
 - **Sprint objetivo:** 1
 - **Story points:** 5
-- **Refinement:** 2026-01-26
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** N/A
-- **Mockup:** Figuras 7–8 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -290,13 +286,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-04 — Información Inicial de Expedición
 - **Sprint objetivo:** 2
 - **Story points:** 3
-- **Refinement:** 2026-02-09
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-02
-- **Mockup:** Figura 14 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -309,13 +304,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-05 — Historial Médico y Consentimiento
 - **Sprint objetivo:** 2
 - **Story points:** 5
-- **Refinement:** 2026-02-09
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-02
-- **Mockup:** Figura 12 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -328,13 +322,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-06 — Contactos de Emergencia Frecuentes
 - **Sprint objetivo:** 2
 - **Story points:** 2
-- **Refinement:** 2026-02-09
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-02
-- **Mockup:** Figura 13 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -347,13 +340,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-07 — Creación de Plan de Expedición
 - **Sprint objetivo:** 2
 - **Story points:** 5
-- **Refinement:** 2026-02-09
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-02
-- **Mockup:** Figura 14 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -366,13 +358,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-08 — Asociación de Contactos y Grupo
 - **Sprint objetivo:** 2
 - **Story points:** 3
-- **Refinement:** 2026-02-09
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-06, HU-07
-- **Mockup:** Figura 14 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -387,13 +378,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-09 — Visualización de Expedición Activa
 - **Sprint objetivo:** 3
 - **Story points:** 3
-- **Refinement:** 2026-02-23
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-07
-- **Mockup:** Figura 14 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -406,13 +396,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-10 — Check-in Manual de Retorno Seguro
 - **Sprint objetivo:** 3
 - **Story points:** 3
-- **Refinement:** 2026-02-23
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-07
-- **Mockup:** Figura 15 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -425,13 +414,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-11 — Motor de Control de Plazos (Cron Job)
 - **Sprint objetivo:** 3
 - **Story points:** 8
-- **Refinement:** 2026-02-23
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-07
-- **Mockup:** Figura 16 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -446,13 +434,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-12 — Alerta por Correo a Contactos
 - **Sprint objetivo:** 4
 - **Story points:** 5
-- **Refinement:** 2026-03-09
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-11, HU-06
-- **Mockup:** Figura 17 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -465,13 +452,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-13 — Alerta por Correo a Equipos de Rescate
 - **Sprint objetivo:** 4
 - **Story points:** 5
-- **Refinement:** 2026-03-09
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-11, HU-05
-- **Mockup:** Figura 17 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -484,13 +470,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-14 — Confirmación de Recepción de Alerta
 - **Sprint objetivo:** 4
 - **Story points:** 2
-- **Refinement:** 2026-03-09
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-12
-- **Mockup:** Figura 18 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -505,13 +490,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-15 — Dashboard Central de Expediciones
 - **Sprint objetivo:** 5
 - **Story points:** 5
-- **Refinement:** 2026-03-23
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-14, R1
-- **Mockup:** Figura 19 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -524,13 +508,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-16 — Filtro de Expediciones por Zona
 - **Sprint objetivo:** 5
 - **Story points:** 3
-- **Refinement:** 2026-03-23
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-15
-- **Mockup:** Figura 19 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -543,13 +526,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-17 — Consola Visual de Alertas por Colores
 - **Sprint objetivo:** 5
 - **Story points:** 3
-- **Refinement:** 2026-03-23
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-15
-- **Mockup:** Figura 20 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -564,13 +546,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-18 — Consulta de Ficha de Emergencia
 - **Sprint objetivo:** 6
 - **Story points:** 5
-- **Refinement:** 2026-04-06
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-17
-- **Mockup:** Figura 21 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -583,13 +564,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-19 — Bitácora y Estados de Rescate
 - **Sprint objetivo:** 6
 - **Story points:** 3
-- **Refinement:** 2026-04-06
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-18
-- **Mockup:** Figura 22 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -602,13 +582,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-20 — Historial de Expediciones Finalizadas
 - **Sprint objetivo:** 6
 - **Story points:** 2
-- **Refinement:** 2026-04-06
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-10
-- **Mockup:** Figura 23 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -623,13 +602,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-21 — Revocación de Datos (Derechos ARCO)
 - **Sprint objetivo:** 7
 - **Story points:** 5
-- **Refinement:** 2026-04-20
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-02
-- **Mockup:** Figuras 24–25 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -642,13 +620,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-22 — Caché y Formularios Offline
 - **Sprint objetivo:** 7
 - **Story points:** 5
-- **Refinement:** 2026-04-20
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-07
-- **Mockup:** Figura 26 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -661,13 +638,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-23 — Validación de Coordenadas
 - **Sprint objetivo:** 7
 - **Story points:** 2
-- **Refinement:** 2026-04-20
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-04, HU-07
-- **Mockup:** Figura 27 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -682,13 +658,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-24 — Optimización de UX y Modo Oscuro
 - **Sprint objetivo:** 8
 - **Story points:** 3
-- **Refinement:** 2026-05-04
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-02
-- **Mockup:** Figuras 28–29 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -701,13 +676,12 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 #### HU-25 — Notificación de Proximidad de Expiración
 - **Sprint objetivo:** 8
 - **Story points:** 3
-- **Refinement:** 2026-05-04
 - **PO:** Marko Antonio Lopez Bernuy
 - **Dependencias resueltas:** HU-09
-- **Mockup:** Figuras 30–31 — proyecto-final.md
+- **Mockup:** `docs/mockups/`
 
 | Criterio | ✓ |
-|----------|---|
+|| Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy || Release | PO |`n|---------|-----|`n| Release 01 — MVP | Marko Antonio Lopez Bernuy |`n| Release 02 — Optimización | Marko Antonio Lopez Bernuy ||---|
 | DOR-01 CONNEXTRA completo | ✓ |
 | DOR-02 INVEST validado | ✓ |
 | DOR-03 Criterios SMART | ✓ |
@@ -722,10 +696,10 @@ Antes de `Dev Ready = Yes`, la HU debe tener:
 
 ## Cierre de releases (DoR)
 
-| Release | Fecha refinement | PO |
-|---------|------------------|-----|
-| Release 01 — MVP | 2026-01-26 a 2026-03-09 | Marko Antonio Lopez Bernuy |
-| Release 02 — Optimización | 2026-03-23 a 2026-05-04 | Marko Antonio Lopez Bernuy |
+| Release | PO |
+|---------|-----|
+| Release 01 — MVP | Marko Antonio Lopez Bernuy |
+| Release 02 — Optimización | Marko Antonio Lopez Bernuy |
 
 ---
 

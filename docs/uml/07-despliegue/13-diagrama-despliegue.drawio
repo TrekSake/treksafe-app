@@ -1,127 +1,104 @@
-<mxfile host="app.diagrams.net" agent="TrekSafe" version="24.0.0">
+<mxfile host="Electron" agent="TrekSafe">
   <diagram id="deploy-treksafe" name="Diagrama de Despliegue">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="1075" dy="681" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
-        <mxCell id="title" value="TrekSafe — Diagrama de Despliegue" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="450" y="16" width="500" height="32" as="geometry" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1A1A1A;" value="TrekSafe — Diagrama de Despliegue" vertex="1">
+          <mxGeometry height="32" width="500" x="450" y="16" as="geometry" />
         </mxCell>
-
-        <!-- Client node -->
-        <mxCell id="node-client" value="&lt;&lt;device&gt;&gt;&#xa;Dispositivo móvil / navegador" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=20;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="60" y="80" width="300" height="300" as="geometry" />
+        <mxCell id="node-client" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=20;fontStyle=1;verticalAlign=top;" value="Dispositivo móvil / navegador" vertex="1">
+          <mxGeometry height="320" width="300" x="60" y="60" as="geometry" />
         </mxCell>
-        <mxCell id="art-browser" value="&lt;&lt;artifact&gt;&gt;&#xa;Browser (Chrome / Safari mobile)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="90" y="140" width="240" height="50" as="geometry" />
+        <mxCell id="art-browser" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" value="Browser (Chrome / Safari mobile)" vertex="1">
+          <mxGeometry height="50" width="240" x="90" y="140" as="geometry" />
         </mxCell>
-        <mxCell id="art-pwa" value="&lt;&lt;artifact&gt;&gt;&#xa;treksafe-pwa (frontend/dist)&#xa;React · Vite · Tailwind" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="90" y="210" width="240" height="60" as="geometry" />
+        <mxCell id="art-pwa" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" value="treksafe-pwa (frontend/dist)&lt;br&gt;React · Vite · Tailwind" vertex="1">
+          <mxGeometry height="60" width="240" x="90" y="210" as="geometry" />
         </mxCell>
-        <mxCell id="art-sw" value="&lt;&lt;artifact&gt;&gt;&#xa;Service Worker + Cache API&#xa;(borradores offline HU-22)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="90" y="290" width="240" height="60" as="geometry" />
+        <mxCell id="art-sw" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" value="Service Worker + Cache API&lt;br&gt;(borradores offline HU-22)" vertex="1">
+          <mxGeometry height="60" width="240" x="90" y="290" as="geometry" />
         </mxCell>
-        <mxCell id="note-client" value="Env: VITE_API_URL&#xa;Sin SUPABASE_* en cliente" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=10;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="90" y="360" width="180" height="50" as="geometry" />
+        <mxCell id="node-server" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=20;fontStyle=1;verticalAlign=top;" value="Servidor de aplicación" vertex="1">
+          <mxGeometry height="320" width="400" x="500" y="70" as="geometry" />
         </mxCell>
-
-        <!-- App server node -->
-        <mxCell id="node-server" value="&lt;&lt;executionEnvironment&gt;&gt;&#xa;Servidor de aplicación" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=20;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="500" y="80" width="400" height="340" as="geometry" />
+        <mxCell id="art-node" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" value="Node.js 20 Runtime" vertex="1">
+          <mxGeometry height="45" width="340" x="530" y="140" as="geometry" />
         </mxCell>
-        <mxCell id="art-node" value="&lt;&lt;artifact&gt;&gt;&#xa;Node.js 20 Runtime" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="530" y="140" width="340" height="45" as="geometry" />
+        <mxCell id="art-api" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" value="treksafe-api (backend/dist)&lt;br&gt;Express · TypeScript · JWT · Helmet · CORS" vertex="1">
+          <mxGeometry height="65" width="340" x="530" y="205" as="geometry" />
         </mxCell>
-        <mxCell id="art-api" value="&lt;&lt;artifact&gt;&gt;&#xa;treksafe-api (backend/dist)&#xa;Express · TypeScript · JWT · Helmet · CORS" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="530" y="205" width="340" height="65" as="geometry" />
+        <mxCell id="art-cron" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" value="expeditionDeadlineCron&lt;br&gt;CRON_INTERVAL_MS (default 60s)" vertex="1">
+          <mxGeometry height="55" width="340" x="530" y="290" as="geometry" />
         </mxCell>
-        <mxCell id="art-cron" value="&lt;&lt;artifact&gt;&gt;&#xa;expeditionDeadlineCron&#xa;CRON_INTERVAL_MS (default 60s)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="530" y="290" width="340" height="55" as="geometry" />
+        <mxCell id="node-mail" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=20;fontStyle=1;verticalAlign=top;" value="Servicio de correo externo" vertex="1">
+          <mxGeometry height="250" width="300" x="1040" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="note-server" value="Puerto :3000 (dev)&#xa;Env: DATABASE_URL, JWT_SECRET,&#xa;MEDICAL_ENCRYPTION_KEY, SMTP/Brevo" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=10;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="530" y="360" width="240" height="65" as="geometry" />
+        <mxCell id="art-smtp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" value="SMTP (Nodemailer)" vertex="1">
+          <mxGeometry height="45" width="240" x="1090" y="165" as="geometry" />
         </mxCell>
-
-        <!-- Mail node -->
-        <mxCell id="node-mail" value="&lt;&lt;node&gt;&gt;&#xa;Servicio de correo externo" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=20;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="1040" y="140" width="300" height="220" as="geometry" />
+        <mxCell id="art-brevo" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" value="Brevo API (alternativa)" vertex="1">
+          <mxGeometry height="40" width="240" x="1080" y="230" as="geometry" />
         </mxCell>
-        <mxCell id="art-smtp" value="&lt;&lt;artifact&gt;&gt;&#xa;SMTP (Nodemailer)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="1070" y="200" width="240" height="45" as="geometry" />
+        <mxCell id="node-supabase" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=20;fontStyle=1;verticalAlign=top;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(26, 26, 26), rgb(215, 215, 215));&quot;&gt;Supabase Cloud&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="200" width="400" x="490" y="495" as="geometry" />
         </mxCell>
-        <mxCell id="art-brevo" value="&lt;&lt;artifact&gt;&gt;&#xa;Brevo API (alternativa)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="1070" y="265" width="240" height="45" as="geometry" />
+        <mxCell id="art-pg" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" value="PostgreSQL 15+&lt;br&gt;12 tablas · ENUMs · RLS deny-by-default" vertex="1">
+          <mxGeometry height="75" width="320" x="540" y="555" as="geometry" />
         </mxCell>
-        <mxCell id="note-mail" value="Alertas HU-12 / HU-13&#xa;Idempotencia: email_dispatches" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=10;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="1070" y="325" width="220" height="50" as="geometry" />
+        <mxCell id="node-cdn" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=15;fontStyle=0;dashed=1;" value="&lt;&lt;node&gt;&gt;&#xa;Hosting estático (prod)" vertex="1">
+          <mxGeometry height="140" width="300" x="60" y="500" as="geometry" />
         </mxCell>
-
-        <!-- Supabase node -->
-        <mxCell id="node-supabase" value="&lt;&lt;node&gt;&gt;&#xa;Supabase Cloud" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=20;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="500" y="500" width="400" height="200" as="geometry" />
+        <mxCell id="art-static" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;dashed=1;" value="frontend/dist (PWA)&lt;br&gt;Netlify / Vercel / Nginx" vertex="1">
+          <mxGeometry height="55" width="240" x="90" y="560" as="geometry" />
         </mxCell>
-        <mxCell id="art-pg" value="&lt;&lt;artifact&gt;&gt;&#xa;PostgreSQL 15+&#xa;12 tablas · ENUMs · RLS deny-by-default" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;" vertex="1" parent="1">
-          <mxGeometry x="540" y="555" width="320" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="note-pg" value="Conexión vía pooler :5432&#xa;Backend usa service_role (BYPASSRLS)" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=10;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="540" y="645" width="240" height="50" as="geometry" />
-        </mxCell>
-
-        <!-- Static hosting -->
-        <mxCell id="node-cdn" value="&lt;&lt;node&gt;&gt;&#xa;Hosting estático (prod)" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;size=15;fontStyle=0;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="60" y="500" width="300" height="140" as="geometry" />
-        </mxCell>
-        <mxCell id="art-static" value="&lt;&lt;artifact&gt;&gt;&#xa;frontend/dist (PWA)&#xa;Netlify / Vercel / Nginx" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#333333;fontColor=#1A1A1A;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="90" y="560" width="240" height="55" as="geometry" />
-        </mxCell>
-
-        <!-- Dev environment -->
-        <mxCell id="dev-box" value="Entorno desarrollo local" style="swimlane;startSize=28;fillColor=#FAFAFA;strokeColor=#333333;fontColor=#1A1A1A;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="60" y="740" width="1280" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="dev-note" value="npm run dev:frontend → :5173&#xa;npm run dev:backend → :3000/api&#xa;CORS_ORIGIN=http://localhost:5173" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#1A1A1A;" vertex="1" parent="dev-box">
-          <mxGeometry x="16" y="36" width="1240" height="36" as="geometry" />
-        </mxCell>
-
-        <!-- Connections -->
-        <mxCell id="c-pwa-api" value="HTTPS REST&#xa;JWT Bearer&#xa;/api/*" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="art-pwa" target="art-api">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="c-api-pg" value="pg pool&#xa;DATABASE_URL" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="art-api" target="art-pg">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="c-cron-pg" value="consulta expediciones&#xa;vencidas (HU-11)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;dashed=1;endArrow=open;endFill=0;" edge="1" parent="1" source="art-cron" target="art-pg">
+        <mxCell id="c-pwa-api" edge="1" parent="1" source="art-pwa" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;strokeWidth=2;endArrow=block;endFill=1;" value="HTTPS REST&#xa;JWT Bearer&#xa;/api/*">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="900" y="318" />
-              <mxPoint x="900" y="593" />
+              <mxPoint x="430" y="240" />
+              <mxPoint x="430" y="237" />
+              <mxPoint x="530" y="237" />
+            </Array>
+            <mxPoint x="530" y="237" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-api-pg" edge="1" parent="1" source="art-api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;strokeWidth=2;endArrow=block;endFill=1;" target="art-pg" value="pg pool&#xa;DATABASE_URL">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="450" y="270" />
+              <mxPoint x="450" y="592" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="c-api-mail" value="SMTP / Brevo" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="art-api" target="art-smtp">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="c-cron-mail" value="alertas automáticas" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontColor=#1A1A1A;dashed=1;endArrow=open;endFill=0;exitX=1;exitY=0.5;entryX=0;entryY=0.75;" edge="1" parent="1" source="art-cron" target="art-brevo">
+        <mxCell id="c-cron-pg" edge="1" parent="1" source="art-cron" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;dashed=1;endArrow=open;endFill=0;" target="art-pg" value="consulta expediciones&#xa;vencidas (HU-11)">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="980" y="318" />
+              <mxPoint x="940" y="318" />
+              <mxPoint x="940" y="593" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-api-mail" edge="1" parent="1" source="art-api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#333333;fontColor=#1A1A1A;strokeWidth=2;endArrow=block;endFill=1;" target="art-smtp" value="SMTP / Brevo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c-cron-mail" edge="1" parent="1" source="art-cron" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontColor=#1A1A1A;dashed=1;endArrow=open;endFill=0;exitX=1;exitY=0.5;" value="alertas automáticas">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="870" y="299" />
+              <mxPoint x="980" y="299" />
               <mxPoint x="980" y="288" />
               <mxPoint x="1070" y="288" />
             </Array>
+            <mxPoint x="1070" y="288" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="c-cdn-pwa" value="sirve assets" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontColor=#1A1A1A;dashed=1;endArrow=open;endFill=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="art-static" target="art-pwa">
+        <mxCell id="c-cdn-pwa" edge="1" parent="1" source="art-static" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontColor=#1A1A1A;dashed=1;endArrow=open;endFill=0;exitX=0;exitY=0.5;entryX=0;entryY=0.5;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" target="art-pwa" value="sirve assets">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="210" y="480" />
-              <mxPoint x="210" y="270" />
+              <mxPoint x="40" y="587" />
+              <mxPoint x="40" y="240" />
             </Array>
           </mxGeometry>
-        </mxCell>
-
-        <mxCell id="legend" value="Producción: PWA en hosting estático + API Node en servidor/VPS + Supabase managed + correo externo&#xa;Desarrollo: monorepo local con hot reload (README.md)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
-          <mxGeometry x="60" y="840" width="800" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

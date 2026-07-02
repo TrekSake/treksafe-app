@@ -1,8 +1,7 @@
 # Product Backlog — TrekSafe
 
-**Última actualización:** 2026-06-18  
 **Product Owner:** Marko Antonio Lopez Bernuy  
-**Referencias:** [proyecto-final.md](./proyecto-final.md) · [definition_of_ready.md](./definition_of_ready.md) · [definition_of_done.md](./definition_of_done.md) · [tasks_mvp.md](./tasks_mvp.md)
+**Referencias:** [definition_of_ready.md](./definition_of_ready.md) · [definition_of_done.md](./definition_of_done.md) · [tasks_mvp.md](./tasks_mvp.md) · [uml/README.md](./uml/README.md)
 
 ---
 
