@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useEstadoEnLinea } from '@/hooks/useEstadoEnLinea';
 import { MapCoordsFallback } from '@/components/maps/MapCoordsFallback';
 
 type MapOnlineGateProps = {
@@ -19,7 +19,7 @@ export function MapOnlineGate({
   className,
   children,
 }: MapOnlineGateProps) {
-  const online = useOnlineStatus();
+  const online = useEstadoEnLinea();
 
   if (!online) {
     return (

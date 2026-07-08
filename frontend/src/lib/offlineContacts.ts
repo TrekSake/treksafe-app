@@ -2,19 +2,19 @@ import { readOfflineJson, writeOfflineJson } from '@/lib/offlineStorage';
 
 const CACHE_KEY = 'contacts-cache';
 
-export type CachedContact = {
+export type ContactoCacheado = {
   id: string;
-  full_name: string;
-  relationship: string;
-  phone: string;
-  email: string;
+  nombreCompleto: string;
+  parentesco: string;
+  telefono: string;
+  correoElectronico: string;
 };
 
-export async function cacheContacts(contacts: CachedContact[]): Promise<void> {
-  await writeOfflineJson(CACHE_KEY, contacts);
+export async function cachearContactos(contactos: ContactoCacheado[]): Promise<void> {
+  await writeOfflineJson(CACHE_KEY, contactos);
 }
 
-export async function getCachedContacts(): Promise<CachedContact[]> {
-  const parsed = await readOfflineJson<CachedContact[]>(CACHE_KEY, [], ['treksafe:contacts-cache']);
+export async function obtenerContactosCacheados(): Promise<ContactoCacheado[]> {
+  const parsed = await readOfflineJson<ContactoCacheado[]>(CACHE_KEY, [], ['treksafe:contacts-cache']);
   return Array.isArray(parsed) ? parsed : [];
 }

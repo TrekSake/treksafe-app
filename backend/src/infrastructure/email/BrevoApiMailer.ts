@@ -1,11 +1,11 @@
 import { loadEnv } from '../config/env.js';
 import type { SendMailInput } from './mailUtils.js';
-import { MailSendError, parseSenderAddress } from './mailUtils.js';
+import { ErrorEnvioCorreo, parseSenderAddress } from './mailUtils.js';
 
 export async function sendViaBrevoApi(input: SendMailInput): Promise<void> {
   const { brevoApiKey, smtpFrom } = loadEnv();
   if (!brevoApiKey) {
-    throw new MailSendError('BREVO_API_KEY no configurada');
+    throw new ErrorEnvioCorreo('BREVO_API_KEY no configurada');
   }
 
   const sender = parseSenderAddress(smtpFrom);
@@ -30,9 +30,9 @@ export async function sendViaBrevoApi(input: SendMailInput): Promise<void> {
     const body = await res.text();
     const isIpBlocked =
       res.status === 401 && body.includes('unrecognised IP address');
-    throw new MailSendError(
+    throw new ErrorEnvioCorreo(
       `Brevo API ${res.status}: ${body.slice(0, 300)}`,
-      isIpBlocked ? 'BREVO_IP_BLOCKED' : String(res.status),
+      isIpBlocked ? 'BREVO_IP_BLOQUEADO' : String(res.status),
     );
   }
 }

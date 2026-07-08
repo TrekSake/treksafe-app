@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { Home, Map, User, LogOut } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAutenticacion } from '@/context/ContextoAutenticacion';
 import { MobileShell } from '@/components/Layout';
-import { SenderistaReminderHost } from '@/components/SenderistaReminderHost';
-import { getActiveExpedition } from '@/services/expedition';
+import { AnfitrionRecordatorioSenderista } from '@/components/AnfitrionRecordatorioSenderista';
+import { obtenerExpedicionActiva } from '@/services/expedicion';
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   `flex flex-col items-center gap-0.5 text-xs font-medium ${
@@ -15,9 +15,9 @@ function ExpeditionNavLink() {
   const [to, setTo] = useState('/senderista/expedicion');
 
   useEffect(() => {
-    getActiveExpedition()
+    obtenerExpedicionActiva()
       .then((r) => {
-        if (r.expedition) setTo('/senderista/expedicion/activa');
+        if (r.expedicion) setTo('/senderista/expedicion/activa');
       })
       .catch(() => undefined);
   }, []);
@@ -31,12 +31,12 @@ function ExpeditionNavLink() {
 }
 
 export function SenderistaLayout() {
-  const { logout } = useAuth();
+  const { logout } = useAutenticacion();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/iniciar-sesion');
   };
 
   return (
@@ -65,7 +65,7 @@ export function SenderistaLayout() {
           </NavLink>
         </nav>
 
-        <SenderistaReminderHost />
+        <AnfitrionRecordatorioSenderista />
       </div>
     </MobileShell>
   );

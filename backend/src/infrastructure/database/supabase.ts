@@ -1,11 +1,11 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { loadEnv } from '../config/env.js';
 
-export type DbUser = {
+export type UsuarioBd = {
   id: string;
-  email: string;
-  password_hash: string;
-  role: 'senderista' | 'rescatista';
+  correo_electronico: string;
+  hash_contrasena: string;
+  rol: 'senderista' | 'rescatista';
 };
 
 let client: SupabaseClient | null = null;
@@ -24,10 +24,10 @@ export function getSupabaseAdmin(): SupabaseClient {
   return client;
 }
 
-export async function verifyDatabaseConnection(): Promise<void> {
+export async function verificarConexionBaseDatos(): Promise<void> {
   const supabase = getSupabaseAdmin();
-  const { error } = await supabase.from('users').select('id').limit(1);
+  const { error } = await supabase.from('usuarios').select('id').limit(1);
   if (error) {
-    throw new Error(`Supabase DB unreachable: ${error.message}`);
+    throw new Error(`Supabase DB inalcanzable: ${error.message}`);
   }
 }

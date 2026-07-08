@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { AlertTriangle, LogOut, Navigation, Shield } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAutenticacion } from '@/context/ContextoAutenticacion';
 import { MobileShell } from '@/components/Layout';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -10,12 +10,12 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
   }`;
 
 export function RescatistaLayout() {
-  const { user, logout } = useAuth();
+  const { usuario, logout } = useAutenticacion();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/iniciar-sesion');
   };
 
   return (
@@ -26,7 +26,7 @@ export function RescatistaLayout() {
             <Shield size={22} className="text-primary" />
             <div>
               <h1 className="text-lg font-bold leading-tight">Consola de Rescate</h1>
-              <p className="text-xs opacity-70">{user?.email}</p>
+              <p className="text-xs opacity-70">{usuario?.correoElectronico}</p>
             </div>
           </div>
           <div className="flex items-center gap-1">

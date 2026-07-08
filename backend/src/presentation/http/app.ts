@@ -3,13 +3,13 @@ import express from 'express';
 import helmet from 'helmet';
 import { loadEnv } from '../../infrastructure/config/env.js';
 import { cronHealth } from '../../infrastructure/jobs/cronState.js';
-import { MailService } from '../../infrastructure/email/MailService.js';
+import { ServicioCorreo } from '../../infrastructure/email/ServicioCorreo.js';
 import { errorHandler, notFoundHandler } from '../../shared/errors/errorHandler.js';
 import { createRateLimiter } from './middleware/rateLimitMiddleware.js';
-import { createAuthRoutes } from './routes/authRoutes.js';
-import { createExpeditionRoutes } from './routes/expeditionRoutes.js';
-import { createRescueRoutes } from './routes/rescueRoutes.js';
-import { createUserRoutes } from './routes/userRoutes.js';
+import { crearRutasAutenticacion } from './routes/rutasAutenticacion.js';
+import { crearRutasExpedicion } from './routes/rutasExpedicion.js';
+import { crearRutasRescate } from './routes/rutasRescate.js';
+import { crearRutasUsuario } from './routes/rutasUsuario.js';
 
 export function createApp() {
   const env = loadEnv();
@@ -20,25 +20,25 @@ export function createApp() {
   app.use(cors({ origin: env.corsOrigin, credentials: true }));
   app.use(express.json({ limit: '100kb' }));
 
-  app.get(`${env.apiPrefix}/health`, (_req, res) => {
-    const mail = new MailService();
+  app.get(`${env.apiPrefix}/salud`, (_req, res) => {
+    const correo = new ServicioCorreo();
     res.json({
-      status: 'ok',
-      service: 'treksafe-api',
-      mail: {
-        configured: mail.isConfigured(),
-        mode: mail.getTransportMode(),
+      estado: 'ok',
+      servicio: 'treksafe-api',
+      correo: {
+        configurado: correo.estaConfigurado(),
+        modo: correo.getModoTransporte(),
       },
       cron: cronHealth,
     });
   });
 
-  const authRateLimit = createRateLimiter(20, 15 * 60_000);
+  const limiteTasaAuth = createRateLimiter(20, 15 * 60_000);
 
-  app.use(`${env.apiPrefix}/auth`, authRateLimit, createAuthRoutes());
-  app.use(`${env.apiPrefix}/user`, createUserRoutes());
-  app.use(`${env.apiPrefix}/expeditions`, createExpeditionRoutes());
-  app.use(`${env.apiPrefix}/rescue`, createRescueRoutes());
+  app.use(`${env.apiPrefix}/auth`, limiteTasaAuth, crearRutasAutenticacion());
+  app.use(`${env.apiPrefix}/usuario`, crearRutasUsuario());
+  app.use(`${env.apiPrefix}/expediciones`, crearRutasExpedicion());
+  app.use(`${env.apiPrefix}/rescate`, crearRutasRescate());
 
   app.use(notFoundHandler);
   app.use(errorHandler);

@@ -1,9 +1,9 @@
 import { loadEnv } from '../src/infrastructure/config/env.js';
-import { runExpeditionDeadlineTick } from '../src/infrastructure/jobs/expeditionDeadlineCron.js';
+import { ejecutarTickFechaLimite } from '../src/infrastructure/jobs/cronFechaLimiteExpedicion.js';
 
 loadEnv();
 
-runExpeditionDeadlineTick()
+ejecutarTickFechaLimite()
   .then((r) => {
     console.log('[cron-tick]', JSON.stringify(r));
   })

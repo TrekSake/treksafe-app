@@ -1,44 +1,44 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  computeExpeditionRiskLevel,
-} from '../../application/services/RescueService.js';
+  calcularNivelRiesgoExpedicion,
+} from '../../application/services/servicioRescate.js';
 import { parseDecimalCoordinates, validateCoordinateInput } from './coordinates.js';
 
-describe('computeExpeditionRiskLevel', () => {
-  const deadline = new Date(Date.now() + 60 * 60_000).toISOString();
+describe('calcularNivelRiesgoExpedicion', () => {
+  const fechaLimite = new Date(Date.now() + 60 * 60_000).toISOString();
 
-  it('returns green when plenty of time remains', () => {
-    const result = computeExpeditionRiskLevel('in_progress', deadline);
-    assert.equal(result.riskLevel, 'green');
-    assert.ok(result.minutesRemaining && result.minutesRemaining > 30);
+  it('devuelve verde cuando hay bastante tiempo restante', () => {
+    const resultado = calcularNivelRiesgoExpedicion('en_progreso', fechaLimite);
+    assert.equal(resultado.nivelRiesgo, 'verde');
+    assert.ok(resultado.minutosRestantes && resultado.minutosRestantes > 30);
   });
 
-  it('returns yellow within 30 minutes', () => {
-    const soon = new Date(Date.now() + 20 * 60_000).toISOString();
-    const result = computeExpeditionRiskLevel('in_progress', soon);
-    assert.equal(result.riskLevel, 'yellow');
+  it('devuelve amarillo dentro de 30 minutos', () => {
+    const pronto = new Date(Date.now() + 20 * 60_000).toISOString();
+    const resultado = calcularNivelRiesgoExpedicion('en_progreso', pronto);
+    assert.equal(resultado.nivelRiesgo, 'amarillo');
   });
 
-  it('returns red for alert status', () => {
-    const result = computeExpeditionRiskLevel('alert', deadline);
-    assert.equal(result.riskLevel, 'red');
+  it('devuelve rojo para estado alerta', () => {
+    const resultado = calcularNivelRiesgoExpedicion('alerta', fechaLimite);
+    assert.equal(resultado.nivelRiesgo, 'rojo');
   });
 });
 
 describe('parseDecimalCoordinates', () => {
-  it('accepts valid decimal coordinates', () => {
-    const parsed = parseDecimalCoordinates('-9.5300, -77.5300');
-    assert.ok(parsed);
-    assert.equal(parsed.lat, -9.53);
-    assert.equal(parsed.lon, -77.53);
+  it('acepta coordenadas decimales válidas', () => {
+    const analizado = parseDecimalCoordinates('-9.5300, -77.5300');
+    assert.ok(analizado);
+    assert.equal(analizado.lat, -9.53);
+    assert.equal(analizado.lon, -77.53);
   });
 
-  it('rejects malformed input', () => {
+  it('rechaza entrada malformada', () => {
     assert.equal(parseDecimalCoordinates('not-coords'), null);
   });
 
-  it('rejects coordinates outside Peru via validateCoordinateInput', () => {
+  it('rechaza coordenadas fuera de Perú vía validateCoordinateInput', () => {
     assert.ok(validateCoordinateInput('40.7128, -74.0060'));
   });
 });

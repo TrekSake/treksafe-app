@@ -4,9 +4,9 @@ export const START_MARKER_COLOR = '#16a34a';
 export const END_MARKER_COLOR = '#dc2626';
 
 export const RISK_MARKER_COLORS = {
-  green: '#16a34a',
-  yellow: '#f59e0b',
-  red: '#dc2626',
+  verde: '#16a34a',
+  amarillo: '#f59e0b',
+  rojo: '#dc2626',
 } as const;
 
 export function makeMarkerIcon(color: string, size = 24) {

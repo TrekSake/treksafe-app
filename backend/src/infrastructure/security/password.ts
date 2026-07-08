@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
 
-const SALT_ROUNDS = 10;
+const RONDAS_SAL = 10;
 
-export async function hashPassword(plain: string): Promise<string> {
-  return bcrypt.hash(plain, SALT_ROUNDS);
+export async function hashearContrasena(plana: string): Promise<string> {
+  return bcrypt.hash(plana, RONDAS_SAL);
 }
 
-export async function verifyPassword(plain: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(plain, hash);
+export async function verificarContrasena(plana: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(plana, hash);
 }

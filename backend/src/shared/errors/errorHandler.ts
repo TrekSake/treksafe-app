@@ -1,11 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
-import { AppError } from './AppError.js';
+import { ErrorAplicacion } from './ErrorAplicacion.js';
 
 export function notFoundHandler(req: Request, res: Response): void {
   res.status(404).json({
-    error: 'Not Found',
-    message: `Ruta no encontrada: ${req.method} ${req.path}`,
+    error: 'NoEncontrado',
+    mensaje: `Ruta no encontrada: ${req.method} ${req.path}`,
   });
 }
 
@@ -15,27 +15,27 @@ export function errorHandler(
   res: Response,
   _next: NextFunction,
 ): void {
-  if (err instanceof AppError) {
-    res.status(err.statusCode).json({
+  if (err instanceof ErrorAplicacion) {
+    res.status(err.codigoEstado).json({
       error: err.name,
-      message: err.message,
-      code: err.code,
+      mensaje: err.message,
+      codigo: err.codigo,
     });
     return;
   }
 
   if (err instanceof ZodError) {
     res.status(400).json({
-      error: 'ValidationError',
-      message: 'Datos de entrada inválidos',
-      details: err.flatten().fieldErrors,
+      error: 'ErrorValidacion',
+      mensaje: 'Datos de entrada inválidos',
+      detalles: err.flatten().fieldErrors,
     });
     return;
   }
 
   console.error('[error]', err);
   res.status(500).json({
-    error: 'InternalServerError',
-    message: 'Error interno del servidor',
+    error: 'ErrorInternoServidor',
+    mensaje: 'Error interno del servidor',
   });
 }

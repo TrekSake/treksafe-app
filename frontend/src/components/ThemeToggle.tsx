@@ -1,5 +1,5 @@
 import { Moon, Sun } from 'lucide-react';
-import { useTheme, type ThemeMode } from '@/context/ThemeContext';
+import { useTheme, type ThemeMode } from '@/context/ContextoTema';
 
 const LABELS: Record<ThemeMode, string> = {
   light: 'Claro',

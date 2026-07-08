@@ -22,14 +22,14 @@ export function parseSenderAddress(from: string): ParsedSender {
   return { name: trimmed, email: trimmed };
 }
 
-export class MailSendError extends Error {
+export class ErrorEnvioCorreo extends Error {
   constructor(
     message: string,
-    public readonly code?: string,
-    public readonly hint?: string,
+    public readonly codigo?: string,
+    public readonly pista?: string,
   ) {
     super(message);
-    this.name = 'MailSendError';
+    this.name = 'ErrorEnvioCorreo';
   }
 }
 
@@ -69,7 +69,7 @@ export async function fetchOutboundIp(): Promise<string | null> {
 }
 
 export function isBrevoApiIpError(err: unknown): boolean {
-  if (err instanceof MailSendError) return err.code === 'BREVO_IP_BLOCKED';
+  if (err instanceof ErrorEnvioCorreo) return err.codigo === 'BREVO_IP_BLOQUEADO';
   if (!err || typeof err !== 'object') return false;
   const e = err as { message?: string };
   return typeof e.message === 'string' && e.message.includes('unrecognised IP address');

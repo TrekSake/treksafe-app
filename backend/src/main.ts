@@ -1,36 +1,36 @@
 import { createApp } from './presentation/http/app.js';
 import { loadEnv } from './infrastructure/config/env.js';
-import { verifyDatabaseConnection } from './infrastructure/database/supabase.js';
-import { MailService } from './infrastructure/email/MailService.js';
-import { startExpeditionDeadlineCron } from './infrastructure/jobs/expeditionDeadlineCron.js';
+import { verificarConexionBaseDatos } from './infrastructure/database/supabase.js';
+import { ServicioCorreo } from './infrastructure/email/ServicioCorreo.js';
+import { iniciarCronFechaLimiteExpedicion } from './infrastructure/jobs/cronFechaLimiteExpedicion.js';
 
 async function bootstrap() {
   loadEnv();
   const { port, nodeEnv, mailDevFallback } = loadEnv();
 
   try {
-    await verifyDatabaseConnection();
-    console.log('[TrekSafe API] Supabase database connection OK');
+    await verificarConexionBaseDatos();
+    console.log('[TrekSafe API] Conexión a base de datos Supabase OK');
   } catch (err) {
-    console.error('[TrekSafe API] Database connection failed:', err);
+    console.error('[TrekSafe API] Fallo en conexión a base de datos:', err);
     process.exit(1);
   }
 
   try {
-    await new MailService().verifyConnection();
+    await new ServicioCorreo().verificarConexion();
   } catch (err) {
     if (nodeEnv === 'production' && !mailDevFallback) {
-      console.error('[TrekSafe API] Mail configuration failed:', err);
+      console.error('[TrekSafe API] Configuración de correo fallida:', err);
       process.exit(1);
     }
-    console.warn('[TrekSafe API] Mail verify warning (dev continues):', err);
+    console.warn('[TrekSafe API] Advertencia de verificación de correo (desarrollo continúa):', err);
   }
 
-  startExpeditionDeadlineCron();
+  iniciarCronFechaLimiteExpedicion();
 
   const app = createApp();
   app.listen(port, () => {
-    console.log(`[TrekSafe API] listening on http://localhost:${port}`);
+    console.log(`[TrekSafe API] escuchando en http://localhost:${port}`);
   });
 }
 

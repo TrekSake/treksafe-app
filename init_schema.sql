@@ -1,23 +1,35 @@
 -- =============================================================================
--- TrekSafe — Inicialización de Esquema Relacional (PostgreSQL / Supabase)
--- Sprint 1 · Paso 1 · Release 01 MVP
+-- TrekSafe — Esquema relacional en español (PostgreSQL / Supabase)
+-- Hispanización completa · esquema recreado desde cero
 -- =============================================================================
--- Ejecución: pegar en el SQL Editor de Supabase o ejecutar con psql:
+-- Ejecución: pegar en el SQL Editor de Supabase o:
 --   psql "$DATABASE_URL" -f init_schema.sql
---
--- Contenido:
---   1. Extensiones y tipos ENUM
---   2. Tablas con PK, FK y CONSTRAINTS
---   3. Índice parcial crítico para el Cron Job (HU-11)
---   4. Row Level Security (RLS) — deny-by-default para roles expuestos
---   5. Datos mock: padrón institucional, senderista y rescatista de prueba
 -- =============================================================================
 
 BEGIN;
 
 -- ---------------------------------------------------------------------------
--- 0. Limpieza idempotente (solo desarrollo / re-ejecución controlada)
+-- 0. Limpieza idempotente
 -- ---------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS treksafe_marcar_expiradas_en_progreso_como_alerta() CASCADE;
+DROP FUNCTION IF EXISTS treksafe_mark_expired_in_progress_as_alert() CASCADE;
+
+DROP TABLE IF EXISTS auditoria_acceso_medico CASCADE;
+DROP TABLE IF EXISTS despachos_correo CASCADE;
+DROP TABLE IF EXISTS bitacoras_rescate CASCADE;
+DROP TABLE IF EXISTS vinculos_expedicion_contacto CASCADE;
+DROP TABLE IF EXISTS acompanantes_expedicion CASCADE;
+DROP TABLE IF EXISTS expediciones CASCADE;
+DROP TABLE IF EXISTS contactos_emergencia CASCADE;
+DROP TABLE IF EXISTS fichas_medicas CASCADE;
+DROP TABLE IF EXISTS perfiles_rescatista CASCADE;
+DROP TABLE IF EXISTS perfiles_senderista CASCADE;
+DROP TABLE IF EXISTS registros_institucionales_rescatista CASCADE;
+DROP TABLE IF EXISTS usuarios CASCADE;
+
+-- Tablas legacy (inglés) por si existen
+DROP TABLE IF EXISTS medical_access_audit CASCADE;
+DROP TABLE IF EXISTS email_dispatches CASCADE;
 DROP TABLE IF EXISTS rescue_logs CASCADE;
 DROP TABLE IF EXISTS expedition_emergency_contacts CASCADE;
 DROP TABLE IF EXISTS expedition_companions CASCADE;
@@ -29,6 +41,9 @@ DROP TABLE IF EXISTS hikers_profile CASCADE;
 DROP TABLE IF EXISTS institutional_rescuer_registry CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
+DROP TYPE IF EXISTS estado_rescate_enum CASCADE;
+DROP TYPE IF EXISTS estado_expedicion_enum CASCADE;
+DROP TYPE IF EXISTS rol_usuario_enum CASCADE;
 DROP TYPE IF EXISTS rescue_status_enum CASCADE;
 DROP TYPE IF EXISTS expedition_status_enum CASCADE;
 DROP TYPE IF EXISTS user_role_enum CASCADE;
@@ -41,377 +56,338 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- ---------------------------------------------------------------------------
 -- 2. Tipos ENUM
 -- ---------------------------------------------------------------------------
-
--- Roles de acceso segregados (HU-01, HU-03)
-CREATE TYPE user_role_enum AS ENUM (
+CREATE TYPE rol_usuario_enum AS ENUM (
     'senderista',
     'rescatista'
 );
 
--- Ciclo de vida de una expedición (HU-07, HU-10, HU-11)
-CREATE TYPE expedition_status_enum AS ENUM (
-    'programmed',
-    'in_progress',
-    'completed',
-    'alert'
+CREATE TYPE estado_expedicion_enum AS ENUM (
+    'programada',
+    'en_progreso',
+    'completada',
+    'alerta'
 );
 
--- Estados operativos de la bitácora de rescate (HU-19)
-CREATE TYPE rescue_status_enum AS ENUM (
+CREATE TYPE estado_rescate_enum AS ENUM (
     'en_busqueda',
     'localizados',
     'cerrado'
 );
 
 -- ---------------------------------------------------------------------------
--- 3. Tablas core
+-- 3. Tablas
 -- ---------------------------------------------------------------------------
+CREATE TABLE usuarios (
+    id                  UUID                PRIMARY KEY DEFAULT gen_random_uuid(),
+    correo_electronico  VARCHAR(255)        NOT NULL,
+    hash_contrasena     VARCHAR(255)        NOT NULL,
+    rol                 rol_usuario_enum    NOT NULL,
+    creado_en           TIMESTAMPTZ         NOT NULL DEFAULT NOW(),
 
--- Tabla base de autenticación y segregación de roles
-CREATE TABLE users (
-    id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
-    email           VARCHAR(255)    NOT NULL,
-    password_hash   VARCHAR(255)    NOT NULL,
-    role            user_role_enum  NOT NULL,
-    created_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
-
-    CONSTRAINT uq_users_email UNIQUE (email),
-    CONSTRAINT chk_users_email_format CHECK (
-        email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+    CONSTRAINT uq_usuarios_correo UNIQUE (correo_electronico),
+    CONSTRAINT chk_usuarios_correo_formato CHECK (
+        correo_electronico ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
     )
 );
 
-COMMENT ON TABLE users IS 'Cuentas de acceso con rol senderista o rescatista.';
-COMMENT ON COLUMN users.password_hash IS 'Hash bcrypt/argon2 generado en backend; nunca texto plano.';
+COMMENT ON TABLE usuarios IS 'Cuentas de acceso con rol senderista o rescatista.';
+COMMENT ON COLUMN usuarios.hash_contrasena IS 'Hash bcrypt generado en backend; nunca texto plano.';
 
--- Perfil extendido del senderista (HU-01)
-CREATE TABLE hikers_profile (
-    user_id         UUID            PRIMARY KEY,
-    full_name       VARCHAR(200)    NOT NULL,
-    phone           VARCHAR(20)     NOT NULL,
-    document_id     VARCHAR(20)     NOT NULL,
+CREATE TABLE perfiles_senderista (
+    usuario_id      UUID            PRIMARY KEY,
+    nombre_completo VARCHAR(200)    NOT NULL,
+    telefono        VARCHAR(20)     NOT NULL,
+    id_documento    VARCHAR(20)     NOT NULL,
 
-    CONSTRAINT fk_hikers_profile_user
-        FOREIGN KEY (user_id) REFERENCES users (id)
+    CONSTRAINT fk_perfiles_senderista_usuario
+        FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
         ON DELETE CASCADE,
-    CONSTRAINT uq_hikers_document_id UNIQUE (document_id),
-    CONSTRAINT chk_hikers_phone_not_empty CHECK (length(trim(phone)) > 0)
+    CONSTRAINT uq_perfiles_senderista_documento UNIQUE (id_documento),
+    CONSTRAINT chk_perfiles_senderista_telefono CHECK (length(trim(telefono)) > 0)
 );
 
-COMMENT ON TABLE hikers_profile IS 'Datos personales del senderista vinculados 1:1 a users.';
+COMMENT ON TABLE perfiles_senderista IS 'Datos personales del senderista vinculados 1:1 a usuarios.';
 
--- Padrón simulado AGMP / MINCETUR para validación en registro (HU-03, RC simulada)
-CREATE TABLE institutional_rescuer_registry (
+CREATE TABLE registros_institucionales_rescatista (
     id                  UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
-    institution         VARCHAR(50)     NOT NULL,
-    credential_number   VARCHAR(50)     NOT NULL,
-    full_name           VARCHAR(200)    NOT NULL,
-    birth_date          DATE            NOT NULL,
-    is_active           BOOLEAN         NOT NULL DEFAULT TRUE,
-    created_at          TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
+    institucion         VARCHAR(50)     NOT NULL,
+    numero_credencial   VARCHAR(50)     NOT NULL,
+    nombre_completo     VARCHAR(200)    NOT NULL,
+    fecha_nacimiento    DATE            NOT NULL,
+    esta_activo         BOOLEAN         NOT NULL DEFAULT TRUE,
+    creado_en           TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
 
-    CONSTRAINT uq_registry_credential UNIQUE (credential_number),
-    CONSTRAINT uq_registry_identity UNIQUE (institution, credential_number, full_name, birth_date),
-    CONSTRAINT chk_registry_institution CHECK (
-        institution IN ('AGMP', 'MINCETUR')
+    CONSTRAINT uq_registro_credencial UNIQUE (numero_credencial),
+    CONSTRAINT uq_registro_identidad UNIQUE (institucion, numero_credencial, nombre_completo, fecha_nacimiento),
+    CONSTRAINT chk_registro_institucion CHECK (
+        institucion IN ('AGMP', 'MINCETUR')
     )
 );
 
-COMMENT ON TABLE institutional_rescuer_registry IS
-    'Padrón local simulado. El backend valida credential_number + full_name + birth_date en el alta.';
+COMMENT ON TABLE registros_institucionales_rescatista IS
+    'Padrón local simulado. El backend valida credencial + nombre + fecha de nacimiento en el alta.';
 
--- Perfil del rescatista validado (HU-03)
-CREATE TABLE rescuers_profile (
-    user_id             UUID            PRIMARY KEY,
-    credential_number   VARCHAR(50)     NOT NULL,
-    full_name           VARCHAR(200)    NOT NULL,
-    birth_date          DATE            NOT NULL,
-    validated_at        TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
+CREATE TABLE perfiles_rescatista (
+    usuario_id          UUID            PRIMARY KEY,
+    numero_credencial   VARCHAR(50)     NOT NULL,
+    nombre_completo     VARCHAR(200)    NOT NULL,
+    fecha_nacimiento    DATE            NOT NULL,
+    validado_en         TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
 
-    CONSTRAINT fk_rescuers_profile_user
-        FOREIGN KEY (user_id) REFERENCES users (id)
+    CONSTRAINT fk_perfiles_rescatista_usuario
+        FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
         ON DELETE CASCADE,
-    CONSTRAINT uq_rescuers_credential UNIQUE (credential_number),
-    CONSTRAINT fk_rescuers_registry_credential
-        FOREIGN KEY (credential_number) REFERENCES institutional_rescuer_registry (credential_number)
+    CONSTRAINT uq_perfiles_rescatista_credencial UNIQUE (numero_credencial),
+    CONSTRAINT fk_perfiles_rescatista_registro
+        FOREIGN KEY (numero_credencial) REFERENCES registros_institucionales_rescatista (numero_credencial)
 );
 
-COMMENT ON TABLE rescuers_profile IS
-    'Rescatista registrado tras validación exitosa contra institutional_rescuer_registry.';
-COMMENT ON COLUMN rescuers_profile.validated_at IS
-    'Marca temporal de validación institucional simulada en el registro inicial.';
+COMMENT ON TABLE perfiles_rescatista IS
+    'Rescatista registrado tras validación exitosa contra el padrón institucional.';
 
--- Ficha médica cifrada con consentimiento explícito (HU-05, Ley N° 29733)
-CREATE TABLE medical_info (
-    id                      UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
-    hiker_id                UUID            NOT NULL,
-    blood_type              VARCHAR(5)      NOT NULL,
-    encrypted_conditions    TEXT            NOT NULL,
-    consent_signed          BOOLEAN         NOT NULL DEFAULT FALSE,
-    created_at              TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
-    updated_at              TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
+CREATE TABLE fichas_medicas (
+    id                          UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
+    senderista_id               UUID            NOT NULL,
+    tipo_sangre                 VARCHAR(5)      NOT NULL,
+    condiciones_encriptadas     TEXT            NOT NULL,
+    consentimiento_firmado      BOOLEAN         NOT NULL DEFAULT FALSE,
+    creado_en                   TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
+    actualizado_en              TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
 
-    CONSTRAINT fk_medical_info_hiker
-        FOREIGN KEY (hiker_id) REFERENCES hikers_profile (user_id)
+    CONSTRAINT fk_fichas_medicas_senderista
+        FOREIGN KEY (senderista_id) REFERENCES perfiles_senderista (usuario_id)
         ON DELETE CASCADE,
-    CONSTRAINT uq_medical_info_hiker UNIQUE (hiker_id),
-    CONSTRAINT chk_medical_consent_required CHECK (consent_signed = TRUE),
-    CONSTRAINT chk_medical_blood_type CHECK (
-        blood_type IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')
+    CONSTRAINT uq_fichas_medicas_senderista UNIQUE (senderista_id),
+    CONSTRAINT chk_ficha_consentimiento CHECK (consentimiento_firmado = TRUE),
+    CONSTRAINT chk_ficha_tipo_sangre CHECK (
+        tipo_sangre IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')
     )
 );
 
-COMMENT ON TABLE medical_info IS
-    'Datos de salud. encrypted_conditions almacena AES-256 desde backend; acceso condicional en alerta.';
-COMMENT ON COLUMN medical_info.consent_signed IS
-    'Debe ser TRUE para persistir. El frontend bloquea el guardado sin consentimiento explícito.';
+COMMENT ON TABLE fichas_medicas IS
+    'Datos de salud. condiciones_encriptadas almacena AES-256 desde backend.';
 
--- Contactos de confianza del senderista (HU-06)
-CREATE TABLE emergency_contacts (
+CREATE TABLE contactos_emergencia (
+    id                  UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
+    senderista_id       UUID            NOT NULL,
+    nombre_completo     VARCHAR(200)    NOT NULL,
+    parentesco          VARCHAR(100)    NOT NULL,
+    telefono            VARCHAR(20)     NOT NULL,
+    correo_electronico  VARCHAR(255)    NOT NULL,
+
+    CONSTRAINT fk_contactos_emergencia_senderista
+        FOREIGN KEY (senderista_id) REFERENCES perfiles_senderista (usuario_id)
+        ON DELETE CASCADE,
+    CONSTRAINT chk_contactos_correo CHECK (
+        correo_electronico ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+    )
+);
+
+COMMENT ON TABLE contactos_emergencia IS 'Contactos de emergencia reutilizables del senderista.';
+
+CREATE TABLE expediciones (
+    id                      UUID                        PRIMARY KEY DEFAULT gen_random_uuid(),
+    senderista_id           UUID                        NOT NULL,
+    lugar_inicio            VARCHAR(500)                NOT NULL,
+    lugar_fin               VARCHAR(500)                NOT NULL,
+    coordenadas_inicio      VARCHAR(32),
+    coordenadas_fin         VARCHAR(32),
+    hora_inicio             TIMESTAMPTZ                 NOT NULL,
+    hora_retorno_estimada   TIMESTAMPTZ                 NOT NULL,
+    minutos_tolerancia      INTEGER                     NOT NULL DEFAULT 30,
+    estado                  estado_expedicion_enum      NOT NULL DEFAULT 'programada',
+    creado_en               TIMESTAMPTZ                 NOT NULL DEFAULT NOW(),
+    actualizado_en          TIMESTAMPTZ                 NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT fk_expediciones_senderista
+        FOREIGN KEY (senderista_id) REFERENCES perfiles_senderista (usuario_id)
+        ON DELETE CASCADE,
+    CONSTRAINT chk_expediciones_tolerancia CHECK (minutos_tolerancia > 0),
+    CONSTRAINT chk_expediciones_orden_temporal CHECK (
+        hora_retorno_estimada > hora_inicio
+    )
+);
+
+COMMENT ON TABLE expediciones IS
+    'Itinerario declarativo con ventana de tolerancia para el motor de plazos.';
+COMMENT ON COLUMN expediciones.minutos_tolerancia IS
+    'Minutos adicionales tras hora_retorno_estimada antes de disparar alerta.';
+COMMENT ON COLUMN expediciones.coordenadas_inicio IS 'Coordenadas decimales "lat,lon" del punto de salida.';
+COMMENT ON COLUMN expediciones.coordenadas_fin IS 'Coordenadas decimales "lat,lon" del destino.';
+
+CREATE TABLE acompanantes_expedicion (
+    id                  UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
+    expedicion_id       UUID            NOT NULL,
+    nombre_acompanante  VARCHAR(200)    NOT NULL,
+
+    CONSTRAINT fk_acompanantes_expedicion
+        FOREIGN KEY (expedicion_id) REFERENCES expediciones (id)
+        ON DELETE CASCADE,
+    CONSTRAINT chk_nombre_acompanante CHECK (length(trim(nombre_acompanante)) > 0)
+);
+
+COMMENT ON TABLE acompanantes_expedicion IS 'Acompañantes declarados en una expedición específica.';
+
+CREATE TABLE vinculos_expedicion_contacto (
     id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
-    hiker_id        UUID            NOT NULL,
-    full_name       VARCHAR(200)    NOT NULL,
-    relationship    VARCHAR(100)    NOT NULL,
-    phone           VARCHAR(20)     NOT NULL,
-    email           VARCHAR(255)    NOT NULL,
+    expedicion_id   UUID            NOT NULL,
+    contacto_id     UUID            NOT NULL,
 
-    CONSTRAINT fk_emergency_contacts_hiker
-        FOREIGN KEY (hiker_id) REFERENCES hikers_profile (user_id)
+    CONSTRAINT fk_vinculos_expedicion
+        FOREIGN KEY (expedicion_id) REFERENCES expediciones (id)
         ON DELETE CASCADE,
-    CONSTRAINT chk_emergency_contacts_email CHECK (
-        email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
-    )
+    CONSTRAINT fk_vinculos_contacto
+        FOREIGN KEY (contacto_id) REFERENCES contactos_emergencia (id)
+        ON DELETE CASCADE,
+    CONSTRAINT uq_vinculo_expedicion_contacto UNIQUE (expedicion_id, contacto_id)
 );
 
-COMMENT ON TABLE emergency_contacts IS 'Contactos de emergencia reutilizables asociados al senderista.';
+COMMENT ON TABLE vinculos_expedicion_contacto IS 'Contactos vinculados a una expedición para alertas.';
 
--- Plan de expedición declarativo (HU-04, HU-07)
-CREATE TABLE expeditions (
-    id                      UUID                    PRIMARY KEY DEFAULT gen_random_uuid(),
-    hiker_id                UUID                    NOT NULL,
-    start_location          VARCHAR(500)            NOT NULL,
-    end_location            VARCHAR(500)            NOT NULL,
-    start_coordinates       VARCHAR(32),
-    end_coordinates         VARCHAR(32),
-    start_time              TIMESTAMPTZ             NOT NULL,
-    estimated_return_time   TIMESTAMPTZ             NOT NULL,
-    tolerance_minutes       INTEGER                 NOT NULL DEFAULT 30,
-    status                  expedition_status_enum  NOT NULL DEFAULT 'programmed',
-    created_at              TIMESTAMPTZ             NOT NULL DEFAULT NOW(),
-    updated_at              TIMESTAMPTZ             NOT NULL DEFAULT NOW(),
+CREATE TABLE bitacoras_rescate (
+    id              UUID                    PRIMARY KEY DEFAULT gen_random_uuid(),
+    expedicion_id   UUID                    NOT NULL,
+    rescatista_id   UUID                    NOT NULL,
+    notas           TEXT,
+    estado_rescate  estado_rescate_enum     NOT NULL DEFAULT 'en_busqueda',
+    actualizado_en  TIMESTAMPTZ             NOT NULL DEFAULT NOW(),
 
-    CONSTRAINT fk_expeditions_hiker
-        FOREIGN KEY (hiker_id) REFERENCES hikers_profile (user_id)
+    CONSTRAINT fk_bitacoras_expedicion
+        FOREIGN KEY (expedicion_id) REFERENCES expediciones (id)
         ON DELETE CASCADE,
-    CONSTRAINT chk_expeditions_tolerance_positive CHECK (tolerance_minutes > 0),
-    CONSTRAINT chk_expeditions_temporal_order CHECK (
-        estimated_return_time > start_time
-    )
+    CONSTRAINT fk_bitacoras_rescatista
+        FOREIGN KEY (rescatista_id) REFERENCES perfiles_rescatista (usuario_id)
+        ON DELETE RESTRICT,
+    CONSTRAINT uq_bitacoras_expedicion_rescatista UNIQUE (expedicion_id, rescatista_id)
 );
 
-COMMENT ON TABLE expeditions IS
-    'Itinerario declarativo con ventana de tolerancia para el motor de plazos (HU-11).';
-COMMENT ON COLUMN expeditions.tolerance_minutes IS
-    'Minutos adicionales tras estimated_return_time antes de disparar alerta.';
-
--- Integrantes de la cordada por expedición (HU-08)
-CREATE TABLE expedition_companions (
-    id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
-    expedition_id   UUID            NOT NULL,
-    companion_name  VARCHAR(200)    NOT NULL,
-
-    CONSTRAINT fk_companions_expedition
-        FOREIGN KEY (expedition_id) REFERENCES expeditions (id)
-        ON DELETE CASCADE,
-    CONSTRAINT chk_companion_name_not_empty CHECK (length(trim(companion_name)) > 0)
-);
-
-COMMENT ON TABLE expedition_companions IS 'Acompañantes declarados en una expedición específica.';
-
--- Vínculo expedición ↔ contactos de emergencia (HU-08)
-CREATE TABLE expedition_emergency_contacts (
-    id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
-    expedition_id   UUID            NOT NULL,
-    contact_id      UUID            NOT NULL,
-
-    CONSTRAINT fk_expedition_contacts_expedition
-        FOREIGN KEY (expedition_id) REFERENCES expeditions (id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_expedition_contacts_contact
-        FOREIGN KEY (contact_id) REFERENCES emergency_contacts (id)
-        ON DELETE CASCADE,
-    CONSTRAINT uq_expedition_contact UNIQUE (expedition_id, contact_id)
-);
-
-COMMENT ON TABLE expedition_emergency_contacts IS 'Contactos vinculados a una expedición para alertas.';
-
--- Bitácora operativa del rescatista (HU-14, HU-19)
-CREATE TABLE rescue_logs (
-    id              UUID                PRIMARY KEY DEFAULT gen_random_uuid(),
-    expedition_id   UUID                NOT NULL,
-    rescuer_id      UUID                NOT NULL,
-    notes           TEXT,
-    status_rescue   rescue_status_enum  NOT NULL DEFAULT 'en_busqueda',
-    updated_at      TIMESTAMPTZ         NOT NULL DEFAULT NOW(),
-
-    CONSTRAINT fk_rescue_logs_expedition
-        FOREIGN KEY (expedition_id) REFERENCES expeditions (id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_rescue_logs_rescuer
-        FOREIGN KEY (rescuer_id) REFERENCES rescuers_profile (user_id)
-        ON DELETE RESTRICT
-);
-
-COMMENT ON TABLE rescue_logs IS
+COMMENT ON TABLE bitacoras_rescate IS
     'Seguimiento de casos de alerta por rescatistas validados.';
 
--- ---------------------------------------------------------------------------
--- 4. Índices de rendimiento
--- ---------------------------------------------------------------------------
+CREATE TABLE despachos_correo (
+    id                  UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
+    expedicion_id       UUID            NOT NULL REFERENCES expediciones (id) ON DELETE CASCADE,
+    tipo_despacho       VARCHAR(32)     NOT NULL,
+    clave_destinatario  VARCHAR(255)    NOT NULL,
+    enviado_en          TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
+    CONSTRAINT uq_despacho_correo UNIQUE (expedicion_id, tipo_despacho, clave_destinatario),
+    CONSTRAINT chk_tipo_despacho CHECK (
+        tipo_despacho IN ('alerta_contacto', 'alerta_rescate')
+    )
+);
 
--- Índice crítico para el Cron Job (HU-11):
--- Filtra expediciones en curso cuyo plazo (+ tolerancia) ya venció.
-CREATE INDEX idx_expeditions_cron_in_progress
-    ON expeditions (status, estimated_return_time)
-    WHERE status = 'in_progress';
+CREATE INDEX idx_despachos_correo_expedicion ON despachos_correo (expedicion_id);
 
-COMMENT ON INDEX idx_expeditions_cron_in_progress IS
-    'Optimiza: SELECT ... WHERE status = in_progress AND NOW() > estimated_return_time + tolerance';
+CREATE TABLE auditoria_acceso_medico (
+    id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
+    senderista_id   UUID            NOT NULL,
+    expedicion_id   UUID            REFERENCES expediciones (id) ON DELETE SET NULL,
+    id_accesor      UUID            NOT NULL,
+    rol_accesor     VARCHAR(32)     NOT NULL,
+    tipo_acceso     VARCHAR(64)     NOT NULL,
+    accedido_en     TIMESTAMPTZ     NOT NULL DEFAULT NOW()
+);
 
--- Índices auxiliares frecuentes en consultas de dashboard
-CREATE INDEX idx_expeditions_hiker_status
-    ON expeditions (hiker_id, status);
-
-CREATE INDEX idx_emergency_contacts_hiker
-    ON emergency_contacts (hiker_id);
-
-CREATE INDEX idx_rescue_logs_expedition
-    ON rescue_logs (expedition_id);
-
-CREATE INDEX idx_expedition_emergency_contacts_expedition
-    ON expedition_emergency_contacts (expedition_id);
-
-CREATE INDEX idx_registry_lookup
-    ON institutional_rescuer_registry (credential_number, full_name, birth_date)
-    WHERE is_active = TRUE;
+CREATE INDEX idx_auditoria_acceso_medico_senderista
+    ON auditoria_acceso_medico (senderista_id, accedido_en DESC);
 
 -- ---------------------------------------------------------------------------
--- 5. Row Level Security (RLS)
+-- 4. Índices
 -- ---------------------------------------------------------------------------
--- Modelo TrekSafe: autorización en la API REST con JWT propio (no Supabase Auth).
--- RLS protege el esquema public contra acceso directo vía PostgREST (anon key).
--- El backend conecta con service_role o DATABASE_URL (postgres) → BYPASSRLS.
--- Ver enable_rls.sql para aplicar solo RLS sobre una BD ya creada.
+CREATE INDEX idx_expediciones_cron_en_progreso
+    ON expediciones (estado, hora_retorno_estimada)
+    WHERE estado = 'en_progreso';
 
-ALTER TABLE users                           ENABLE ROW LEVEL SECURITY;
-ALTER TABLE hikers_profile                  ENABLE ROW LEVEL SECURITY;
-ALTER TABLE rescuers_profile                ENABLE ROW LEVEL SECURITY;
-ALTER TABLE institutional_rescuer_registry  ENABLE ROW LEVEL SECURITY;
-ALTER TABLE medical_info                    ENABLE ROW LEVEL SECURITY;
-ALTER TABLE emergency_contacts              ENABLE ROW LEVEL SECURITY;
-ALTER TABLE expeditions                     ENABLE ROW LEVEL SECURITY;
-ALTER TABLE expedition_companions           ENABLE ROW LEVEL SECURITY;
-ALTER TABLE expedition_emergency_contacts   ENABLE ROW LEVEL SECURITY;
-ALTER TABLE rescue_logs                     ENABLE ROW LEVEL SECURITY;
+CREATE INDEX idx_expediciones_senderista_estado
+    ON expediciones (senderista_id, estado);
 
--- Política explícita deny-all para roles expuestos por la Data API de Supabase.
--- Sin políticas permisivas: anon/authenticated no pueden leer ni escribir nada.
-CREATE POLICY treksafe_deny_anon_authenticated ON users
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
+CREATE INDEX idx_expediciones_senderista_bloqueantes
+    ON expediciones (senderista_id, estado)
+    WHERE estado IN ('en_progreso', 'alerta');
 
-CREATE POLICY treksafe_deny_anon_authenticated ON hikers_profile
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
+CREATE INDEX idx_contactos_emergencia_senderista
+    ON contactos_emergencia (senderista_id);
 
-CREATE POLICY treksafe_deny_anon_authenticated ON rescuers_profile
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
+CREATE INDEX idx_bitacoras_rescate_expedicion
+    ON bitacoras_rescate (expedicion_id);
 
-CREATE POLICY treksafe_deny_anon_authenticated ON institutional_rescuer_registry
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
+CREATE INDEX idx_vinculos_expedicion_contacto_expedicion
+    ON vinculos_expedicion_contacto (expedicion_id);
 
-CREATE POLICY treksafe_deny_anon_authenticated ON medical_info
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
-
-CREATE POLICY treksafe_deny_anon_authenticated ON emergency_contacts
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
-
-CREATE POLICY treksafe_deny_anon_authenticated ON expeditions
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
-
-CREATE POLICY treksafe_deny_anon_authenticated ON expedition_companions
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
-
-CREATE POLICY treksafe_deny_anon_authenticated ON expedition_emergency_contacts
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
-
-CREATE POLICY treksafe_deny_anon_authenticated ON rescue_logs
-    FOR ALL TO anon, authenticated
-    USING (false) WITH CHECK (false);
+CREATE INDEX idx_registro_busqueda
+    ON registros_institucionales_rescatista (numero_credencial, nombre_completo, fecha_nacimiento)
+    WHERE esta_activo = TRUE;
 
 -- ---------------------------------------------------------------------------
--- 6. Datos mock / semilla de desarrollo
+-- 5. Función RPC del cron
 -- ---------------------------------------------------------------------------
--- Contraseña de prueba para ambas cuentas: Treksafe123!
--- Hash generado con pgcrypto (bf/10), compatible con bcrypt del backend.
+CREATE OR REPLACE FUNCTION treksafe_marcar_expiradas_en_progreso_como_alerta()
+RETURNS SETOF UUID
+LANGUAGE sql
+AS $$
+    UPDATE expediciones
+    SET estado = 'alerta', actualizado_en = NOW()
+    WHERE estado = 'en_progreso'
+      AND (hora_retorno_estimada + (minutos_tolerancia || ' minutes')::interval) < NOW()
+    RETURNING id;
+$$;
 
--- UUIDs fijos para referencia en pruebas de integración
--- Senderista: 11111111-1111-4111-8111-111111111111
--- Rescatista: 22222222-2222-4222-8222-222222222222
+-- ---------------------------------------------------------------------------
+-- 6. Row Level Security
+-- ---------------------------------------------------------------------------
+ALTER TABLE usuarios                                ENABLE ROW LEVEL SECURITY;
+ALTER TABLE perfiles_senderista                     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE perfiles_rescatista                     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE registros_institucionales_rescatista    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE fichas_medicas                          ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contactos_emergencia                    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE expediciones                            ENABLE ROW LEVEL SECURITY;
+ALTER TABLE acompanantes_expedicion                 ENABLE ROW LEVEL SECURITY;
+ALTER TABLE vinculos_expedicion_contacto            ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bitacoras_rescate                       ENABLE ROW LEVEL SECURITY;
+ALTER TABLE despachos_correo                        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE auditoria_acceso_medico                 ENABLE ROW LEVEL SECURITY;
 
-INSERT INTO institutional_rescuer_registry (
-    id, institution, credential_number, full_name, birth_date, is_active
+CREATE POLICY treksafe_deny_anon_authenticated ON usuarios
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON perfiles_senderista
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON perfiles_rescatista
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON registros_institucionales_rescatista
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON fichas_medicas
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON contactos_emergencia
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON expediciones
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON acompanantes_expedicion
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON vinculos_expedicion_contacto
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON bitacoras_rescate
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON despachos_correo
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+CREATE POLICY treksafe_deny_anon_authenticated ON auditoria_acceso_medico
+    FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+
+-- ---------------------------------------------------------------------------
+-- 7. Datos semilla
+-- ---------------------------------------------------------------------------
+-- Contraseña de prueba: Treksafe123!
+
+INSERT INTO registros_institucionales_rescatista (
+    id, institucion, numero_credencial, nombre_completo, fecha_nacimiento, esta_activo
 ) VALUES
-    (
-        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa1',
-        'AGMP',
-        'AGMP-2024-00158',
-        'Carlos Mendoza Quispe',
-        '1985-03-14',
-        TRUE
-    ),
-    (
-        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa2',
-        'AGMP',
-        'AGMP-2024-00203',
-        'Lucía Fernández Ríos',
-        '1990-07-22',
-        TRUE
-    ),
-    (
-        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa3',
-        'MINCETUR',
-        'MIN-RS-2019-00441',
-        'Marco Antonio Vargas Silva',
-        '1988-11-05',
-        TRUE
-    ),
-    (
-        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa4',
-        'MINCETUR',
-        'MIN-RS-2021-00789',
-        'Ana Patricia Solís Campos',
-        '1993-01-18',
-        TRUE
-    ),
-    (
-        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa5',
-        'AGMP',
-        'AGMP-2023-00999',
-        'Roberto Elías Paredes Luna',
-        '1979-09-30',
-        FALSE  -- Credencial inactiva: debe rechazarse en registro
-    );
+    ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa1', 'AGMP', 'AGMP-2024-00158', 'Carlos Mendoza Quispe', '1985-03-14', TRUE),
+    ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa2', 'AGMP', 'AGMP-2024-00203', 'Lucía Fernández Ríos', '1990-07-22', TRUE),
+    ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa3', 'MINCETUR', 'MIN-RS-2019-00441', 'Marco Antonio Vargas Silva', '1988-11-05', TRUE),
+    ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa4', 'MINCETUR', 'MIN-RS-2021-00789', 'Ana Patricia Solís Campos', '1993-01-18', TRUE),
+    ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa5', 'AGMP', 'AGMP-2023-00999', 'Roberto Elías Paredes Luna', '1979-09-30', FALSE);
 
--- Senderista de prueba (HU-01)
-INSERT INTO users (id, email, password_hash, role, created_at)
+INSERT INTO usuarios (id, correo_electronico, hash_contrasena, rol, creado_en)
 VALUES (
     '11111111-1111-4111-8111-111111111111',
     'senderista@treksafe.pe',
@@ -420,7 +396,7 @@ VALUES (
     NOW()
 );
 
-INSERT INTO hikers_profile (user_id, full_name, phone, document_id)
+INSERT INTO perfiles_senderista (usuario_id, nombre_completo, telefono, id_documento)
 VALUES (
     '11111111-1111-4111-8111-111111111111',
     'Juan Pérez García',
@@ -428,8 +404,7 @@ VALUES (
     '45879632'
 );
 
--- Rescatista de prueba (HU-03) — coincide con padrón AGMP-2024-00158
-INSERT INTO users (id, email, password_hash, role, created_at)
+INSERT INTO usuarios (id, correo_electronico, hash_contrasena, rol, creado_en)
 VALUES (
     '22222222-2222-4222-8222-222222222222',
     'rescatista@treksafe.pe',
@@ -438,8 +413,8 @@ VALUES (
     NOW()
 );
 
-INSERT INTO rescuers_profile (
-    user_id, credential_number, full_name, birth_date, validated_at
+INSERT INTO perfiles_rescatista (
+    usuario_id, numero_credencial, nombre_completo, fecha_nacimiento, validado_en
 )
 VALUES (
     '22222222-2222-4222-8222-222222222222',
@@ -450,19 +425,3 @@ VALUES (
 );
 
 COMMIT;
-
--- =============================================================================
--- Notas post-instalación
--- =============================================================================
--- · RLS activo con deny-by-default para anon/authenticated (Data API).
---   El backend DEBE usar SUPABASE_SERVICE_ROLE_KEY o DATABASE_URL directa.
---   NUNCA expongas service_role ni DATABASE_URL en el frontend PWA.
--- · medical_info.encrypted_conditions en seeds se poblará en Sprint 2 tras
---   implementar AES-256 en backend.
--- · Para validar el índice del cron:
---     EXPLAIN ANALYZE
---     SELECT id, estimated_return_time, tolerance_minutes
---     FROM expeditions
---     WHERE status = 'in_progress'
---       AND NOW() > (estimated_return_time + (tolerance_minutes || ' minutes')::INTERVAL);
--- =============================================================================

@@ -1,30 +1,30 @@
 import type { Request, Response, NextFunction } from 'express';
 
-type Bucket = { count: number; resetAt: number };
+type Cubo = { count: number; resetAt: number };
 
-const buckets = new Map<string, Bucket>();
+const cubos = new Map<string, Cubo>();
 
-export function createRateLimiter(maxRequests: number, windowMs: number) {
+export function createRateLimiter(maxSolicitudes: number, ventanaMs: number) {
   return (req: Request, res: Response, next: NextFunction): void => {
-    const key = `${req.ip}:${req.path}`;
-    const now = Date.now();
-    const bucket = buckets.get(key);
+    const clave = `${req.ip}:${req.path}`;
+    const ahora = Date.now();
+    const cubo = cubos.get(clave);
 
-    if (!bucket || now >= bucket.resetAt) {
-      buckets.set(key, { count: 1, resetAt: now + windowMs });
+    if (!cubo || ahora >= cubo.resetAt) {
+      cubos.set(clave, { count: 1, resetAt: ahora + ventanaMs });
       next();
       return;
     }
 
-    if (bucket.count >= maxRequests) {
+    if (cubo.count >= maxSolicitudes) {
       res.status(429).json({
-        message: 'Demasiados intentos. Espera un momento e inténtalo de nuevo.',
-        code: 'RATE_LIMITED',
+        mensaje: 'Demasiados intentos. Espera un momento e inténtalo de nuevo.',
+        codigo: 'LIMITE_TASA',
       });
       return;
     }
 
-    bucket.count += 1;
+    cubo.count += 1;
     next();
   };
 }

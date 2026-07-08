@@ -100,7 +100,7 @@ flowchart LR
   subgraph Backend
     API[Express · TypeScript]
     CRON[Cron plazos]
-    MAIL[MailService]
+    MAIL[ServicioCorreo]
   end
 
   subgraph Datos
@@ -116,22 +116,23 @@ flowchart LR
 
 
 
-**Backend — Clean Architecture**
+**Backend — Clean Architecture (nombres en español)**
 
 ```
-presentation/   → Rutas HTTP, controllers, middleware
+presentation/   → Rutas HTTP, controladores, middleware
 application/    → Servicios, DTOs, casos de uso
-domain/         → Entidades y contratos
-infrastructure/ → Repositorios, email, cron, cifrado, JWT
+domain/         → Entidades y value objects
+infrastructure/ → Repositorios, correo, cron, cifrado, JWT
 ```
 
-**Frontend — PWA mobile-first**
+**Frontend — PWA mobile-first (nombres en español)**
 
 ```
-pages/          → Flujos senderista y rescatista
+pages/          → Páginas senderista y rescatista
 components/     → Layouts, diálogos, recordatorios
-services/       → Cliente HTTP tipado
+services/       → Cliente HTTP tipado (clienteApi, autenticacion, …)
 lib/            → Offline, validación, sesión, tema
+context/        → ContextoAutenticacion, ContextoTema
 ```
 
 ---
@@ -170,12 +171,8 @@ treksake-app/
 │       ├── pages/           # Pantallas por rol
 │       ├── components/      # UI reutilizable
 │       └── services/        # Cliente API
-├── docs/                    # Backlog, DoR, DoD, UML, mockups Figma
-├── init_schema.sql          # Esquema base + datos mock de prueba
-├── enable_rls.sql           # Políticas RLS
-├── sprint2_migration.sql    # Cifrado médico
-├── sprint7_migration.sql    # Derechos ARCO
-├── post_mvp_migration.sql   # Extensiones post-MVP
+├── init_schema.sql          # Esquema completo en español + semillas
+├── enable_rls.sql           # Reaplicar políticas RLS (opcional)
 └── .env.example             # Plantilla de variables de entorno
 ```
 
@@ -239,13 +236,12 @@ Edita `backend/.env` con los valores de **Supabase Dashboard → Project Setting
 
 ### 3. Inicializar la base de datos
 
-Ejecuta los scripts en el **SQL Editor de Supabase** (en orden):
+Ejecuta en el **SQL Editor de Supabase**:
 
-1. `init_schema.sql`
-2. `enable_rls.sql`
-3. `sprint2_migration.sql`
-4. `sprint7_migration.sql`
-5. `post_mvp_migration.sql` *(si aplica)*
+1. `init_schema.sql` — esquema completo en español (tablas, enums, índices, RLS, semillas y función RPC del cron)
+2. `enable_rls.sql` — solo si necesitas reaplicar políticas RLS sobre una BD ya creada
+
+> Las migraciones `sprint2_migration.sql`, `sprint7_migration.sql` y `post_mvp_migration.sql` están **obsoletas** (contenido fusionado en `init_schema.sql`).
 
 El esquema incluye usuarios mock para pruebas locales (ver comentarios al final de `init_schema.sql`).
 
@@ -254,17 +250,17 @@ El esquema incluye usuarios mock para pruebas locales (ver comentarios al final 
 En terminales separadas:
 
 ```bash
-npm run dev:backend    # → http://localhost:3000/api/health
+npm run dev:backend    # → http://localhost:3000/api/salud
 npm run dev:frontend   # → http://localhost:5173
 ```
 
 Verifica el health check:
 
 ```bash
-curl http://localhost:3000/api/health
+curl http://localhost:3000/api/salud
 ```
 
-Respuesta esperada: `{ "status": "ok", "service": "treksafe-api", "mail": { ... }, "cron": { ... } }`
+Respuesta esperada: `{ "estado": "ok", "servicio": "treksafe-api", "correo": { ... }, "cron": { ... } }`
 
 ### 5. Build de producción
 
@@ -279,13 +275,13 @@ npm run build:frontend   # Salida en frontend/dist (PWA lista para desplegar)
 
 ## Base de datos
 
-Modelo relacional en PostgreSQL con tipos ENUM para roles, estados de expedición y bitácora de rescate.
+Modelo relacional en PostgreSQL con tipos ENUM y nombres en español.
 
-**Entidades principales:** `users`, `hikers_profile`, `rescuers_profile`, `expeditions`, `emergency_contacts`, `medical_info`, `rescue_logs`, `institutional_rescuer_registry`.
+**Entidades principales:** `usuarios`, `perfiles_senderista`, `perfiles_rescatista`, `expediciones`, `contactos_emergencia`, `fichas_medicas`, `bitacoras_rescate`, `registros_institucionales_rescatista`, `despachos_correo`, `auditoria_acceso_medico`.
 
-**Estados de expedición:** `programmed` → `in_progress` → `completed` | `alert`
+**Estados de expedición:** `programada` → `en_progreso` → `completada` | `alerta`
 
-El índice parcial sobre expediciones `in_progress` con deadline vencido optimiza el cron job (HU-11).
+El índice parcial sobre expediciones `en_progreso` con fecha límite vencida optimiza el cron job (HU-11).
 
 ---
 
@@ -293,14 +289,14 @@ El índice parcial sobre expediciones `in_progress` con deadline vencido optimiz
 
 ## API REST
 
-Prefijo base: `/api` · Autenticación: `Authorization: Bearer <JWT>`
+Prefijo base: `/api` · Autenticación: `Authorization: Bearer <JWT>` · Campos JSON en `camelCase` español
 
 ### Salud
 
 
-| Método | Ruta      | Auth | Descripción                      |
-| ------ | --------- | ---- | -------------------------------- |
-| `GET`  | `/health` | —    | Estado del servicio, mail y cron |
+| Método | Ruta     | Auth | Descripción                      |
+| ------ | -------- | ---- | -------------------------------- |
+| `GET`  | `/salud` | —    | Estado del servicio, correo y cron |
 
 
 
@@ -308,50 +304,50 @@ Prefijo base: `/api` · Autenticación: `Authorization: Bearer <JWT>`
 ### Autenticación
 
 
-| Método | Ruta                     | Descripción               |
-| ------ | ------------------------ | ------------------------- |
-| `POST` | `/auth/register-hiker`   | Registro de senderista    |
-| `POST` | `/auth/register-rescuer` | Registro de rescatista    |
-| `POST` | `/auth/login`            | Login (emite JWT por rol) |
+| Método | Ruta                         | Descripción               |
+| ------ | ---------------------------- | ------------------------- |
+| `POST` | `/auth/registrar-senderista` | Registro de senderista    |
+| `POST` | `/auth/registrar-rescatista` | Registro de rescatista    |
+| `POST` | `/auth/iniciar-sesion`       | Login (emite JWT por rol) |
 
 
 
 
-### Usuario senderista (`/user`)
+### Usuario senderista (`/usuario`)
 
 
-| Método            | Ruta              | Descripción             |
-| ----------------- | ----------------- | ----------------------- |
-| `GET/PUT`         | `/medical-info`   | Ficha médica cifrada    |
-| `GET/POST/DELETE` | `/contacts`       | Contactos de emergencia |
-| `POST`            | `/privacy/revoke` | Revocación ARCO         |
-
-
-
-
-### Expediciones senderista (`/expeditions`)
-
-
-| Método | Ruta            | Descripción              |
-| ------ | --------------- | ------------------------ |
-| `POST` | `/`             | Crear plan de expedición |
-| `GET`  | `/active`       | Expedición en curso      |
-| `GET`  | `/history`      | Historial finalizado     |
-| `POST` | `/:id/check-in` | Confirmar retorno seguro |
+| Método            | Ruta                  | Descripción             |
+| ----------------- | --------------------- | ----------------------- |
+| `GET/PUT`         | `/ficha-medica`       | Ficha médica cifrada    |
+| `GET/POST/DELETE` | `/contactos`          | Contactos de emergencia |
+| `POST`            | `/privacidad/revocar` | Revocación ARCO         |
 
 
 
 
-### Rescate (`/rescue`)
+### Expediciones senderista (`/expediciones`)
 
 
-| Método  | Ruta                            | Descripción               |
-| ------- | ------------------------------- | ------------------------- |
-| `GET`   | `/expeditions`                  | Expediciones monitoreadas |
-| `GET`   | `/alerts`                       | Alertas activas           |
-| `GET`   | `/alerts/:expeditionId`         | Detalle de emergencia     |
-| `POST`  | `/alerts/:expeditionId/confirm` | Confirmar recepción       |
-| `PATCH` | `/alerts/:expeditionId/log`     | Actualizar bitácora       |
+| Método | Ruta                     | Descripción              |
+| ------ | ------------------------ | ------------------------ |
+| `POST` | `/`                      | Crear plan de expedición |
+| `GET`  | `/activa`                | Expedición en curso      |
+| `GET`  | `/historial`             | Historial finalizado     |
+| `POST` | `/:id/confirmar-retorno` | Confirmar retorno seguro |
+
+
+
+
+### Rescate (`/rescate`)
+
+
+| Método  | Ruta                               | Descripción               |
+| ------- | ---------------------------------- | ------------------------- |
+| `GET`   | `/expediciones`                    | Expediciones monitoreadas |
+| `GET`   | `/alertas`                         | Alertas activas           |
+| `GET`   | `/alertas/:expedicionId`           | Detalle de emergencia     |
+| `POST`  | `/alertas/:expedicionId/confirmar` | Confirmar recepción       |
+| `PATCH` | `/alertas/:expedicionId/bitacora`  | Actualizar bitácora       |
 
 
 ---
@@ -383,7 +379,7 @@ Prefijo base: `/api` · Autenticación: `Authorization: Bearer <JWT>`
 | Medida                    | Implementación                                                              |
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Ley N° 29733** (Perú)   | Consentimiento explícito en registro; ficha médica cifrada en reposo        |
-| **Derechos ARCO**         | Eliminación/anonimización vía `POST /user/privacy/revoke`                   |
+| **Derechos ARCO**         | Eliminación/anonimización vía `POST /usuario/privacidad/revocar`            |
 | **Segregación de roles**  | JWT con rol `senderista` | `rescatista`; middleware por ruta                |
 | **RLS**                   | Políticas deny-by-default en Supabase; acceso vía `service_role` en backend |
 | **Auditoría médica**      | Registro de accesos a ficha médica por rescatistas                          |
@@ -398,24 +394,6 @@ Prefijo base: `/api` · Autenticación: `Authorization: Bearer <JWT>`
 - Rastreo GPS continuo vía hardware IoT
 - Integración con APIs gubernamentales reales (validación simulada)
 - SMS de pago como canal de alerta
-
----
-
-
-
-## Documentación
-
-
-| Documento                                                    | Contenido                                   |
-| ------------------------------------------------------------ | ------------------------------------------- |
-| `[docs/product_backlog.md](docs/product_backlog.md)`         | 25 historias de usuario (HU-01 a HU-25)     |
-| `[docs/tasks_mvp.md](docs/tasks_mvp.md)`                     | Desglose de tareas por sprint               |
-| `[docs/definition_of_ready.md](docs/definition_of_ready.md)` | Criterios DoR (CONNEXTRA, INVEST, Gherkin)  |
-| `[docs/definition_of_done.md](docs/definition_of_done.md)`   | Criterios DoD y validación de cierre        |
-| `[docs/uml/README.md](docs/uml/README.md)`                   | Diagramas UML (Draw.io)                     |
-| `[docs/ownership.md](docs/ownership.md)`                     | Reparto de ownership y flujo Git del equipo |
-| `[docs/mockups/](docs/mockups/)`                             | Prototipos Figma exportados                 |
-
 
 ---
 

@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import '@/components/maps/leafletIconFix';
 import { parseDecimalCoordinates } from '@/lib/coordinates';
 import { buildExternalMapUrl } from '@/lib/mapLinks';
-import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useEstadoEnLinea } from '@/hooks/useEstadoEnLinea';
 import { FitMapBounds } from '@/components/maps/FitMapBounds';
 import { makeMarkerIcon, RISK_MARKER_COLORS } from '@/components/maps/mapMarkers';
 import {
@@ -15,29 +15,32 @@ import {
   OSM_TILE_URL,
   PERU_CENTER,
 } from '@/components/maps/mapDefaults';
-import type { RescueExpeditionRiskLevel } from '@/services/rescue';
+import type { NivelRiesgoRescate } from '@/services/rescate';
 
-export type RescueExpeditionMapPoint = {
-  expeditionId: string;
+export type PuntoMapaExpedicionRescate = {
+  expedicionId: string;
   label: string;
   sublabel: string;
   routeLabel: string;
-  coordinates: string;
-  riskLevel: RescueExpeditionRiskLevel;
+  coordenadas: string;
+  nivelRiesgo: NivelRiesgoRescate;
   alertHref?: string;
 };
 
+/** @deprecated Use PuntoMapaExpedicionRescate */
+export type RescueExpeditionMapPoint = PuntoMapaExpedicionRescate;
+
 export type RescueExpeditionsMapProps = {
-  expeditions: RescueExpeditionMapPoint[];
+  expeditions: PuntoMapaExpedicionRescate[];
   className?: string;
 };
 
 export function RescueExpeditionsMap({ expeditions, className }: RescueExpeditionsMapProps) {
-  const online = useOnlineStatus();
+  const online = useEstadoEnLinea();
 
   const markers = useMemo(() => {
     return expeditions.flatMap((exp) => {
-      const parsed = parseDecimalCoordinates(exp.coordinates);
+      const parsed = parseDecimalCoordinates(exp.coordenadas);
       if (!parsed) return [];
       return [
         {
@@ -69,10 +72,10 @@ export function RescueExpeditionsMap({ expeditions, className }: RescueExpeditio
         </p>
         <div className="space-y-3">
           {markers.map((marker) => {
-            const parsed = parseDecimalCoordinates(marker.coordinates);
+            const parsed = parseDecimalCoordinates(marker.coordenadas);
             if (!parsed) return null;
             return (
-              <div key={marker.expeditionId}>
+              <div key={marker.expedicionId}>
                 <p className="font-medium">{marker.label}</p>
                 <p className="text-xs text-muted-foreground">{marker.routeLabel}</p>
                 <a
@@ -105,9 +108,9 @@ export function RescueExpeditionsMap({ expeditions, className }: RescueExpeditio
           <FitMapBounds points={points} padding={[32, 32]} />
           {markers.map((marker) => (
             <Marker
-              key={marker.expeditionId}
+              key={marker.expedicionId}
               position={marker.position}
-              icon={makeMarkerIcon(RISK_MARKER_COLORS[marker.riskLevel], marker.riskLevel === 'red' ? 28 : 24)}
+              icon={makeMarkerIcon(RISK_MARKER_COLORS[marker.nivelRiesgo], marker.nivelRiesgo === 'rojo' ? 28 : 24)}
             >
               <Popup>
                 <strong>{marker.label}</strong>
