@@ -23,7 +23,6 @@ TrekSafe desplaza el modelo reactivo tradicional de rescate hacia un **protocolo
 - [API REST](#api-rest)
 - [Scripts](#scripts)
 - [Seguridad y cumplimiento legal](#seguridad-y-cumplimiento-legal)
-- [Documentación](#documentación)
 - [Equipo](#equipo)
 
 ---
@@ -294,8 +293,8 @@ Prefijo base: `/api` · Autenticación: `Authorization: Bearer <JWT>` · Campos 
 ### Salud
 
 
-| Método | Ruta     | Auth | Descripción                      |
-| ------ | -------- | ---- | -------------------------------- |
+| Método | Ruta     | Auth | Descripción                        |
+| ------ | -------- | ---- | ---------------------------------- |
 | `GET`  | `/salud` | —    | Estado del servicio, correo y cron |
 
 
@@ -380,7 +379,7 @@ Prefijo base: `/api` · Autenticación: `Authorization: Bearer <JWT>` · Campos 
 | ------------------------- | --------------------------------------------------------------------------- |
 | **Ley N° 29733** (Perú)   | Consentimiento explícito en registro; ficha médica cifrada en reposo        |
 | **Derechos ARCO**         | Eliminación/anonimización vía `POST /usuario/privacidad/revocar`            |
-| **Segregación de roles**  | JWT con rol `senderista` | `rescatista`; middleware por ruta                |
+| **Segregación de roles**  | JWT con rol `senderista`                                                    |
 | **RLS**                   | Políticas deny-by-default en Supabase; acceso vía `service_role` en backend |
 | **Auditoría médica**      | Registro de accesos a ficha médica por rescatistas                          |
 | **Rate limiting**         | 20 req/15 min en endpoints de autenticación                                 |
