@@ -1,0 +1,83 @@
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { AuthProvider, useAuth, AuthSessionBridge } from '@/context/AuthContext';
+import { ThemeProvider } from '@/context/ThemeContext';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { RescatistaLayout } from '@/components/RescatistaLayout';
+import { SenderistaLayout } from '@/components/SenderistaLayout';
+import { LoginPage } from '@/pages/LoginPage';
+import { RegisterHikerPage } from '@/pages/RegisterHikerPage';
+import { RegisterRescuerPage } from '@/pages/RegisterRescuerPage';
+import { RescatistaHomePage } from '@/pages/RescatistaHomePage';
+import { RescueConsolePage } from '@/pages/RescueConsolePage';
+import { RescueAlertDetailPage } from '@/pages/RescueAlertDetailPage';
+import { SenderistaHomePage } from '@/pages/SenderistaHomePage';
+import { SenderistaProfilePage } from '@/pages/SenderistaProfilePage';
+import { MedicalInfoPage } from '@/pages/MedicalInfoPage';
+import { ContactsPage } from '@/pages/ContactsPage';
+import { ExpeditionHistoryPage } from '@/pages/ExpeditionHistoryPage';
+import { PrivacySettingsPage } from '@/pages/PrivacySettingsPage';
+import { DataRevocationPage } from '@/pages/DataRevocationPage';
+import { ExpeditionListPage } from '@/pages/ExpeditionListPage';
+import { CreateExpeditionPage } from '@/pages/CreateExpeditionPage';
+import { ActiveExpeditionPage } from '@/pages/ActiveExpeditionPage';
+import { CheckInSuccessPage } from '@/pages/CheckInSuccessPage';
+
+function RootRedirect() {
+  const { isAuthenticated, user } = useAuth();
+  if (!isAuthenticated || !user) return <Navigate to="/login" replace />;
+  return (
+    <Navigate to={user.role === 'rescatista' ? '/rescatista/consola' : '/senderista'} replace />
+  );
+}
+
+export function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+        <AuthSessionBridge />
+        <Routes>
+          <Route path="/" element={<RootRedirect />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register/hiker" element={<RegisterHikerPage />} />
+          <Route path="/register/rescuer" element={<RegisterRescuerPage />} />
+          <Route
+            path="/senderista"
+            element={
+              <ProtectedRoute role="senderista">
+                <SenderistaLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<SenderistaHomePage />} />
+            <Route path="perfil" element={<SenderistaProfilePage />} />
+            <Route path="perfil/medica" element={<MedicalInfoPage />} />
+            <Route path="perfil/contactos" element={<ContactsPage />} />
+            <Route path="perfil/historial" element={<ExpeditionHistoryPage />} />
+            <Route path="perfil/privacidad" element={<PrivacySettingsPage />} />
+            <Route path="perfil/privacidad/solicitud" element={<DataRevocationPage />} />
+            <Route path="expedicion" element={<ExpeditionListPage />} />
+            <Route path="expedicion/activa" element={<ActiveExpeditionPage />} />
+            <Route path="expedicion/confirmada" element={<CheckInSuccessPage />} />
+            <Route path="expedicion/nueva" element={<CreateExpeditionPage />} />
+          </Route>
+          <Route
+            path="/rescatista"
+            element={
+              <ProtectedRoute role="rescatista">
+                <RescatistaLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="consola" replace />} />
+            <Route path="consola" element={<RescueConsolePage />} />
+            <Route path="alertas" element={<RescatistaHomePage />} />
+            <Route path="alertas/:expeditionId" element={<RescueAlertDetailPage />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
