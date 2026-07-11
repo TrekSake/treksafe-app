@@ -124,65 +124,77 @@ export function PaginaRegistroSenderista() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <FieldLabel>Nombre completo</FieldLabel>
+            <FieldLabel htmlFor="reg-nombre">Nombre completo</FieldLabel>
             <input
+              id="reg-nombre"
               className={`input-field ${tocados.nombreCompleto && errores.nombreCompleto ? 'input-error' : ''}`}
               value={nombreCompleto}
               onChange={(e) => setNombreCompleto(e.target.value)}
               onBlur={() => setTocados((t) => ({ ...t, nombreCompleto: true }))}
               placeholder="Tu nombre completo"
+              aria-required="true"
             />
             <FieldError message={tocados.nombreCompleto ? errores.nombreCompleto : undefined} />
           </div>
 
           <div>
-            <FieldLabel>DNI</FieldLabel>
+            <FieldLabel htmlFor="reg-dni">DNI</FieldLabel>
             <input
+              id="reg-dni"
               className={`input-field ${tocados.idDocumento && errores.idDocumento ? 'input-error' : ''}`}
               value={idDocumento}
               onChange={(e) => setIdDocumento(e.target.value.replace(/\D/g, '').slice(0, 8))}
               onBlur={() => setTocados((t) => ({ ...t, idDocumento: true }))}
               placeholder="45879632"
               inputMode="numeric"
+              aria-required="true"
             />
             <FieldError message={tocados.idDocumento ? errores.idDocumento : undefined} />
           </div>
 
           <div>
-            <FieldLabel>Correo electrónico</FieldLabel>
+            <FieldLabel htmlFor="reg-correo">Correo electrónico</FieldLabel>
             <input
+              id="reg-correo"
               type="email"
               className={`input-field ${tocados.correo && errores.correo ? 'input-error' : ''}`}
               value={correo}
               onChange={(e) => setCorreo(e.target.value)}
               onBlur={() => setTocados((t) => ({ ...t, correo: true }))}
               placeholder="tu@correo.pe"
+              autoComplete="email"
+              aria-required="true"
             />
             <FieldError message={tocados.correo ? errores.correo : undefined} />
           </div>
 
           <div>
-            <FieldLabel>Celular</FieldLabel>
+            <FieldLabel htmlFor="reg-celular">Celular</FieldLabel>
             <input
+              id="reg-celular"
               type="tel"
               className={`input-field ${tocados.telefono && errores.telefono ? 'input-error' : ''}`}
               value={telefono}
               onChange={(e) => setTelefono(e.target.value)}
               onBlur={() => setTocados((t) => ({ ...t, telefono: true }))}
               placeholder="+51987654321"
+              aria-required="true"
             />
             <FieldError message={tocados.telefono ? errores.telefono : undefined} />
           </div>
 
           <div>
-            <FieldLabel>Contraseña</FieldLabel>
+            <FieldLabel htmlFor="reg-contrasena">Contraseña</FieldLabel>
             <input
+              id="reg-contrasena"
               type="password"
               className={`input-field ${tocados.contrasena && errores.contrasena ? 'input-error' : ''}`}
               value={contrasena}
               onChange={(e) => setContrasena(e.target.value)}
               onBlur={() => setTocados((t) => ({ ...t, contrasena: true }))}
               placeholder="Mín. 8 caracteres, mayúscula, minúscula y número"
+              autoComplete="new-password"
+              aria-required="true"
             />
             {contrasena && (
               <p className="text-xs mt-1 text-muted-foreground">
@@ -193,24 +205,29 @@ export function PaginaRegistroSenderista() {
           </div>
 
           <div>
-            <FieldLabel>Confirmar contraseña</FieldLabel>
+            <FieldLabel htmlFor="reg-confirmar">Confirmar contraseña</FieldLabel>
             <input
+              id="reg-confirmar"
               type="password"
               className={`input-field ${tocados.confirmarContrasena && errores.confirmarContrasena ? 'input-error' : ''}`}
               value={confirmarContrasena}
               onChange={(e) => setConfirmarContrasena(e.target.value)}
               onBlur={() => setTocados((t) => ({ ...t, confirmarContrasena: true }))}
+              autoComplete="new-password"
+              aria-required="true"
             />
             <FieldError message={tocados.confirmarContrasena ? errores.confirmarContrasena : undefined} />
           </div>
 
           <label className="flex items-start gap-3 cursor-pointer">
             <input
+              id="reg-consentimiento"
               type="checkbox"
               checked={consentimiento}
               onChange={(e) => setConsentimiento(e.target.checked)}
               onBlur={() => setTocados((t) => ({ ...t, consentimiento: true }))}
               className="mt-1 w-4 h-4 accent-primary"
+              aria-required="true"
             />
             <span className="text-sm leading-relaxed">
               Acepto el tratamiento de mis datos personales conforme a la{' '}

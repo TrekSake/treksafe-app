@@ -3,18 +3,18 @@ import { Check } from 'lucide-react';
 
 type EstadoUbicacion = {
   lugarFin?: string;
-  retornadoEn?: string;
+  confirmadoEn?: string;
 };
 
 export function PaginaRetornoConfirmado() {
   const location = useLocation();
   const state = (location.state as EstadoUbicacion | null) ?? {};
 
-  if (!state.retornadoEn) {
+  if (!state.confirmadoEn) {
     return <Navigate to="/senderista" replace />;
   }
 
-  const etiquetaRetorno = new Date(state.retornadoEn).toLocaleString('es-PE', {
+  const etiquetaRetorno = new Date(state.confirmadoEn).toLocaleString('es-PE', {
     day: 'numeric',
     month: 'short',
     hour: '2-digit',

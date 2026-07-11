@@ -31,6 +31,28 @@ export type FilaBitacoraRescate = {
   notas: string | null;
 };
 
+export type FilaHistorialRescatista = {
+  id: string;
+  expedicion_id: string;
+  estado_rescate: string;
+  actualizado_en: string;
+  notas: string | null;
+  expediciones: {
+    id: string;
+    estado: string;
+    lugar_inicio: string;
+    lugar_fin: string;
+    hora_inicio: string;
+    hora_retorno_estimada: string;
+    minutos_tolerancia: number;
+    actualizado_en: string;
+    perfiles_senderista:
+      | { nombre_completo: string; telefono: string }
+      | { nombre_completo: string; telefono: string }[]
+      | null;
+  };
+};
+
 export class RepositorioRescate {
   private readonly supabase = getSupabaseAdmin();
 
@@ -220,5 +242,26 @@ export class RepositorioRescate {
     }
 
     return data;
+  }
+
+  async listarHistorialCompletadas(rescatistaId: string): Promise<FilaHistorialRescatista[]> {
+    const { data, error } = await this.supabase
+      .from('bitacoras_rescate')
+      .select(
+        `
+        id, expedicion_id, estado_rescate, actualizado_en, notas,
+        expediciones!inner (
+          id, estado, lugar_inicio, lugar_fin, hora_inicio, hora_retorno_estimada,
+          minutos_tolerancia, actualizado_en,
+          perfiles_senderista ( nombre_completo, telefono )
+        )
+      `,
+      )
+      .eq('rescatista_id', rescatistaId)
+      .eq('expediciones.estado', 'completada')
+      .order('actualizado_en', { ascending: false });
+
+    if (error) throw new ErrorAplicacion(500, error.message);
+    return (data ?? []) as unknown as FilaHistorialRescatista[];
   }
 }

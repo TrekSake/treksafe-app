@@ -30,6 +30,11 @@ export async function listarAlertas(req: Request, res: Response): Promise<void> 
   res.status(200).json({ alertas });
 }
 
+export async function listarHistorial(req: Request, res: Response): Promise<void> {
+  const historial = await servicioRescate.listarHistorial(solicitudAuth(req).user.id);
+  res.status(200).json({ historial });
+}
+
 export async function actualizarBitacoraRescate(req: Request, res: Response): Promise<void> {
   const expedicionId = String(req.params.expedicionId);
   const entrada = actualizarBitacoraRescateSchema.parse(req.body ?? {});

@@ -10,6 +10,7 @@ import { PaginaRegistroRescatista } from '@/pages/PaginaRegistroRescatista';
 import { PaginaInicioRescatista } from '@/pages/PaginaInicioRescatista';
 import { PaginaConsolaRescate } from '@/pages/PaginaConsolaRescate';
 import { PaginaDetalleAlertaRescate } from '@/pages/PaginaDetalleAlertaRescate';
+import { PaginaHistorialRescatista } from '@/pages/PaginaHistorialRescatista';
 import { PaginaInicioSenderista } from '@/pages/PaginaInicioSenderista';
 import { PaginaPerfilSenderista } from '@/pages/PaginaPerfilSenderista';
 import { PaginaFichaMedica } from '@/pages/PaginaFichaMedica';
@@ -82,6 +83,7 @@ export function App() {
               <Route path="consola" element={<PaginaConsolaRescate />} />
               <Route path="alertas" element={<PaginaInicioRescatista />} />
               <Route path="alertas/:expedicionId" element={<PaginaDetalleAlertaRescate />} />
+              <Route path="historial" element={<PaginaHistorialRescatista />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

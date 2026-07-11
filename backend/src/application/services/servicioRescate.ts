@@ -116,6 +116,21 @@ export type DetalleAlertaRescate = {
   } | null;
 };
 
+export type ItemHistorialRescatista = {
+  expedicionId: string;
+  nombreCompletoSenderista: string;
+  telefonoSenderista: string;
+  lugarInicio: string;
+  lugarFin: string;
+  horaInicio: string;
+  horaRetornoEstimada: string;
+  fechaLimite: string;
+  completadaEn: string;
+  estadoRescate: string;
+  confirmadoEn: string;
+  notas: string | null;
+};
+
 export class ServicioRescate {
   constructor(
     private readonly repo = new RepositorioRescate(),
@@ -337,5 +352,41 @@ export class ServicioRescate {
         notas: bitacora.notas,
       },
     };
+  }
+
+  async listarHistorial(rescatistaId: string): Promise<ItemHistorialRescatista[]> {
+    await this.repo.verificarEsRescatista(rescatistaId);
+
+    const filas = await this.repo.listarHistorialCompletadas(rescatistaId);
+    const items: ItemHistorialRescatista[] = [];
+
+    for (const fila of filas) {
+      const expedicion = fila.expediciones;
+      if (!expedicion) continue;
+
+      const senderista = Array.isArray(expedicion.perfiles_senderista)
+        ? expedicion.perfiles_senderista[0]
+        : expedicion.perfiles_senderista;
+      if (!senderista) continue;
+
+      items.push({
+        expedicionId: expedicion.id,
+        nombreCompletoSenderista: senderista.nombre_completo,
+        telefonoSenderista: senderista.telefono,
+        lugarInicio: expedicion.lugar_inicio,
+        lugarFin: expedicion.lugar_fin,
+        horaInicio: expedicion.hora_inicio,
+        horaRetornoEstimada: expedicion.hora_retorno_estimada,
+        fechaLimite: calcularFechaLimite(expedicion.hora_retorno_estimada, expedicion.minutos_tolerancia),
+        completadaEn: expedicion.actualizado_en,
+        estadoRescate: fila.estado_rescate,
+        confirmadoEn: fila.actualizado_en,
+        notas: fila.notas,
+      });
+    }
+
+    return items.sort(
+      (a, b) => new Date(b.completadaEn).getTime() - new Date(a.completadaEn).getTime(),
+    );
   }
 }

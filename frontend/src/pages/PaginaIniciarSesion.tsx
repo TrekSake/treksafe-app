@@ -28,6 +28,14 @@ export function PaginaIniciarSesion() {
     setCargando(true);
     try {
       const res = await iniciarSesion({ correoElectronico: correo, contrasena });
+      if (res.usuario.rol !== tab) {
+        setError(
+          res.usuario.rol === 'rescatista'
+            ? 'Esta cuenta es de rescatista. Cambia al tab Rescatista para continuar.'
+            : 'Esta cuenta es de senderista. Cambia al tab Senderista para continuar.',
+        );
+        return;
+      }
       loginSession(res.token, res.usuario);
       navigate(res.usuario.rol === 'rescatista' ? '/rescatista' : '/senderista');
     } catch (err) {
@@ -54,24 +62,43 @@ export function PaginaIniciarSesion() {
     }
   };
 
+  const esRescatista = tab === 'rescatista';
+  const inputClass = esRescatista ? 'input-field input-field-secondary' : 'input-field';
+  const btnClass = esRescatista ? 'btn-secondary' : 'btn-primary';
+  const linkClass = esRescatista
+    ? 'text-secondary font-semibold hover:underline'
+    : 'text-primary font-semibold hover:underline';
+
   return (
     <MobileShell>
       <div className="px-6 flex flex-col py-10">
-        <LogoHeader />
+        <LogoHeader variant={tab} />
 
         <div className="flex bg-muted rounded-xl p-1 mb-5">
-          {(['senderista', 'rescatista'] as const).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTab(t)}
-              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
-                tab === t ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground'
-              }`}
-            >
-              {t === 'senderista' ? 'Senderista' : 'Rescatista'}
-            </button>
-          ))}
+          {(['senderista', 'rescatista'] as const).map((t) => {
+            const activo = tab === t;
+            const TabIcon = t === 'rescatista' ? Shield : Mountain;
+            return (
+              <button
+                key={t}
+                type="button"
+                onClick={() => {
+                  setTab(t);
+                  setError('');
+                }}
+                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all inline-flex items-center justify-center gap-1.5 ${
+                  activo
+                    ? t === 'rescatista'
+                      ? 'bg-secondary text-secondary-foreground shadow-sm'
+                      : 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground'
+                }`}
+              >
+                <TabIcon size={14} />
+                {t === 'senderista' ? 'Senderista' : 'Rescatista'}
+              </button>
+            );
+          })}
         </div>
 
         <h2 className="text-xl font-bold mb-4">Iniciar sesión</h2>
@@ -80,27 +107,33 @@ export function PaginaIniciarSesion() {
 
         <form onSubmit={handleSubmit} className="space-y-4 mb-4">
           <div>
-            <FieldLabel>Correo electrónico</FieldLabel>
+            <FieldLabel htmlFor="login-correo">Correo electrónico</FieldLabel>
             <input
+              id="login-correo"
               type="email"
               value={correo}
               onChange={(e) => setCorreo(e.target.value)}
               placeholder="tu@correo.pe"
-              className="input-field"
+              className={inputClass}
               required
+              aria-required="true"
+              autoComplete="email"
             />
           </div>
           <div>
-            <FieldLabel>Contraseña</FieldLabel>
+            <FieldLabel htmlFor="login-contrasena">Contraseña</FieldLabel>
             <input
+              id="login-contrasena"
               type="password"
               value={contrasena}
               onChange={(e) => setContrasena(e.target.value)}
-              className="input-field"
+              className={inputClass}
               required
+              aria-required="true"
+              autoComplete="current-password"
             />
           </div>
-          <button type="submit" className="btn-primary" disabled={cargando}>
+          <button type="submit" className={btnClass} disabled={cargando}>
             {cargando ? 'Ingresando…' : 'Iniciar sesión'}
           </button>
         </form>
@@ -108,8 +141,8 @@ export function PaginaIniciarSesion() {
         <p className="text-center text-sm text-muted-foreground mb-8">
           ¿No tienes cuenta?{' '}
           <Link
-            to={tab === 'rescatista' ? '/registro/rescatista' : '/registro/senderista'}
-            className="text-primary font-semibold hover:underline"
+            to={esRescatista ? '/registro/rescatista' : '/registro/senderista'}
+            className={linkClass}
           >
             Crear cuenta
           </Link>

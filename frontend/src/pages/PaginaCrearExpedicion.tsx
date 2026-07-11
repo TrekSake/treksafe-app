@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Globe, Plus, WifiOff, X } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronUp, Globe, Plus, WifiOff, X } from 'lucide-react';
 import { FieldError, FieldLabel } from '@/components/Layout';
 import { CoordinatePickerMapLazy } from '@/components/maps/CoordinatePickerMapLazy';
 import type { CoordinatePickerTarget } from '@/components/maps/CoordinatePickerMap';
@@ -36,9 +36,18 @@ export function PaginaCrearExpedicion() {
   const [idsContactosSeleccionados, setIdsContactosSeleccionados] = useState<string[]>([]);
   const [nombresAcompanantes, setNombresAcompanantes] = useState<string[]>(['']);
   const [objetivoSelector, setObjetivoSelector] = useState<CoordinatePickerTarget>('start');
+  const [coordsManualesAbiertas, setCoordsManualesAbiertas] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [cargando, setCargando] = useState(false);
+
+  useEffect(() => {
+    if (!enLinea) setCoordsManualesAbiertas(true);
+  }, [enLinea]);
+
+  useEffect(() => {
+    if (errorCoordInicio || errorCoordFin) setCoordsManualesAbiertas(true);
+  }, [errorCoordInicio, errorCoordFin]);
 
   useEffect(() => {
     void listarPlantillasRuta().then(setPlantillas);
@@ -276,66 +285,34 @@ export function PaginaCrearExpedicion() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <FieldLabel>Ubicación inicial</FieldLabel>
+          <FieldLabel htmlFor="exp-lugar-inicio">Ubicación inicial</FieldLabel>
           <input
+            id="exp-lugar-inicio"
             className="input-field"
             value={lugarInicio}
             onChange={(e) => setLugarInicio(e.target.value)}
             placeholder="Ej: Cebollapampa, Huaraz"
+            aria-required="true"
           />
         </div>
         <div>
-          <FieldLabel>Coordenadas de salida (opcional)</FieldLabel>
+          <FieldLabel htmlFor="exp-lugar-fin">Destino / Nevado</FieldLabel>
           <input
-            className={`input-field ${errorCoordInicio ? 'input-error' : ''}`}
-            value={coordenadasInicio}
-            onChange={(e) => {
-              setCoordenadasInicio(e.target.value);
-              if (errorCoordInicio) setErrorCoordInicio('');
-            }}
-            onBlur={() => {
-              if (coordenadasInicio.trim()) {
-                setErrorCoordInicio(validateCoordinateInput(coordenadasInicio) ?? '');
-              }
-            }}
-            placeholder="-9.5105, -77.5275"
-          />
-          {errorCoordInicio && <FieldError message={errorCoordInicio} />}
-          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-            <Globe size={12} /> Formato decimal. Ejemplo: -9.0105, -77.6042
-          </p>
-        </div>
-        <div>
-          <FieldLabel>Destino / Nevado</FieldLabel>
-          <input
+            id="exp-lugar-fin"
             className="input-field"
             value={lugarFin}
             onChange={(e) => setLugarFin(e.target.value)}
             placeholder="Ej: Laguna 69"
+            aria-required="true"
           />
-        </div>
-        <div>
-          <FieldLabel>Coordenadas de destino (opcional)</FieldLabel>
-          <input
-            className={`input-field ${errorCoordFin ? 'input-error' : ''}`}
-            value={coordenadasFin}
-            onChange={(e) => {
-              setCoordenadasFin(e.target.value);
-              if (errorCoordFin) setErrorCoordFin('');
-            }}
-            onBlur={() => {
-              if (coordenadasFin.trim()) {
-                setErrorCoordFin(validateCoordinateInput(coordenadasFin) ?? '');
-              }
-            }}
-            placeholder="-9.0105, -77.6042"
-          />
-          {errorCoordFin && <FieldError message={errorCoordFin} />}
         </div>
 
-        {enLinea && (
+        {enLinea ? (
           <div>
-            <FieldLabel>Ubicación en mapa (opcional)</FieldLabel>
+            <FieldLabel>Ubicación en mapa</FieldLabel>
+            <p className="text-xs text-muted-foreground mb-2">
+              Marca salida y destino en el mapa. Las coordenadas se completan solas.
+            </p>
             <CoordinatePickerMapLazy
               className="mt-2"
               activeTarget={objetivoSelector}
@@ -356,29 +333,100 @@ export function PaginaCrearExpedicion() {
               onEndError={setErrorCoordFin}
             />
           </div>
+        ) : (
+          <div className="p-3 rounded-xl bg-muted/60 text-sm text-muted-foreground flex items-start gap-2">
+            <WifiOff size={16} className="mt-0.5 shrink-0" />
+            Mapa no disponible offline. Usa coordenadas manuales o una plantilla guardada.
+          </div>
         )}
 
+        <div className="rounded-xl border border-border bg-card overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setCoordsManualesAbiertas((v) => !v)}
+            className="w-full flex items-center justify-between gap-2 px-4 py-3 text-sm font-semibold"
+          >
+            <span className="flex items-center gap-2">
+              <Globe size={16} className="text-muted-foreground" />
+              Editar coordenadas manualmente
+            </span>
+            {coordsManualesAbiertas ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+
+          {coordsManualesAbiertas && (
+            <div className="px-4 pb-4 space-y-3 border-t border-border pt-3">
+              <p className="text-xs text-muted-foreground">
+                Útil para pegar coords de GPS, ajustar precisión o registrar offline.
+                Formato decimal: <span className="font-medium">-9.0105, -77.6042</span>
+              </p>
+              <div>
+                <FieldLabel htmlFor="exp-coord-inicio">Coordenadas de salida</FieldLabel>
+                <input
+                  id="exp-coord-inicio"
+                  className={`input-field ${errorCoordInicio ? 'input-error' : ''}`}
+                  value={coordenadasInicio}
+                  onChange={(e) => {
+                    setCoordenadasInicio(e.target.value);
+                    if (errorCoordInicio) setErrorCoordInicio('');
+                  }}
+                  onBlur={() => {
+                    if (coordenadasInicio.trim()) {
+                      setErrorCoordInicio(validateCoordinateInput(coordenadasInicio) ?? '');
+                    }
+                  }}
+                  placeholder="-9.5105, -77.5275"
+                />
+                {errorCoordInicio && <FieldError message={errorCoordInicio} />}
+              </div>
+              <div>
+                <FieldLabel htmlFor="exp-coord-fin">Coordenadas de destino</FieldLabel>
+                <input
+                  id="exp-coord-fin"
+                  className={`input-field ${errorCoordFin ? 'input-error' : ''}`}
+                  value={coordenadasFin}
+                  onChange={(e) => {
+                    setCoordenadasFin(e.target.value);
+                    if (errorCoordFin) setErrorCoordFin('');
+                  }}
+                  onBlur={() => {
+                    if (coordenadasFin.trim()) {
+                      setErrorCoordFin(validateCoordinateInput(coordenadasFin) ?? '');
+                    }
+                  }}
+                  placeholder="-9.0105, -77.6042"
+                />
+                {errorCoordFin && <FieldError message={errorCoordFin} />}
+              </div>
+            </div>
+          )}
+        </div>
+
         <div>
-          <FieldLabel>Fecha y hora de salida</FieldLabel>
+          <FieldLabel htmlFor="exp-hora-inicio">Fecha y hora de salida</FieldLabel>
           <input
+            id="exp-hora-inicio"
             type="datetime-local"
             className="input-field"
             value={horaInicio}
             onChange={(e) => setHoraInicio(e.target.value)}
+            aria-required="true"
           />
         </div>
         <div>
-          <FieldLabel>Retorno estimado</FieldLabel>
+          <FieldLabel htmlFor="exp-hora-retorno">Retorno estimado</FieldLabel>
           <input
+            id="exp-hora-retorno"
             type="datetime-local"
             className="input-field"
             value={horaRetornoEstimada}
             onChange={(e) => setHoraRetornoEstimada(e.target.value)}
+            aria-required="true"
           />
         </div>
         <div>
-          <FieldLabel>Tolerancia (minutos)</FieldLabel>
+          <FieldLabel htmlFor="exp-tolerancia">Tolerancia (minutos)</FieldLabel>
           <input
+            id="exp-tolerancia"
             type="number"
             min={1}
             max={480}
@@ -388,8 +436,8 @@ export function PaginaCrearExpedicion() {
           />
         </div>
 
-        <div>
-          <FieldLabel>Contactos de alerta</FieldLabel>
+        <fieldset>
+          <legend className="block text-sm font-semibold mb-1.5">Contactos de alerta</legend>
           <div className="space-y-2 mt-2">
             {contactos.map((c) => (
               <label key={c.id} className="flex items-center gap-3 bg-card border border-border rounded-xl p-3">
@@ -408,7 +456,7 @@ export function PaginaCrearExpedicion() {
           {idsContactosSeleccionados.length === 0 && (
             <FieldError message="Selecciona al menos un contacto" />
           )}
-        </div>
+        </fieldset>
 
         <div>
           <FieldLabel>Acompañantes de la cordada</FieldLabel>

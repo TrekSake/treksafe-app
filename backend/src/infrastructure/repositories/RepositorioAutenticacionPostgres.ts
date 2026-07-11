@@ -34,6 +34,21 @@ export class RepositorioAutenticacionPostgres {
     return data as UsuarioBd | null;
   }
 
+  async obtenerNombreCompletoPerfil(
+    usuarioId: string,
+    rol: 'senderista' | 'rescatista',
+  ): Promise<string | null> {
+    const tabla = rol === 'rescatista' ? 'perfiles_rescatista' : 'perfiles_senderista';
+    const { data, error } = await this.supabase
+      .from(tabla)
+      .select('nombre_completo')
+      .eq('usuario_id', usuarioId)
+      .maybeSingle();
+
+    if (error) throw new ErrorAplicacion(500, `Error al consultar perfil: ${error.message}`);
+    return data?.nombre_completo ?? null;
+  }
+
   async existeDocumentoSenderista(idDocumento: string): Promise<boolean> {
     const { data, error } = await this.supabase
       .from('perfiles_senderista')

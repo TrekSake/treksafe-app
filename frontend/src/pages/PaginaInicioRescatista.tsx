@@ -78,7 +78,14 @@ export function PaginaInicioRescatista() {
         </div>
       </div>
 
-      {error && <div className="error-banner mb-4">{error}</div>}
+      {error && (
+        <div className="error-banner mb-4">
+          {error}{' '}
+          <button type="button" onClick={cargarAlertas} className="underline font-semibold ml-1">
+            Reintentar
+          </button>
+        </div>
+      )}
 
       {cargando ? (
         <p className="text-sm text-muted-foreground">Cargando alertas…</p>
@@ -191,7 +198,7 @@ function TarjetaAlerta({
             type="button"
             onClick={onConfirmar}
             disabled={confirmando}
-            className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-xl flex items-center justify-center gap-2"
+            className="w-full py-3 bg-destructive text-destructive-foreground font-semibold rounded-xl flex items-center justify-center gap-2"
           >
             <CheckCircle size={18} />
             {confirmando ? 'Confirmando…' : 'Confirmar recepción'}

@@ -5,12 +5,16 @@ import {
   CheckCircle,
   ChevronLeft,
   Clock,
+  Copy,
+  ExternalLink,
   Heart,
   MapPin,
   Phone,
   Users,
 } from 'lucide-react';
 import { ExpeditionRouteMapLazy } from '@/components/maps/ExpeditionRouteMapLazy';
+import { parseDecimalCoordinates } from '@/lib/coordinates';
+import { buildExternalMapUrl } from '@/lib/mapLinks';
 import {
   confirmarAlertaRescate,
   obtenerDetalleAlertaRescate,
@@ -45,6 +49,7 @@ export function PaginaDetalleAlertaRescate() {
   const [estadoRescate, setEstadoRescate] = useState<EstadoRescate>('en_busqueda');
   const [notas, setNotas] = useState('');
   const [mensajeGuardado, setMensajeGuardado] = useState('');
+  const [coordsCopiadas, setCoordsCopiadas] = useState(false);
 
   const cargarDetalle = useCallback(() => {
     if (!expedicionId) return;
@@ -70,7 +75,22 @@ export function PaginaDetalleAlertaRescate() {
     setConfirmando(true);
     setError('');
     try {
-      await confirmarAlertaRescate(expedicionId);
+      const res = await confirmarAlertaRescate(expedicionId);
+      setDetalle((prev) =>
+        prev
+          ? {
+              ...prev,
+              bitacora: {
+                id: res.confirmacion.id,
+                estadoRescate: res.confirmacion.estadoRescate,
+                notas: res.confirmacion.notas,
+                actualizadoEn: res.confirmacion.confirmadoEn,
+              },
+            }
+          : prev,
+      );
+      setEstadoRescate((res.confirmacion.estadoRescate as EstadoRescate) || 'en_busqueda');
+      setNotas(res.confirmacion.notas ?? '');
       cargarDetalle();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'No se pudo confirmar');
@@ -110,8 +130,30 @@ export function PaginaDetalleAlertaRescate() {
     );
   }
 
+  const coordsPrioritarias =
+    parseDecimalCoordinates(detalle.coordenadasFin ?? '') ??
+    parseDecimalCoordinates(detalle.coordenadasInicio ?? '');
+  const textoCoords =
+    detalle.coordenadasFin?.trim() ||
+    detalle.coordenadasInicio?.trim() ||
+    '';
+  const urlMapa = coordsPrioritarias
+    ? buildExternalMapUrl(coordsPrioritarias.lat, coordsPrioritarias.lon)
+    : null;
+
+  const copiarCoords = async () => {
+    if (!textoCoords) return;
+    try {
+      await navigator.clipboard.writeText(textoCoords);
+      setCoordsCopiadas(true);
+      window.setTimeout(() => setCoordsCopiadas(false), 2000);
+    } catch {
+      setError('No se pudieron copiar las coordenadas');
+    }
+  };
+
   return (
-    <div className="px-6 py-6 pb-8">
+    <div className="px-6 py-6 pb-36">
       <button
         type="button"
         onClick={() => navigate(-1)}
@@ -130,6 +172,41 @@ export function PaginaDetalleAlertaRescate() {
         </span>
       </div>
 
+      <div className="grid grid-cols-3 gap-2 mb-4">
+        <a
+          href={`tel:${detalle.telefonoSenderista}`}
+          className="min-h-12 rounded-xl bg-destructive text-destructive-foreground text-xs font-semibold flex flex-col items-center justify-center gap-1"
+        >
+          <Phone size={16} />
+          Llamar
+        </a>
+        {urlMapa ? (
+          <a
+            href={urlMapa}
+            target="_blank"
+            rel="noreferrer"
+            className="min-h-12 rounded-xl bg-secondary text-secondary-foreground text-xs font-semibold flex flex-col items-center justify-center gap-1"
+          >
+            <ExternalLink size={16} />
+            Mapa
+          </a>
+        ) : (
+          <span className="min-h-12 rounded-xl bg-muted text-muted-foreground text-xs font-semibold flex flex-col items-center justify-center gap-1 opacity-60">
+            <ExternalLink size={16} />
+            Sin GPS
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={() => void copiarCoords()}
+          disabled={!textoCoords}
+          className="min-h-12 rounded-xl border border-border bg-card text-xs font-semibold flex flex-col items-center justify-center gap-1 disabled:opacity-50"
+        >
+          <Copy size={16} />
+          {coordsCopiadas ? 'Copiado' : 'Coords'}
+        </button>
+      </div>
+
       {error && <div className="error-banner mb-4">{error}</div>}
       {mensajeGuardado && (
         <div className="mb-4 p-3 rounded-xl bg-primary/10 text-primary text-sm font-medium">
@@ -146,7 +223,7 @@ export function PaginaDetalleAlertaRescate() {
             type="button"
             onClick={handleConfirmar}
             disabled={confirmando}
-            className="w-full py-3 bg-secondary text-secondary-foreground font-semibold rounded-xl flex items-center justify-center gap-2"
+            className="w-full py-3 bg-destructive text-destructive-foreground font-semibold rounded-xl flex items-center justify-center gap-2"
           >
             <CheckCircle size={18} />
             {confirmando ? 'Confirmando…' : 'Confirmar recepción'}
@@ -184,12 +261,34 @@ export function PaginaDetalleAlertaRescate() {
           </p>
           <p className="text-xs">Alerta desde {formatDt(detalle.enAlertaDesde)}</p>
         </div>
-        <p className="mt-3 flex items-center gap-2 text-sm">
-          <Phone size={14} className="text-muted-foreground" />
-          <a href={`tel:${detalle.telefonoSenderista}`} className="text-primary font-medium">
-            {detalle.telefonoSenderista}
-          </a>
-        </p>
+      </section>
+
+      <section className="bg-card border border-border rounded-2xl p-4 mb-4">
+        <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3 flex items-center gap-1">
+          <Heart size={14} /> Ficha médica autorizada
+        </h3>
+        {detalle.fichaMedica ? (
+          <dl className="space-y-2 text-sm">
+            <div>
+              <dt className="text-muted-foreground text-xs">Tipo de sangre</dt>
+              <dd className="font-medium">{detalle.fichaMedica.tipoSangre}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground text-xs">Alergias</dt>
+              <dd>{detalle.fichaMedica.alergias || 'No declaradas'}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground text-xs">Condiciones</dt>
+              <dd>{detalle.fichaMedica.condiciones || 'No declaradas'}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground text-xs">Medicación</dt>
+              <dd>{detalle.fichaMedica.medicamentos || 'No declarada'}</dd>
+            </div>
+          </dl>
+        ) : (
+          <p className="text-sm text-muted-foreground">Sin ficha médica autorizada registrada.</p>
+        )}
       </section>
 
       <section className="bg-card border border-border rounded-2xl p-4 mb-4">
@@ -221,34 +320,6 @@ export function PaginaDetalleAlertaRescate() {
           </div>
         </section>
       )}
-
-      <section className="bg-card border border-border rounded-2xl p-4 mb-4">
-        <h3 className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3 flex items-center gap-1">
-          <Heart size={14} /> Ficha médica autorizada
-        </h3>
-        {detalle.fichaMedica ? (
-          <dl className="space-y-2 text-sm">
-            <div>
-              <dt className="text-muted-foreground text-xs">Tipo de sangre</dt>
-              <dd className="font-medium">{detalle.fichaMedica.tipoSangre}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-xs">Alergias</dt>
-              <dd>{detalle.fichaMedica.alergias || 'No declaradas'}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-xs">Condiciones</dt>
-              <dd>{detalle.fichaMedica.condiciones || 'No declaradas'}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground text-xs">Medicación</dt>
-              <dd>{detalle.fichaMedica.medicamentos || 'No declarada'}</dd>
-            </div>
-          </dl>
-        ) : (
-          <p className="text-sm text-muted-foreground">Sin ficha médica autorizada registrada.</p>
-        )}
-      </section>
 
       {detalle.bitacora && (
         <section className="bg-card border border-border rounded-2xl p-4">
@@ -305,6 +376,39 @@ export function PaginaDetalleAlertaRescate() {
       >
         Ver todas las alertas
       </Link>
+
+      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm px-4 z-40">
+        <div className="bg-card/95 backdrop-blur border border-border rounded-2xl shadow-lg p-2 grid grid-cols-3 gap-2">
+          <a
+            href={`tel:${detalle.telefonoSenderista}`}
+            className="min-h-11 rounded-xl bg-destructive text-destructive-foreground text-xs font-semibold flex items-center justify-center gap-1"
+          >
+            <Phone size={14} /> Llamar
+          </a>
+          {urlMapa ? (
+            <a
+              href={urlMapa}
+              target="_blank"
+              rel="noreferrer"
+              className="min-h-11 rounded-xl bg-secondary text-secondary-foreground text-xs font-semibold flex items-center justify-center gap-1"
+            >
+              <ExternalLink size={14} /> Mapa
+            </a>
+          ) : (
+            <span className="min-h-11 rounded-xl bg-muted text-muted-foreground text-xs font-semibold flex items-center justify-center opacity-60">
+              Sin GPS
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={() => void copiarCoords()}
+            disabled={!textoCoords}
+            className="min-h-11 rounded-xl border border-border text-xs font-semibold flex items-center justify-center gap-1 disabled:opacity-50"
+          >
+            <Copy size={14} /> {coordsCopiadas ? 'OK' : 'Coords'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

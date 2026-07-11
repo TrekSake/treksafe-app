@@ -5,6 +5,7 @@ import {
   listarAlertas,
   obtenerDetalleAlerta,
   listarExpediciones,
+  listarHistorial,
   actualizarBitacoraRescate,
   confirmarAlerta,
 } from '../controllers/controladorRescate.js';
@@ -15,6 +16,7 @@ export function crearRutasRescate(): Router {
   router.use(middlewareAutenticacion, requerirRol('rescatista'));
 
   router.get('/expediciones', asyncHandler(listarExpediciones));
+  router.get('/historial', asyncHandler(listarHistorial));
   router.get('/alertas', asyncHandler(listarAlertas));
   router.get('/alertas/:expedicionId', asyncHandler(obtenerDetalleAlerta));
   router.patch('/alertas/:expedicionId/bitacora', asyncHandler(actualizarBitacoraRescate));

@@ -1,4 +1,4 @@
-import { Mountain } from 'lucide-react';
+import { Mountain, Shield } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 export function MobileShell({ children }: { children: ReactNode }) {
@@ -9,14 +9,29 @@ export function MobileShell({ children }: { children: ReactNode }) {
   );
 }
 
-export function LogoHeader() {
+type LogoHeaderVariant = 'senderista' | 'rescatista';
+
+export function LogoHeader({ variant = 'senderista' }: { variant?: LogoHeaderVariant }) {
+  const esRescatista = variant === 'rescatista';
+  const Icono = esRescatista ? Shield : Mountain;
+
   return (
     <div className="flex flex-col items-center mb-8">
-      <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-primary/30">
-        <Mountain size={30} className="text-primary-foreground" />
+      <div
+        className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-lg ${
+          esRescatista
+            ? 'bg-secondary shadow-secondary/30'
+            : 'bg-primary shadow-primary/30'
+        }`}
+      >
+        <Icono size={30} className={esRescatista ? 'text-secondary-foreground' : 'text-primary-foreground'} />
       </div>
       <h1 className="text-3xl font-bold tracking-tight">TrekSafe</h1>
-      <p className="text-muted-foreground text-sm mt-1">Seguridad en expediciones de montaña</p>
+      <p className="text-muted-foreground text-sm mt-1">
+        {esRescatista
+          ? 'Consola de rescate y monitoreo'
+          : 'Seguridad en expediciones de montaña'}
+      </p>
     </div>
   );
 }

@@ -8,6 +8,7 @@ export type UsuarioSesion = {
   id: string;
   correoElectronico: string;
   rol: 'senderista' | 'rescatista';
+  nombreCompleto?: string | null;
 };
 
 function migrarSesionLegacy(): void {
@@ -31,6 +32,7 @@ function migrarSesionLegacy(): void {
           id: u.id ?? '',
           correoElectronico: u.correoElectronico ?? u.email ?? '',
           rol: ((u.rol ?? u.role) as UsuarioSesion['rol']) ?? 'senderista',
+          nombreCompleto: (u as { nombreCompleto?: string }).nombreCompleto ?? null,
         };
         sessionStorage.setItem(CLAVE_USUARIO, JSON.stringify(migrado));
         sessionStorage.removeItem(CLAVE_USUARIO_LEGACY);

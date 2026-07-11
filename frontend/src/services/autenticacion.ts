@@ -7,6 +7,7 @@ export type RespuestaAuth = {
     id: string;
     correoElectronico: string;
     rol: 'senderista' | 'rescatista';
+    nombreCompleto?: string | null;
   };
 };
 

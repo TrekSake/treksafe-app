@@ -153,7 +153,7 @@ export function PaginaConsolaRescate() {
             aria-label="Filtrar por zona"
           />
         </div>
-        <button type="submit" className="px-4 py-2 bg-secondary text-secondary-foreground rounded-xl text-sm font-semibold">
+        <button type="submit" className="px-4 min-h-12 bg-secondary text-secondary-foreground rounded-xl text-sm font-semibold">
           Buscar
         </button>
       </form>
@@ -193,7 +193,14 @@ export function PaginaConsolaRescate() {
         </div>
       )}
 
-      {error && <div className="error-banner mb-4">{error}</div>}
+      {error && (
+        <div className="error-banner mb-4">
+          {error}{' '}
+          <button type="button" onClick={cargarExpediciones} className="underline font-semibold ml-1">
+            Reintentar
+          </button>
+        </div>
+      )}
 
       {cargando ? (
         <p className="text-sm text-muted-foreground">Cargando expediciones…</p>

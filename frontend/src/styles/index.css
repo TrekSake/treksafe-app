@@ -75,6 +75,11 @@ button {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
 }
 
+.input-field.input-field-secondary:focus {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-secondary) 20%, transparent);
+}
+
 .input-field.input-error {
   border-color: var(--color-destructive);
 }
@@ -122,6 +127,21 @@ button {
   border: none;
   border-radius: var(--radius-xl);
   cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-secondary) 30%, transparent);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .btn-touch {

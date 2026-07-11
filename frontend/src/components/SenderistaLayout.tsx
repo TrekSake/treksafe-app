@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Map, User, LogOut } from 'lucide-react';
 import { useAutenticacion } from '@/context/ContextoAutenticacion';
 import { MobileShell } from '@/components/Layout';
+import { BannerOffline } from '@/components/BannerOffline';
 import { AnfitrionRecordatorioSenderista } from '@/components/AnfitrionRecordatorioSenderista';
 import { obtenerExpedicionActiva } from '@/services/expedicion';
 
@@ -13,14 +14,15 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
 
 function ExpeditionNavLink() {
   const [to, setTo] = useState('/senderista/expedicion');
+  const location = useLocation();
 
   useEffect(() => {
     obtenerExpedicionActiva()
       .then((r) => {
-        if (r.expedicion) setTo('/senderista/expedicion/activa');
+        setTo(r.expedicion ? '/senderista/expedicion/activa' : '/senderista/expedicion');
       })
       .catch(() => undefined);
-  }, []);
+  }, [location.pathname]);
 
   return (
     <NavLink to={to} className={navClass}>
@@ -44,10 +46,12 @@ export function SenderistaLayout() {
       <div className="min-h-screen flex flex-col pb-20">
         <header className="px-6 py-4 flex items-center justify-between border-b border-border">
           <h1 className="text-lg font-bold">TrekSafe</h1>
-          <button type="button" onClick={handleLogout} aria-label="Cerrar sesión">
+          <button type="button" onClick={handleLogout} aria-label="Cerrar sesión" className="btn-touch">
             <LogOut size={20} className="text-muted-foreground" />
           </button>
         </header>
+
+        <BannerOffline />
 
         <main className="flex-1">
           <Outlet />

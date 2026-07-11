@@ -7,10 +7,17 @@ type Props = {
   expedicionId: string;
   open: boolean;
   onClose: () => void;
-  onSuccess: (retornadoEn: string) => void;
+  onSuccess: (confirmadoEn: string) => void;
+  enLinea?: boolean;
 };
 
-export function DialogoConfirmarRetorno({ expedicionId, open, onClose, onSuccess }: Props) {
+export function DialogoConfirmarRetorno({
+  expedicionId,
+  open,
+  onClose,
+  onSuccess,
+  enLinea = true,
+}: Props) {
   const [contrasena, setContrasena] = useState('');
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
@@ -35,12 +42,16 @@ export function DialogoConfirmarRetorno({ expedicionId, open, onClose, onSuccess
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!contrasena) return;
+    if (!enLinea) {
+      setError('Sin conexión. El retorno seguro requiere red para registrarse en el servidor.');
+      return;
+    }
     setError('');
     setCargando(true);
     try {
       const resultado = await confirmarRetorno(expedicionId, contrasena);
       setContrasena('');
-      onSuccess(resultado.retornadoEn);
+      onSuccess(resultado.confirmadoEn);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo confirmar el retorno');
     } finally {
@@ -73,6 +84,12 @@ export function DialogoConfirmarRetorno({ expedicionId, open, onClose, onSuccess
           Ingresa tu contraseña para cerrar la expedición y confirmar que regresaste a salvo.
         </p>
 
+        {!enLinea && (
+          <div className="error-banner mb-4">
+            Estás offline. Conéctate para registrar el retorno en el servidor.
+          </div>
+        )}
+
         {error && <div className="error-banner mb-4">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -88,7 +105,11 @@ export function DialogoConfirmarRetorno({ expedicionId, open, onClose, onSuccess
               autoComplete="current-password"
             />
           </div>
-          <button type="submit" className="btn-primary" disabled={!contrasena || cargando}>
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={!contrasena || cargando || !enLinea}
+          >
             {cargando ? 'Confirmando…' : 'Registrar retorno seguro'}
           </button>
         </form>

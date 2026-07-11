@@ -14,6 +14,7 @@ export type RespuestaAutenticacion = {
     id: string;
     correoElectronico: string;
     rol: 'senderista' | 'rescatista';
+    nombreCompleto: string | null;
   };
 };
 
@@ -45,7 +46,12 @@ export class ServicioAutenticacion {
 
     return {
       token,
-      usuario: { id: usuario.id, correoElectronico: usuario.correo_electronico, rol: usuario.rol },
+      usuario: {
+        id: usuario.id,
+        correoElectronico: usuario.correo_electronico,
+        rol: usuario.rol,
+        nombreCompleto: entrada.nombreCompleto,
+      },
     };
   }
 
@@ -61,10 +67,16 @@ export class ServicioAutenticacion {
     }
 
     const token = firmarToken({ sub: usuario.id, rol: usuario.rol });
+    const nombreCompleto = await this.repo.obtenerNombreCompletoPerfil(usuario.id, usuario.rol);
 
     return {
       token,
-      usuario: { id: usuario.id, correoElectronico: usuario.correo_electronico, rol: usuario.rol },
+      usuario: {
+        id: usuario.id,
+        correoElectronico: usuario.correo_electronico,
+        rol: usuario.rol,
+        nombreCompleto,
+      },
     };
   }
 
@@ -103,7 +115,12 @@ export class ServicioAutenticacion {
 
     return {
       token,
-      usuario: { id: usuario.id, correoElectronico: usuario.correo_electronico, rol: usuario.rol },
+      usuario: {
+        id: usuario.id,
+        correoElectronico: usuario.correo_electronico,
+        rol: usuario.rol,
+        nombreCompleto: entrada.nombreCompleto,
+      },
     };
   }
 }

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { DialogoConfirmarRetorno } from '@/components/DialogoConfirmarRetorno';
 import { useCuentaRegresiva } from '@/hooks/useCuentaRegresiva';
+import { useEstadoEnLinea } from '@/hooks/useEstadoEnLinea';
 import { clearReminderDismissal } from '@/lib/recordatorioRetorno';
 import { obtenerExpedicionActiva, type ExpedicionActiva } from '@/services/expedicion';
 
@@ -28,6 +29,7 @@ function formatTime(iso: string): string {
 export function PaginaExpedicionActiva() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const enLinea = useEstadoEnLinea();
   const [expedicion, setExpedicion] = useState<ExpedicionActiva | null>(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -59,13 +61,13 @@ export function PaginaExpedicionActiva() {
     return () => clearInterval(poll);
   }, []);
 
-  const handleRetornoConfirmado = (retornadoEn: string) => {
+  const handleRetornoConfirmado = (confirmadoEn: string) => {
     if (expedicion) clearReminderDismissal(expedicion.id);
     setCheckInAbierto(false);
     navigate('/senderista/expedicion/confirmada', {
       state: {
         lugarFin: expedicion?.lugarFin,
-        retornadoEn,
+        confirmadoEn,
       },
     });
   };
@@ -160,17 +162,10 @@ export function PaginaExpedicionActiva() {
       </p>
       <h2 className="text-xl font-bold mb-5 leading-tight">{expedicion.lugarFin}</h2>
 
-      {cuentaRegresiva.vencida && (
+      {cuentaRegresiva.vencida && !esAlerta && (
         <div className="error-banner mb-4 flex items-start gap-2">
           <AlertTriangle size={18} className="flex-shrink-0 mt-0.5" />
           <span>Plazo vencido. El sistema puede escalar tu expedición a alerta automáticamente.</span>
-        </div>
-      )}
-
-      {cuentaRegresiva.esUrgente && !cuentaRegresiva.vencida && (
-        <div className="urgent-banner-subtle mb-4">
-          Faltan menos de 30 minutos para el límite. Confirma tu retorno a tiempo para evitar una
-          alerta automática.
         </div>
       )}
 
@@ -259,17 +254,25 @@ export function PaginaExpedicionActiva() {
       <button
         type="button"
         onClick={() => setCheckInAbierto(true)}
-        className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary/30 text-lg"
+        disabled={!enLinea}
+        className="w-full py-4 bg-primary text-primary-foreground font-semibold rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary/30 text-lg disabled:opacity-50"
       >
         <CheckCircle size={22} />
-        Registrar retorno seguro
+        {enLinea ? 'Registrar retorno seguro' : 'Sin red — no se puede confirmar'}
       </button>
+
+      {!enLinea && (
+        <p className="text-xs text-center text-muted-foreground mt-2">
+          El check-in de retorno necesita conexión para avisar a contactos y rescatistas.
+        </p>
+      )}
 
       <DialogoConfirmarRetorno
         expedicionId={expedicion.id}
         open={checkInAbierto}
         onClose={() => setCheckInAbierto(false)}
         onSuccess={handleRetornoConfirmado}
+        enLinea={enLinea}
       />
     </div>
   );

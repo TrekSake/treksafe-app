@@ -52,7 +52,7 @@ export function confirmarRetorno(expedicionId: string, contrasena: string) {
   return api.post<{
     mensaje: string;
     expedicion: Expedicion;
-    retornadoEn: string;
+    confirmadoEn: string;
   }>(`/expediciones/${expedicionId}/confirmar-retorno`, { contrasena }, true);
 }
 
