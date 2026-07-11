@@ -1,6 +1,6 @@
 # TrekSafe
 
-Monitoreo pasivo y verificación positiva para senderistas en alta montaña.
+Sistema Automatizado de Monitoreo y Gestión de Seguridad para Turismo de Aventura en Alta Montaña.
 
 El senderista registra su plan de expedición y confirma el retorno seguro. Si no lo hace a tiempo, TrekSafe escala alertas automáticas a contactos de emergencia y equipos de rescate, con ubicación y ficha médica.
 
