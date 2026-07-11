@@ -1,418 +1,252 @@
 # TrekSafe
 
-**Sistema automatizado de monitoreo y gestión de seguridad para turismo de aventura en alta montaña.**
+Monitoreo pasivo y verificación positiva para senderistas en alta montaña.
 
-TrekSafe desplaza el modelo reactivo tradicional de rescate hacia un **protocolo de verificación positiva**: el senderista registra su plan de expedición y confirma su retorno seguro; si no lo hace dentro del plazo acordado, el sistema escala alertas automáticas hacia contactos de emergencia y cuerpos de rescate, entregando de inmediato ubicación georreferenciada y ficha médica.
+El senderista registra su plan de expedición y confirma el retorno seguro. Si no lo hace a tiempo, TrekSafe escala alertas automáticas a contactos de emergencia y equipos de rescate, con ubicación y ficha médica.
+
+[Demo](https://treksafe-app.vercel.app) · [API /salud](https://treksafe-api.fly.dev/api/salud) · [`.env.example`](.env.example)
+
+![Node](https://img.shields.io/badge/Node.js-22-339933?logo=nodedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3FCF8E?logo=supabase&logoColor=white)
+![Fly.io](https://img.shields.io/badge/API-Fly.io-24175B?logo=flydotio&logoColor=white)
+![Vercel](https://img.shields.io/badge/PWA-Vercel-000000?logo=vercel&logoColor=white)
 
 > Proyecto académico — **Universidad de Lima** · Ingeniería de Software 1 · 2026  
-> **Estado:** Release 01 y Release 02 completados · **25/25 historias de usuario** · **96 story points**
+> Release 01–02 · **25/25** historias de usuario · **96** story points
 
----
+## Contenido
 
-
-
-## Tabla de contenidos
-
-- [Problema y propuesta de valor](#problema-y-propuesta-de-valor)
-- [Funcionalidades](#funcionalidades)
+- [Características](#características)
 - [Arquitectura](#arquitectura)
-- [Stack tecnológico](#stack-tecnológico)
-- [Estructura del repositorio](#estructura-del-repositorio)
+- [Stack](#stack)
+- [Estructura](#estructura)
 - [Inicio rápido](#inicio-rápido)
-- [Base de datos](#base-de-datos)
-- [API REST](#api-rest)
-- [Scripts](#scripts)
-- [Seguridad y cumplimiento legal](#seguridad-y-cumplimiento-legal)
+- [Despliegue](#despliegue)
+- [API](#api)
+- [Seguridad](#seguridad)
 - [Equipo](#equipo)
+- [Licencia](#licencia)
 
----
+## Características
 
+**Senderista**
+- Plan de ruta, countdown y check-in de retorno seguro
+- Ficha médica cifrada AES-256 y contactos de emergencia
+- PWA offline (borradores / caché) y derechos ARCO (Ley N° 29733)
 
+**Rescatista**
+- Consola con semáforo por zona y detalle de alerta (mapa + ficha médica auditada)
+- Confirmación de recepción, bitácora e historial operativo
 
-## Problema y propuesta de valor
+**Motor**
+- Cron de plazos, alertas por correo (Brevo API o SMTP) e idempotencia de despacho
 
-En entornos de senderismo independiente, la siniestralidad y el retraso en operaciones de rescate son críticos: la falta de información exacta sobre el paradero de las víctimas y la dependencia de reportes manuales prolongan las búsquedas durante las **horas doradas** posteriores a un incidente.
+<details>
+<summary>Detalle de capacidades</summary>
 
-TrekSafe responde con **monitoreo pasivo** — sin hardware IoT ni rastreo GPS continuo — basado en:
+| Rol | Capacidades |
+| --- | --- |
+| Senderista | Registro/login JWT, expedición activa, recordatorio a 30 min, modo oscuro mobile-first |
+| Rescatista | Validación institucional simulada (AGMP/MINCETUR), filtro por zona, estados En búsqueda → Localizados → Cerrado |
+| Sistema | Sin IoT ni GPS continuo; monitoreo pasivo por verificación positiva |
 
-1. **Registro digital del plan de ruta** (origen, destino, hora estimada de retorno, acompañantes y contactos).
-2. **Check-in de retorno seguro** con ventana de tolerancia y escalamiento automático.
-3. **Coordinación de rescate** mediante consola operativa para equipos especializados.
-
----
-
-
-
-## Funcionalidades
-
-
-
-### Para senderistas
-
-
-| Área               | Capacidades                                                                     |
-| ------------------ | ------------------------------------------------------------------------------- |
-| **Cuenta**         | Registro con consentimiento Ley N° 29733, login JWT, perfil personal            |
-| **Expedición**     | Creación de plan de ruta, contactos vinculados, expedición activa con countdown |
-| **Seguridad**      | Check-in manual de retorno, recordatorio a 30 min del vencimiento               |
-| **Datos críticos** | Ficha médica cifrada AES-256, contactos de emergencia frecuentes                |
-| **Offline**        | Borradores y contactos en caché (PWA + Service Worker) para zonas sin señal     |
-| **Privacidad**     | Derechos ARCO: eliminación o anonimización de datos personales                  |
-| **UX**             | Interfaz mobile-first, modo oscuro para condiciones adversas en montaña         |
-
-
-
-
-### Para rescatistas
-
-
-| Área            | Capacidades                                                                           |
-| --------------- | ------------------------------------------------------------------------------------- |
-| **Acceso**      | Registro con validación simulada de credenciales institucionales (AGMP/MINCETUR)      |
-| **Consola**     | Dashboard en tiempo real, filtro por zona, semáforo verde/amarillo/rojo               |
-| **Alertas**     | Detalle de emergencia con ubicación y ficha médica (con auditoría de acceso)          |
-| **Operaciones** | Confirmación de recepción, bitácora con estados (En búsqueda → Localizados → Cerrado) |
-
-
-
-
-### Motor del sistema
-
-- **Cron job** de control de plazos que detecta expediciones vencidas sin check-in.
-- **Notificaciones por correo** a contactos del senderista y equipos de rescate (SMTP o Brevo API).
-- **Idempotencia** en despacho de alertas para evitar duplicados.
-
----
-
-
+</details>
 
 ## Arquitectura
 
-Monorepo con separación estricta de capas: el frontend **nunca** expone claves de Supabase; toda la persistencia pasa por la API REST con `service_role`.
+Monorepo: el frontend **nunca** expone claves de Supabase; toda la persistencia pasa por la API con `service_role`.
 
 ```mermaid
-flowchart LR
-  subgraph Cliente
-    PWA[PWA React · Vite]
+flowchart TB
+  subgraph Users [Usuarios]
+    Senderista[Senderista]
+    Rescatista[Rescatista]
   end
 
-  subgraph Backend
-    API[Express · TypeScript]
-    CRON[Cron plazos]
-    MAIL[ServicioCorreo]
+  subgraph Vercel [Vercel]
+    PWA["PWA React / Vite<br/>treksafe-app.vercel.app"]
   end
 
-  subgraph Datos
-    PG[(PostgreSQL / Supabase)]
+  subgraph Fly [Fly.io - region iad]
+    API["Express API + Cron<br/>treksafe-api.fly.dev"]
+    MailSvc[ServicioCorreo]
   end
 
-  PWA -->|JWT REST| API
-  API --> PG
-  CRON --> PG
-  CRON --> MAIL
-  API --> MAIL
+  subgraph Supabase [Supabase]
+    PG[(PostgreSQL)]
+  end
+
+  subgraph Brevo [Brevo]
+    EmailAPI[Transactional Email API]
+    SMTP[SMTP Relay]
+  end
+
+  Senderista -->|"TCP/HTTPS :443"| PWA
+  Rescatista -->|"TCP/HTTPS :443"| PWA
+  PWA -->|"TCP/HTTPS :443<br/>JWT REST"| API
+  API -->|"TCP/HTTPS :443<br/>Supabase JS / service_role"| PG
+  API -->|"TCP interno"| MailSvc
+  MailSvc -->|"TCP/HTTPS :443<br/>Brevo API"| EmailAPI
+  MailSvc -->|"TCP/SMTP :587 STARTTLS<br/>o TCP/SMTPS :465"| SMTP
 ```
 
+**Backend (Clean Architecture):** `presentation` → `application` → `domain` ← `infrastructure`  
+**Frontend:** pages / components / services / lib / context
 
+## Stack
 
-**Backend — Clean Architecture (nombres en español)**
+| Capa | Tecnologías |
+| --- | --- |
+| Frontend | React 18 · Vite 6 · TypeScript · Tailwind 4 · React Router · PWA |
+| Backend | Node.js 22 · Express · Zod · bcrypt · JWT · Helmet · CORS |
+| Datos | PostgreSQL (Supabase) · RLS deny-by-default |
+| Email | Brevo API · Nodemailer (SMTP) |
+| Seguridad | AES-256-GCM · rate limiting · auditoría de acceso médico |
 
-```
-presentation/   → Rutas HTTP, controladores, middleware
-application/    → Servicios, DTOs, casos de uso
-domain/         → Entidades y value objects
-infrastructure/ → Repositorios, correo, cron, cifrado, JWT
-```
-
-**Frontend — PWA mobile-first (nombres en español)**
-
-```
-pages/          → Páginas senderista y rescatista
-components/     → Layouts, diálogos, recordatorios
-services/       → Cliente HTTP tipado (clienteApi, autenticacion, …)
-lib/            → Offline, validación, sesión, tema
-context/        → ContextoAutenticacion, ContextoTema
-```
-
----
-
-
-
-## Stack tecnológico
-
-
-| Capa              | Tecnologías                                                                            |
-| ----------------- | -------------------------------------------------------------------------------------- |
-| **Frontend**      | React 18 · Vite 6 · TypeScript · Tailwind CSS 4 · React Router · PWA (vite-plugin-pwa) |
-| **Backend**       | Node.js · Express · TypeScript · Zod · bcrypt · JWT · Helmet · CORS                    |
-| **Base de datos** | PostgreSQL (Supabase) · pg · RLS deny-by-default                                       |
-| **Email**         | Nodemailer (SMTP) · Brevo API (alternativa)                                            |
-| **Seguridad**     | AES-256-GCM (ficha médica) · rate limiting en auth · auditoría de acceso médico        |
-
-
----
-
-
-
-## Estructura del repositorio
+## Estructura
 
 ```
 treksake-app/
-├── backend/                 # API REST + cron + email
-│   ├── src/
-│   │   ├── presentation/    # HTTP (routes, controllers, middleware)
-│   │   ├── application/     # Servicios de negocio
-│   │   ├── domain/          # Entidades
-│   │   └── infrastructure/  # DB, jobs, email, security
-│   └── scripts/             # Utilidades (cron manual, pruebas de mail)
-├── frontend/                # PWA React (sin claves Supabase)
-│   └── src/
-│       ├── pages/           # Pantallas por rol
-│       ├── components/      # UI reutilizable
-│       └── services/        # Cliente API
-├── init_schema.sql          # Esquema completo en español + semillas
-├── enable_rls.sql           # Reaplicar políticas RLS (opcional)
-└── .env.example             # Plantilla de variables de entorno
+├── backend/          # API REST + cron + email (Fly.io)
+├── frontend/         # PWA React (Vercel)
+├── init_schema.sql   # Esquema + semillas
+├── enable_rls.sql    # Reaplicar RLS (opcional)
+└── .env.example      # Plantilla de entorno
 ```
-
----
-
-
 
 ## Inicio rápido
 
-
-
-### Requisitos previos
-
-- **Node.js** ≥ 20
-- **npm** ≥ 10
-- Proyecto en [Supabase](https://supabase.com) con PostgreSQL habilitado
-- (Opcional) Servidor SMTP o API key de [Brevo](https://www.brevo.com) para alertas por correo
-
-
-
-### 1. Clonar e instalar dependencias
+**Requisitos:** Node.js ≥ 20 · npm ≥ 10 · proyecto [Supabase](https://supabase.com) · (opcional) [Brevo](https://www.brevo.com)
 
 ```bash
 git clone <url-del-repositorio>
 cd treksake-app
 npm run install:all
-```
 
-
-
-### 2. Configurar variables de entorno
-
-Copia `.env.example` y crea los archivos de entorno:
-
-```bash
-# Backend — credenciales sensibles (NUNCA en el cliente)
 cp .env.example backend/.env
-
-# Frontend — solo la URL del API
 echo "VITE_API_URL=http://localhost:3000/api" > frontend/.env
+# Completa SUPABASE_*, JWT_SECRET, MEDICAL_ENCRYPTION_KEY y correo en backend/.env
 ```
 
-Edita `backend/.env` con los valores de **Supabase Dashboard → Project Settings → API / Database**:
-
-
-| Variable                    | Descripción                                            |
-| --------------------------- | ------------------------------------------------------ |
-| `SUPABASE_URL`              | URL del proyecto                                       |
-| `SUPABASE_SERVICE_ROLE_KEY` | Clave `service_role` (solo backend)                    |
-| `DATABASE_URL`              | Connection string del pooler (puerto 5432)             |
-| `JWT_SECRET`                | Secreto largo (`openssl rand -base64 64`)              |
-| `MEDICAL_ENCRYPTION_KEY`    | Clave AES-256 de 32 bytes para ficha médica            |
-| `SMTP_*` o `BREVO_API_KEY`  | Canal de envío de alertas                              |
-| `CRON_INTERVAL_MS`          | Intervalo del motor de plazos (default: 60000)         |
-| `CORS_ORIGIN`               | Origen del frontend (default: `http://localhost:5173`) |
-
-
-> En desarrollo, `MAIL_DEV_FALLBACK=true` permite continuar si el correo falla (p. ej. IP no autorizada en Brevo); en producción usar `false`.
-
-
-
-### 3. Inicializar la base de datos
-
-Ejecuta en el **SQL Editor de Supabase**:
-
-1. `init_schema.sql` — esquema completo en español (tablas, enums, índices, RLS, semillas y función RPC del cron)
-2. `enable_rls.sql` — solo si necesitas reaplicar políticas RLS sobre una BD ya creada
-
-> Las migraciones `sprint2_migration.sql`, `sprint7_migration.sql` y `post_mvp_migration.sql` están **obsoletas** (contenido fusionado en `init_schema.sql`).
-
-El esquema incluye usuarios mock para pruebas locales (ver comentarios al final de `init_schema.sql`).
-
-### 4. Ejecutar en desarrollo
-
-En terminales separadas:
+En el SQL Editor de Supabase ejecuta `init_schema.sql` (incluye semillas de prueba).
 
 ```bash
-npm run dev:backend    # → http://localhost:3000/api/salud
-npm run dev:frontend   # → http://localhost:5173
+npm run dev:backend    # http://localhost:3000/api/salud
+npm run dev:frontend   # http://localhost:5173
 ```
 
-Verifica el health check:
+<details>
+<summary>Variables de entorno principales</summary>
+
+| Variable | Descripción |
+| --- | --- |
+| `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | Solo backend |
+| `JWT_SECRET` | ≥ 32 caracteres |
+| `MEDICAL_ENCRYPTION_KEY` | 32 bytes AES-256 |
+| `BREVO_API_KEY` o `SMTP_*` | Alertas por correo |
+| `CORS_ORIGIN` | Origen del frontend |
+| `MAIL_DEV_FALLBACK` | `true` en dev · `false` en prod |
+| `VITE_API_URL` | URL del API (build-time en Vercel) |
+
+Referencia completa: [`.env.example`](.env.example).
+
+</details>
+
+<details>
+<summary>Scripts npm</summary>
+
+| Comando | Descripción |
+| --- | --- |
+| `npm run install:all` | Dependencias backend + frontend |
+| `npm run dev:backend` / `dev:frontend` | Desarrollo |
+| `npm run build:backend` / `build:frontend` | Build producción |
+| `npm test --prefix backend` | Tests |
+| `npm run test:mail --prefix backend` | Verifica correo |
+| `npm run test:rescue-alert --prefix backend` | Simula alerta |
+
+</details>
+
+## Despliegue
+
+| Capa | Plataforma | URL |
+| --- | --- | --- |
+| PWA | Vercel | https://treksafe-app.vercel.app |
+| API + cron | Fly.io (`iad`) | https://treksafe-api.fly.dev |
+| DB | Supabase | `service_role` |
+| Email | Brevo (desde Fly) | API y/o SMTP |
+
+Orden: API → PWA (`VITE_API_URL`) → `CORS_ORIGIN` en Fly.
 
 ```bash
-curl http://localhost:3000/api/salud
+cd backend
+fly apps create treksafe-api --org personal   # si no existe
+powershell -File scripts/set-fly-secrets.ps1
+fly deploy
 ```
 
-Respuesta esperada: `{ "estado": "ok", "servicio": "treksafe-api", "correo": { ... }, "cron": { ... } }`
-
-### 5. Build de producción
+Vercel: Root Directory `frontend` · Build `npm run build` · Output `dist` · Env `VITE_API_URL=https://treksafe-api.fly.dev/api`.
 
 ```bash
-npm run build:backend
-npm run build:frontend   # Salida en frontend/dist (PWA lista para desplegar)
+fly secrets set CORS_ORIGIN=https://treksafe-app.vercel.app -a treksafe-api
 ```
 
----
+Artefactos: [`backend/fly.toml`](backend/fly.toml) · [`backend/Dockerfile`](backend/Dockerfile) · [`frontend/vercel.json`](frontend/vercel.json).
 
+> Los correos salen desde **Fly**, no desde Vercel. Con API key de Brevo suele bastar; IP de egress fija: `fly ips allocate-egress -a treksafe-api -r iad`.
 
+<details>
+<summary>Base de datos</summary>
 
-## Base de datos
+Estados de expedición: `programada` → `en_progreso` → `completada` | `alerta`.
 
-Modelo relacional en PostgreSQL con tipos ENUM y nombres en español.
+Entidades: `usuarios`, `perfiles_senderista`, `perfiles_rescatista`, `expediciones`, `contactos_emergencia`, `fichas_medicas`, `bitacoras_rescate`, `despachos_correo`, `auditoria_acceso_medico`, …
 
-**Entidades principales:** `usuarios`, `perfiles_senderista`, `perfiles_rescatista`, `expediciones`, `contactos_emergencia`, `fichas_medicas`, `bitacoras_rescate`, `registros_institucionales_rescatista`, `despachos_correo`, `auditoria_acceso_medico`.
+Las migraciones `sprint*_migration.sql` y `post_mvp_migration.sql` están obsoletas (fusionadas en `init_schema.sql`).
 
-**Estados de expedición:** `programada` → `en_progreso` → `completada` | `alerta`
+</details>
 
-El índice parcial sobre expediciones `en_progreso` con fecha límite vencida optimiza el cron job (HU-11).
+## API
 
----
+Prefijo `/api` · `Authorization: Bearer <JWT>` · JSON `camelCase`
 
+| Área | Rutas clave |
+| --- | --- |
+| Salud | `GET /salud` |
+| Auth | `POST /auth/registrar-senderista` · `registrar-rescatista` · `iniciar-sesion` |
+| Usuario | `/usuario/ficha-medica` · `/contactos` · `/privacidad/revocar` |
+| Expediciones | `POST /` · `GET /activa` · `GET /historial` · `POST /:id/confirmar-retorno` |
+| Rescate | `/expediciones` · `/historial` · `/alertas` · confirmar · bitácora |
 
+## Seguridad
 
-## API REST
+| Medida | Implementación |
+| --- | --- |
+| Ley N° 29733 | Consentimiento en registro; ficha médica cifrada en reposo |
+| Derechos ARCO | `POST /usuario/privacidad/revocar` |
+| Roles JWT | `senderista` / `rescatista` |
+| RLS | Deny-by-default; acceso vía `service_role` |
+| Auditoría médica | Accesos de rescatistas registrados |
+| Rate limiting | 20 req / 15 min en auth |
+| Cliente | Solo `VITE_API_URL` (sin secretos) |
 
-Prefijo base: `/api` · Autenticación: `Authorization: Bearer <JWT>` · Campos JSON en `camelCase` español
-
-### Salud
-
-
-| Método | Ruta     | Auth | Descripción                        |
-| ------ | -------- | ---- | ---------------------------------- |
-| `GET`  | `/salud` | —    | Estado del servicio, correo y cron |
-
-
-
-
-### Autenticación
-
-
-| Método | Ruta                         | Descripción               |
-| ------ | ---------------------------- | ------------------------- |
-| `POST` | `/auth/registrar-senderista` | Registro de senderista    |
-| `POST` | `/auth/registrar-rescatista` | Registro de rescatista    |
-| `POST` | `/auth/iniciar-sesion`       | Login (emite JWT por rol) |
-
-
-
-
-### Usuario senderista (`/usuario`)
-
-
-| Método            | Ruta                  | Descripción             |
-| ----------------- | --------------------- | ----------------------- |
-| `GET/PUT`         | `/ficha-medica`       | Ficha médica cifrada    |
-| `GET/POST/DELETE` | `/contactos`          | Contactos de emergencia |
-| `POST`            | `/privacidad/revocar` | Revocación ARCO         |
-
-
-
-
-### Expediciones senderista (`/expediciones`)
-
-
-| Método | Ruta                     | Descripción              |
-| ------ | ------------------------ | ------------------------ |
-| `POST` | `/`                      | Crear plan de expedición |
-| `GET`  | `/activa`                | Expedición en curso      |
-| `GET`  | `/historial`             | Historial finalizado     |
-| `POST` | `/:id/confirmar-retorno` | Confirmar retorno seguro |
-
-
-
-
-### Rescate (`/rescate`)
-
-
-| Método  | Ruta                               | Descripción               |
-| ------- | ---------------------------------- | ------------------------- |
-| `GET`   | `/expediciones`                    | Expediciones monitoreadas |
-| `GET`   | `/alertas`                         | Alertas activas           |
-| `GET`   | `/alertas/:expedicionId`           | Detalle de emergencia     |
-| `POST`  | `/alertas/:expedicionId/confirmar` | Confirmar recepción       |
-| `PATCH` | `/alertas/:expedicionId/bitacora`  | Actualizar bitácora       |
-
-
----
-
-
-
-## Scripts
-
-
-| Comando                                      | Descripción                                |
-| -------------------------------------------- | ------------------------------------------ |
-| `npm run install:all`                        | Instala dependencias de backend y frontend |
-| `npm run dev:backend`                        | API en modo watch (tsx)                    |
-| `npm run dev:frontend`                       | PWA con hot reload                         |
-| `npm run build:backend`                      | Compila TypeScript → `backend/dist`        |
-| `npm run build:frontend`                     | Build de producción PWA                    |
-| `npm test --prefix backend`                  | Tests unitarios (Node test runner)         |
-| `npm run test:mail --prefix backend`         | Verifica configuración de correo           |
-| `npm run test:rescue-alert --prefix backend` | Simula alerta de rescate                   |
-
-
----
-
-
-
-## Seguridad y cumplimiento legal
-
-
-| Medida                    | Implementación                                                              |
-| ------------------------- | --------------------------------------------------------------------------- |
-| **Ley N° 29733** (Perú)   | Consentimiento explícito en registro; ficha médica cifrada en reposo        |
-| **Derechos ARCO**         | Eliminación/anonimización vía `POST /usuario/privacidad/revocar`            |
-| **Segregación de roles**  | JWT con rol `senderista`                                                    |
-| **RLS**                   | Políticas deny-by-default en Supabase; acceso vía `service_role` en backend |
-| **Auditoría médica**      | Registro de accesos a ficha médica por rescatistas                          |
-| **Rate limiting**         | 20 req/15 min en endpoints de autenticación                                 |
-| **Sin claves en cliente** | Frontend solo conoce `VITE_API_URL`                                         |
-
-
-
-
-### Fuera de alcance (por diseño)
-
-- Rastreo GPS continuo vía hardware IoT
-- Integración con APIs gubernamentales reales (validación simulada)
-- SMS de pago como canal de alerta
-
----
-
-
+**Fuera de alcance:** GPS continuo IoT · APIs gubernamentales reales · SMS de pago.
 
 ## Equipo
 
+| Integrante | Rol |
+| --- | --- |
+| Marko Antonio Lopez Bernuy | Product Owner |
+| Ariana Belen Blanco Quintana | Scrum Master |
+| Manuel Rodrigo Llaury Murga | Developer |
+| Pedro Leonardo Ormeño Moquillaza | Developer |
+| Yahel Jair Cordova Amez | Developer |
 
-| Integrante                           | Rol           |
-| ------------------------------------ | ------------- |
-| **Marko Antonio Lopez Bernuy**       | Product Owner |
-| **Ariana Belen Blanco Quintana**     | Scrum Master  |
-| **Manuel Rodrigo Llaury Murga**      | Developer     |
-| **Pedro Leonardo Ormeño Moquillaza** | Developer     |
-| **Yahel Jair Cordova Amez**          | Developer     |
+**Docente:** Jorge Luis Irey Nuñez · Universidad de Lima · Ingeniería de Sistemas
 
+## Licencia
 
-**Docente:** Jorge Luis Irey Nuñez  
-**Universidad de Lima** · Facultad de Ingeniería · Carrera de Ingeniería de Sistemas
-
----
-
-TrekSafe — Verificación positiva para senderistas en los Andes peruanos.
+Proyecto académico (Universidad de Lima, 2026). Uso educativo del curso; sin licencia open source publicada en el repositorio.

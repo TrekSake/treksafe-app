@@ -29,8 +29,8 @@ async function bootstrap() {
   iniciarCronFechaLimiteExpedicion();
 
   const app = createApp();
-  app.listen(port, () => {
-    console.log(`[TrekSafe API] escuchando en http://localhost:${port}`);
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`[TrekSafe API] escuchando en http://0.0.0.0:${port}`);
   });
 }
 

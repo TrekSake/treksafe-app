@@ -22,7 +22,6 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^9.0.1",
     "pg": "^8.13.1",
-    "treksafe-app": "file:..",
     "zod": "^3.24.1"
   },
   "devDependencies": {
